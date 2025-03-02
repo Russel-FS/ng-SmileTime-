@@ -202,7 +202,7 @@ git pull origin main            # Actualizar con main
 
 ### Construido con 💙 usando Angular
 
-[![Stargazers](https://img.shields.io/github/stars/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/tu-usuario/ng-SmileTime/stargazers)
-[![Forks](https://img.shields.io/github/forks/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/tu-usuario/ng-SmileTime/network/members)
+[![Stargazers](https://img.shields.io/github/stars/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/Russel-FS/ng-SmileTime-)
+[![Forks](https://img.shields.io/github/forks/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/Russel-FS/ng-SmileTime-)
 
 </div>
