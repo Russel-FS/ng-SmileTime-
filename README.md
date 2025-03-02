@@ -182,13 +182,77 @@ src/app/
 
 ## 🌿 Flujo de Trabajo Git
 
-> ⚠️ **ADVERTENCIA**  
-> Siempre crear una rama nueva para cada feature
+<div align="center">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=36BCF7&width=435&lines=🚀+Guía+de+Colaboración+en+Git+🚀;💻+Desarrollo+ordenado+y+eficiente+💻" alt="Typing SVG">
+</div>
+
+> [!IMPORTANT]
+> **Actualiza siempre tu rama local antes de empezar:**
+> ```bash
+> git pull origin main
+> ```
+
+> [!NOTE]
+> **Crea una nueva rama para tu funcionalidad:**
+> ```bash
+> git checkout -b feature/nueva-funcionalidad
+> # Ejemplos de nombres:
+> # feature/gestion-citas
+> # feature/busqueda-clinicas
+> # bugfix/correccion-formulario
+> ```
+
+> [!NOTE]
+> **Guarda tus cambios:**
+> ```bash
+> git add .
+> git commit -m "feat: añadida funcionalidad de búsqueda"
+> git push origin feature/nueva-funcionalidad
+> ```
+
+> [!TIP]
+> **Buenas Prácticas:**
+> - Haz commits pequeños y frecuentes
+> - Usa mensajes descriptivos en los commits
+> - Verifica el estado con `git status`
+> - Mantén actualizada tu rama con main
+
+### 📝 Convención de Nombres
+
+> [!IMPORTANT]
+> **Nomenclatura de Archivos:**
+> - Components: `kebab-case` (ej: `appointment-card.component.ts`)
+> - Services: `kebab-case` (ej: `dental-service.service.ts`)
+> - Interfaces: `PascalCase` (ej: `IDentalAppointment.ts`)
+> - Clases: `PascalCase` (ej: `AppointmentManager.ts`)
+
+### 🔄 Proceso de Pull Request
+
+1. Actualiza tu rama con main
+2. Resuelve conflictos si existen
+3. Crea el PR desde GitHub
+4. Espera la revisión del equipo
+
+### 🎯 Commits Semánticos
 
 ```bash
-git checkout -b feature/nombre   # Nueva rama
-git pull origin main            # Actualizar con main
+feat: nueva funcionalidad
+fix: corrección de bug
+docs: cambios en documentación
+style: cambios de formato
+refactor: refactorización de código
+test: añadir o modificar tests
 ```
+
+----
+<div align="center">
+  <h3>💡 Desarrollo Colaborativo</h3>
+  
+[![Pull Requests](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![Colaboración](https://img.shields.io/badge/Colaboración-Activa-success?style=for-the-badge)](https://github.com/tu-usuario/ng-SmileTime)
+
+Construido con 💙 usando Angular
+</div>
 
 ## 🤝 Contribución
 
