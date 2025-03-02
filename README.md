@@ -1,203 +1,208 @@
-# SmileTime - Sistema de Gestión Odontológica
+<div align="center">
 
-Aplicación web para la gestión de citas odontológicas y búsqueda de clínicas dentales cercanas.
+# 🦷 SmileTime
 
-## Características Principales
+[![Angular](https://img.shields.io/badge/Angular-16+-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![RxJS](https://img.shields.io/badge/RxJS-7.x-B7178C?style=for-the-badge&logo=reactivex&logoColor=white)](https://rxjs.dev/)
+[![ESLint](https://img.shields.io/badge/ESLint-8.x-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
 
-- Búsqueda de clínicas dentales por ubicación
-- Sistema de agenda y reserva de citas
-- Gestión de historiales clínicos
-- Panel administrativo para odontólogos
-- Sistema de notificaciones para recordatorios de citas
+<h3>
+  Sistema moderno de gestión odontológica construido con tecnologías de última generación
+</h3>
 
-## Tecnologías Utilizadas
+[📚 Documentación](#características) •
+[🚀 Inicio Rápido](#requisitos) •
+[💻 Desarrollo](#instalación) •
+[🏗️ Arquitectura](#arquitectura)
 
-### Core
-- Angular 16+
-- TypeScript 5.x
-- RxJS 7.x
+---
 
-### Estilos
-- Tailwind CSS 3.x
-- Angular Material (opcional)
+</div>
 
-### Integración
-- REST API
-- Swagger/OpenAPI
-- Axios/HttpClient
+## ⭐ Características Principales
 
-### Contenedorización
-- Docker
-- Docker Compose
+<div align="center">
 
-### Testing
-- Jasmine
-- Karma
-- Cypress (e2e)
+| 🔍 Búsqueda | 📅 Agenda | 📋 Historiales | 👨‍⚕️ Admin | 🔔 Notificaciones |
+|------------|-----------|----------------|-----------|-----------------|
+| Localización inteligente de clínicas | Sistema avanzado de citas | Gestión de historiales clínicos | Panel administrativo | Recordatorios en tiempo real |
 
-### CI/CD
-- GitHub Actions
-- SonarQube
+</div>
 
-### Otras Herramientas
-- ESLint
-- Prettier
-- Husky (git hooks)
-- Commitlint
+## 🚀 Stack Tecnológico
 
-## Configuración del Entorno de Desarrollo
+<div align="center">
 
-### Prerrequisitos
+### Core Framework
+[![Angular](https://img.shields.io/badge/Angular-16+-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![RxJS](https://img.shields.io/badge/RxJS-7.x-B7178C?style=for-the-badge&logo=reactivex&logoColor=white)](https://rxjs.dev/)
 
-1. Node.js y npm:
-   ```bash
-   # Verificar si está instalado
-   node --version  # Debe ser v16.x o superior
-   npm --version   # Debe ser v8.x o superior
+### UI Framework & Styling
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Angular Material](https://img.shields.io/badge/Angular_Material-16+-607D8B?style=for-the-badge&logo=material-design&logoColor=white)](https://material.angular.io/)
+[![SASS](https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=white)](https://sass-lang.com/)
 
-   # Si no está instalado, descarga de:
-   # https://nodejs.org/es/download/
-   ```
+### Code Quality & Testing
+[![ESLint](https://img.shields.io/badge/ESLint-8.x-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-3.x-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)
+[![Jest](https://img.shields.io/badge/Jest-29.x-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
 
-2. Angular CLI:
-   ```bash
-   # Instalar Angular CLI globalmente
-   npm install -g @angular/cli
+### Development Tools
+[![NPM](https://img.shields.io/badge/NPM-9.x-CB3837?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/)
+[![Git](https://img.shields.io/badge/Git-2.x-F05032?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/)
+[![VS Code](https://img.shields.io/badge/VS_Code-Latest-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://code.visualstudio.com/)
 
-   # Verificar instalación
-   ng version
-   ```
+</div>
 
-3. Git:
-   ```bash
-   # Verificar instalación
-   git --version
+### Características del Stack
 
-   # Si no está instalado:
-   # Windows: https://git-scm.com/download/win
-   # Linux: sudo apt install git
-   # Mac: brew install git
-   ```
+| Categoría | Tecnología | Propósito |
+|-----------|------------|-----------|
+| **Frontend Core** | Angular 16+ | Framework principal para desarrollo SPA |
+| | TypeScript 5.x | Tipado estático y características modernas de ES |
+| | RxJS 7.x | Programación reactiva y manejo de eventos |
+| **Estilos** | Tailwind CSS | Framework CSS utilitario para diseño responsive |
+| | Angular Material | Componentes Material Design pre-construidos |
+| | SASS | Preprocesador CSS para estilos avanzados |
+| **Calidad** | ESLint | Análisis estático de código |
+| | Prettier | Formateo consistente de código |
+| | Jest | Framework de testing unitario |
+| **Desarrollo** | NPM | Gestor de paquetes y scripts |
+| | Git | Control de versiones |
+| | VS Code | Editor de código recomendado |
 
-### Instalación del Proyecto
+## 📋 Requisitos Previos
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/ng-SmileTime.git
-   cd ng-SmileTime
-   ```
+> ⚡ **IMPORTANTE**  
+> Asegúrate de tener instaladas todas las herramientas necesarias
 
-2. Instalar dependencias:
-   ```bash
-   npm install
-   ```
+### Herramientas Requeridas
 
-3. Verificar instalación:
-   ```bash
-   ng serve
-   ```
+| Herramienta | Versión | Enlace de Descarga |
+|-------------|---------|-------------------|
+| Node.js | v16.x o superior | [📥 Descargar Node.js](https://nodejs.org/es/download/) |
+| VS Code | Última versión | [📥 Descargar VS Code](https://code.visualstudio.com/download) |
+| Git | v2.x o superior | [📥 Descargar Git](https://git-scm.com/downloads) |
 
-4. Instalación de herramientas adicionales:
-   ```bash
-   # Instalar Tailwind CSS
-   npm install -D tailwindcss postcss autoprefixer
-   npx tailwindcss init
+### Verificación de Instalación
 
-   # Instalar ESLint y Prettier
-   npm install -D eslint prettier eslint-config-prettier
-   ```
-
-### Desarrollo
-
-1. Iniciar servidor de desarrollo:
 ```bash
-ng serve
+node -v     # v16.x o superior
+npm -v      # v8.x o superior
+git --version # v2.x o superior
 ```
-Navega a `http://localhost:4200/`
 
-2. Para crear nuevos componentes:
+### Instalación de Angular CLI
 ```bash
-ng generate component components/nombre-componente
+npm install -g @angular/cli  # Instalar Angular CLI
+ng version                   # Verificar instalación
 ```
 
-## Flujo de Trabajo Git
+## 🔧 Herramientas Recomendadas
 
-1. Al iniciar una nueva funcionalidad:
+<div align="center">
+
+### VS Code + Extensiones Esenciales
+
+[![Angular](https://img.shields.io/badge/Angular_Language_Service-0B1123?style=for-the-badge&logo=angular)](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template)
+[![Error Lens](https://img.shields.io/badge/Error_Lens-B7178C?style=for-the-badge&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_IntelliSense-38B2AC?style=for-the-badge&logo=tailwind-css)](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint)](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+</div>
+
+### Configuración Recomendada
+
+Agregar al `settings.json` de VS Code:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifier": "relative"
+}
+```
+
+## 💫 Inicio Rápido
+
 ```bash
-git pull origin main             # Actualizar rama main local
-git checkout -b feature/nombre   # Crear y cambiar a nueva rama
+# Clonar e instalar
+git clone https://github.com/tu-usuario/ng-SmileTime.git
+cd ng-SmileTime
+npm install
+
+# Iniciar desarrollo
+npm start         # http://localhost:4200
 ```
 
-2. Antes de hacer push:
+## 📐 Estructura del Proyecto
+
+```
+src/app/
+├── core/                    # Capa de dominio
+│   ├── domain/
+│   │   └── models/         # Modelos de dominio
+│   ├── use-cases/          # Casos de uso
+│   ├── interfaces/         # Contratos/Puertos
+│   └── services/           # Servicios de dominio
+│
+├── data/                   # Capa de datos
+│   ├── repositories/       # Implementaciones
+│   ├── datasources/        # Fuentes de datos
+│   ├── mappers/           # Convertidores
+│   └── dto/               # Objetos de transferencia
+│
+├── presentation/           # Capa de presentación
+│   ├── pages/             # Páginas
+│   ├── components/        # Componentes
+│   └── shared/           
+│       └── layout/        # Layouts
+│           ├── components/
+│           └── containers/
+│
+├── infrastructure/         # Capa de infraestructura
+│   ├── http/              # Servicios HTTP
+│   ├── storage/           # Almacenamiento
+│   └── config/           # Configuraciones
+│
+└── shared/                # Recursos compartidos
+    ├── constants/         # Constantes
+    ├── utils/            # Utilidades
+    └── types/            # Tipos globales
+```
+
+> 🏗️ **NOTA**  
+> La estructura sigue los principios de Clean Architecture para mantener el código organizado, testeable y mantenible.
+
+## 🌿 Flujo de Trabajo Git
+
+> ⚠️ **ADVERTENCIA**  
+> Siempre crear una rama nueva para cada feature
+
 ```bash
-git pull origin main            # Actualizar con últimos cambios
-git add .                       # Agregar cambios
-git commit -m "descripción"     # Commit de cambios
-git push origin feature/nombre  # Subir cambios a rama feature
+git checkout -b feature/nombre   # Nueva rama
+git pull origin main            # Actualizar con main
 ```
 
-3. Para crear Pull Request:
-- Ir a GitHub
-- Crear nuevo Pull Request desde tu rama feature hacia main
-- Esperar revisión y aprobación
+## 🤝 Contribución
 
-## Estructura del Proyecto
+1. Crear rama feature (`git checkout -b feature/AmazingFeature`)
+2. Commit cambios (`git commit -m 'Add: AmazingFeature'`)
+3. Push a la rama (`git push origin feature/AmazingFeature`)
+4. Abrir Pull Request
 
-```
-src/
-├── app/
-│   ├── core/                    # Capa de dominio
-│   │   ├── domain/
-│   │   │   └── models/         # Modelos de dominio
-│   │   ├── use-cases/          # Casos de uso
-│   │   ├── interfaces/         # Interfaces y contratos
-│   │   └── services/           # Servicios de dominio
-│   │
-│   ├── data/                   # Capa de datos
-│   │   ├── repositories/       # Implementaciones de repositorios
-│   │   ├── datasources/        # Fuentes de datos
-│   │   ├── mappers/           # Convertidores de datos
-│   │   └── dto/               # Objetos de transferencia
-│   │
-│   ├── presentation/           # Capa de presentación
-│   │   ├── pages/             # Páginas principales
-│   │   ├── components/        # Componentes
-│   │   └── shared/           
-│   │       └── layout/        # Layouts compartidos
-│   │
-│   ├── infrastructure/         # Capa de infraestructura
-│   │   ├── http/              # Servicios HTTP
-│   │   ├── storage/           # Almacenamiento local
-│   │   └── config/            # Configuraciones
-│   │
-│   └── shared/                # Recursos compartidos
-│       ├── constants/         # Constantes
-│       ├── utils/            # Utilidades
-│       └── types/            # Tipos compartidos
-```
+----
+<div align="center">
 
-## Scripts Disponibles
+### Construido con 💙 usando Angular
 
-- `ng serve`: Inicia el servidor de desarrollo
-- `ng build`: Compila el proyecto
-- `ng test`: Ejecuta tests unitarios
-- `ng lint`: Ejecuta el linter
-- `ng e2e`: Ejecuta tests end-to-end
+[![Stargazers](https://img.shields.io/github/stars/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/tu-usuario/ng-SmileTime/stargazers)
+[![Forks](https://img.shields.io/github/forks/tu-usuario/ng-SmileTime?style=for-the-badge)](https://github.com/tu-usuario/ng-SmileTime/network/members)
 
-## Guías de Estilo
-
-- Seguir [Angular Style Guide](https://angular.io/guide/styleguide)
-- Usar TypeScript strict mode
-- Documentar componentes y servicios principales
-- Mantener tests unitarios actualizados
-
-## Despliegue
-
-Para construir la versión de producción:
-```bash
-ng build --configuration production
-```
-
-## Soporte
-
-Para reportar problemas o sugerir mejoras, crear un issue en el repositorio.
+</div>
