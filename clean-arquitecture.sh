@@ -29,5 +29,6 @@ touch src/app/shared/constants/.gitkeep
 touch src/app/shared/utils/.gitkeep
 touch src/app/shared/types/.gitkeep
 
+
 # permisos de ejecución al script
 #chmod +x create-structure.sh
