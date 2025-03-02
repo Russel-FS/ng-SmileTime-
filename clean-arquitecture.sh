@@ -6,7 +6,7 @@
 mkdir -p src/app/core/{domain/models,use-cases,interfaces,services}
 
 # Capa de datos:  
-mkdir -p src/app/data/{repositories,datasources}
+mkdir -p src/app/data/{repositories,datasources,mappers,dto}
 
 # Capa de presentación
 mkdir -p src/app/presentation/{pages,components,shared}
@@ -18,7 +18,7 @@ mkdir -p src/app/infrastructure/{http,storage,config}
 # Recursos compartidos
 mkdir -p src/app/shared/{constants,utils,types}
 
-# Archivos .gitkeep para mantener la estructura en el repositorio
+# Archivos .gitkeep 
 touch src/app/core/domain/.gitkeep
 touch src/app/core/domain/domain-models/.gitkeep
 touch src/app/core/use-cases/.gitkeep
@@ -26,6 +26,8 @@ touch src/app/core/interfaces/.gitkeep
 touch src/app/core/services/.gitkeep
 touch src/app/data/repositories/.gitkeep
 touch src/app/data/datasources/.gitkeep
+touch src/app/data/mappers/.gitkeep
+touch src/app/data/dto/.gitkeep
 touch src/app/presentation/shared/layout/components/.gitkeep
 touch src/app/presentation/shared/layout/containers/.gitkeep
 touch src/app/presentation/pages/.gitkeep
