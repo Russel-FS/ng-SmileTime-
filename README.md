@@ -133,7 +133,7 @@ Agregar al `settings.json` de VS Code:
 
 ```bash
 # Clonar e instalar
-git clone https://github.com/tu-usuario/ng-SmileTime.git
+git clone https://github.com/tu-usuario/ng-SmileTime.git](https://github.com/Russel-FS/ng-SmileTime-.git
 cd ng-SmileTime
 npm install
 
