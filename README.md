@@ -1,59 +1,203 @@
-# NgSmileTime
+# SmileTime - Sistema de Gestión Odontológica
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+Aplicación web para la gestión de citas odontológicas y búsqueda de clínicas dentales cercanas.
 
-## Development server
+## Características Principales
 
-To start a local development server, run: 
+- Búsqueda de clínicas dentales por ubicación
+- Sistema de agenda y reserva de citas
+- Gestión de historiales clínicos
+- Panel administrativo para odontólogos
+- Sistema de notificaciones para recordatorios de citas
 
+## Tecnologías Utilizadas
+
+### Core
+- Angular 16+
+- TypeScript 5.x
+- RxJS 7.x
+
+### Estilos
+- Tailwind CSS 3.x
+- Angular Material (opcional)
+
+### Integración
+- REST API
+- Swagger/OpenAPI
+- Axios/HttpClient
+
+### Contenedorización
+- Docker
+- Docker Compose
+
+### Testing
+- Jasmine
+- Karma
+- Cypress (e2e)
+
+### CI/CD
+- GitHub Actions
+- SonarQube
+
+### Otras Herramientas
+- ESLint
+- Prettier
+- Husky (git hooks)
+- Commitlint
+
+## Configuración del Entorno de Desarrollo
+
+### Prerrequisitos
+
+1. Node.js y npm:
+   ```bash
+   # Verificar si está instalado
+   node --version  # Debe ser v16.x o superior
+   npm --version   # Debe ser v8.x o superior
+
+   # Si no está instalado, descarga de:
+   # https://nodejs.org/es/download/
+   ```
+
+2. Angular CLI:
+   ```bash
+   # Instalar Angular CLI globalmente
+   npm install -g @angular/cli
+
+   # Verificar instalación
+   ng version
+   ```
+
+3. Git:
+   ```bash
+   # Verificar instalación
+   git --version
+
+   # Si no está instalado:
+   # Windows: https://git-scm.com/download/win
+   # Linux: sudo apt install git
+   # Mac: brew install git
+   ```
+
+### Instalación del Proyecto
+
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/ng-SmileTime.git
+   cd ng-SmileTime
+   ```
+
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Verificar instalación:
+   ```bash
+   ng serve
+   ```
+
+4. Instalación de herramientas adicionales:
+   ```bash
+   # Instalar Tailwind CSS
+   npm install -D tailwindcss postcss autoprefixer
+   npx tailwindcss init
+
+   # Instalar ESLint y Prettier
+   npm install -D eslint prettier eslint-config-prettier
+   ```
+
+### Desarrollo
+
+1. Iniciar servidor de desarrollo:
 ```bash
 ng serve
 ```
+Navega a `http://localhost:4200/`
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+2. Para crear nuevos componentes:
 ```bash
-ng generate component component-name
+ng generate component components/nombre-componente
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Flujo de Trabajo Git
 
+1. Al iniciar una nueva funcionalidad:
 ```bash
-ng generate --help
+git pull origin main             # Actualizar rama main local
+git checkout -b feature/nombre   # Crear y cambiar a nueva rama
 ```
 
-## Building
-
-To build the project run:
-
+2. Antes de hacer push:
 ```bash
-ng build
+git pull origin main            # Actualizar con últimos cambios
+git add .                       # Agregar cambios
+git commit -m "descripción"     # Commit de cambios
+git push origin feature/nombre  # Subir cambios a rama feature
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+3. Para crear Pull Request:
+- Ir a GitHub
+- Crear nuevo Pull Request desde tu rama feature hacia main
+- Esperar revisión y aprobación
 
-## Running unit tests
+## Estructura del Proyecto
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+```
+src/
+├── app/
+│   ├── core/                    # Capa de dominio
+│   │   ├── domain/
+│   │   │   └── models/         # Modelos de dominio
+│   │   ├── use-cases/          # Casos de uso
+│   │   ├── interfaces/         # Interfaces y contratos
+│   │   └── services/           # Servicios de dominio
+│   │
+│   ├── data/                   # Capa de datos
+│   │   ├── repositories/       # Implementaciones de repositorios
+│   │   ├── datasources/        # Fuentes de datos
+│   │   ├── mappers/           # Convertidores de datos
+│   │   └── dto/               # Objetos de transferencia
+│   │
+│   ├── presentation/           # Capa de presentación
+│   │   ├── pages/             # Páginas principales
+│   │   ├── components/        # Componentes
+│   │   └── shared/           
+│   │       └── layout/        # Layouts compartidos
+│   │
+│   ├── infrastructure/         # Capa de infraestructura
+│   │   ├── http/              # Servicios HTTP
+│   │   ├── storage/           # Almacenamiento local
+│   │   └── config/            # Configuraciones
+│   │
+│   └── shared/                # Recursos compartidos
+│       ├── constants/         # Constantes
+│       ├── utils/            # Utilidades
+│       └── types/            # Tipos compartidos
 ```
 
-## Running end-to-end tests
+## Scripts Disponibles
 
-For end-to-end (e2e) testing, run:
+- `ng serve`: Inicia el servidor de desarrollo
+- `ng build`: Compila el proyecto
+- `ng test`: Ejecuta tests unitarios
+- `ng lint`: Ejecuta el linter
+- `ng e2e`: Ejecuta tests end-to-end
 
+## Guías de Estilo
+
+- Seguir [Angular Style Guide](https://angular.io/guide/styleguide)
+- Usar TypeScript strict mode
+- Documentar componentes y servicios principales
+- Mantener tests unitarios actualizados
+
+## Despliegue
+
+Para construir la versión de producción:
 ```bash
-ng e2e
+ng build --configuration production
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Soporte
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Para reportar problemas o sugerir mejoras, crear un issue en el repositorio.
