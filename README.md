@@ -138,7 +138,7 @@ cd ng-SmileTime
 npm install
 
 # Iniciar desarrollo
-npm start         # http://localhost:4200
+ng serve        # http://localhost:4200
 ```
 
 ## 📐 Estructura del Proyecto
