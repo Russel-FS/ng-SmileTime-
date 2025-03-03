@@ -1,26 +1,156 @@
-<div class="flex flex-col h-screen bg-gray-50">
-  <!-- Chat Header-->
-  <div
-    class="bg-white/80 border-b border-gray-200 px-6 py-4 shadow-sm chat-header sticky top-0 z-10"
-  >
-    <h1 class="text-xl font-semibold text-gray-800">Dental Chat</h1>
-    <p class="text-sm text-gray-500">Consultas y Ayuda</p>
-  </div>
+<div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <!-- Sidebar -->
+  <div class="w-96 border-r border-gray-200/30 bg-white/80 backdrop-blur-2xl">
+    <!-- Top controls -->
+    <div class="p-6 border-b border-gray-200/30">
+      <div class="flex items-center mb-6">
+        <h1
+          class="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800"
+        >
+          Mensajes
+        </h1>
+      </div>
 
-  <!-- Chat conversaciones -->
-  <div class="flex-1 overflow-y-auto px-6 py-4">
-    <div class="space-y-4">
-      @for (message of messages; track message) {
+      <!-- campo de búsqueda -->
+      <div class="relative">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          class="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200/30 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all backdrop-blur-sm"
+          placeholder="Buscar conversaciones..."
+        />
+        <svg
+          class="absolute left-3 top-3 h-5 w-5 text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Lista de contactos con efectos de hover -->
+    <div class="overflow-y-auto h-full">
+      @for (contact of contacts; track contact.id) {
         <div
+          (click)="selectContact(contact)"
+          class="group transition-all duration-200 ease-out"
           [class]="
-            message.isUser ? 'flex justify-end message-enter' : 'flex justify-start message-enter'
+            contact.isActive
+              ? 'bg-blue-50/50 border-l-4 border-blue-500'
+              : 'hover:bg-gray-50/50 border-l-4 border-transparent'
           "
         >
+          <div class="p-4 transition-transform duration-200 ease-out group-hover:scale-[0.99]">
+            <div class="flex items-center">
+              <div class="relative">
+                <img
+                  [src]="contact.avatar"
+                  alt="avatar"
+                  class="w-12 h-12 rounded-full object-cover ring-2 ring-white"
+                />
+                <div
+                  [class]="
+                    contact.status === 'online'
+                      ? 'absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white'
+                      : contact.status === 'typing'
+                        ? 'absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full ring-2 ring-white animate-pulse'
+                        : 'absolute bottom-0 right-0 w-3 h-3 bg-gray-400 rounded-full ring-2 ring-white'
+                  "
+                ></div>
+              </div>
+              <div class="ml-4 flex-1">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-gray-900">
+                    {{ contact.name }}
+                  </h3>
+                  @if (contact.unread > 0) {
+                    <span
+                      class="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse"
+                    >
+                      {{ contact.unread }}
+                    </span>
+                  }
+                </div>
+                <p class="text-xs text-blue-600">{{ contact.role }}</p>
+                <p class="text-xs text-gray-500 mt-1 truncate">
+                  @if (contact.status === 'typing') {
+                    <span class="inline-flex items-center">
+                      <span class="animate-bounce">•</span>
+                      <span class="animate-bounce [animation-delay:0.2s]">•</span>
+                      <span class="animate-bounce [animation-delay:0.4s]">•</span>
+                    </span>
+                  } @else {
+                    {{ contact.lastMessage }}
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Chat de Area -->
+  <div class="flex-1 flex flex-col bg-white/50 backdrop-blur-xl">
+    <!-- Encabezado Header -->
+    <div class="px-6 py-4 border-b border-gray-200/30 bg-white/80 backdrop-blur-xl">
+      @for (contact of contacts; track contact.id) {
+        @if (contact.isActive) {
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="relative">
+                <img
+                  [src]="contact.avatar"
+                  alt="avatar"
+                  class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
+                />
+                <div
+                  [class]="
+                    contact.status === 'online'
+                      ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white'
+                      : contact.status === 'typing'
+                        ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-blue-500 rounded-full ring-2 ring-white animate-pulse'
+                        : 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-400 rounded-full ring-2 ring-white'
+                  "
+                ></div>
+              </div>
+              <div class="ml-4">
+                <h2 class="text-lg font-semibold text-gray-900">
+                  {{ contact.name }}
+                </h2>
+                <p class="text-sm text-gray-500">
+                  {{
+                    contact.status === 'typing'
+                      ? 'Escribiendo...'
+                      : contact.status === 'online'
+                        ? 'En línea'
+                        : 'Desconectado'
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Mensajes -->
+    <div #messageContainer class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+      @for (message of messages; track message) {
+        <div [@fadeSlide] [class]="message.isUser ? 'flex justify-end' : 'flex justify-start'">
           <div
             [class]="
               message.isUser
-                ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2 max-w-[80%] message-bubble shadow-sm'
-                : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 py-2 max-w-[80%] message-bubble shadow-sm'
+                ? 'max-w-[80%] bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2 shadow-sm hover:shadow-md transition-all transform hover:scale-[1.01]'
+                : 'max-w-[80%] bg-gray-100 text-gray-900 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm hover:shadow-md transition-all transform hover:scale-[1.01]'
             "
           >
             <p class="text-sm">{{ message.text }}</p>
@@ -31,30 +161,33 @@
         </div>
       }
     </div>
-  </div>
 
-  <!-- Chat input y button enviar -->
-  <div class="bg-white/80 border-t border-gray-200 px-6 py-4 backdrop-blur-sm">
-    <form class="flex items-center space-x-3" (ngSubmit)="sendMessage()">
-      <input
-        type="text"
-        [(ngModel)]="newMessage"
-        name="message"
-        class="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all bg-white/90"
-        placeholder="Escribe tu mensaje..."
-        maxlength="250"
-      />
-      <button
-        type="submit"
-        [disabled]="!newMessage.trim()"
-        [class]="
-          newMessage.trim()
-            ? 'bg-blue-600 text-white rounded-full px-6 py-2 text-sm font-medium hover:bg-blue-700 transition-all transform hover:scale-105 active:scale-95 shadow-md'
-            : 'bg-gray-300 text-gray-500 rounded-full px-6 py-2 text-sm font-medium cursor-not-allowed'
-        "
-      >
-        Enviar
-      </button>
-    </form>
+    <!-- Input Area -->
+    <div class="px-6 py-4 border-t border-gray-200/30 bg-white/80 backdrop-blur-xl">
+      <form class="flex items-center space-x-4" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          name="message"
+          class="flex-1 px-4 py-3 bg-gray-50/50 border border-gray-200/30 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all backdrop-blur-sm"
+          placeholder="Type your message..."
+        />
+        <button
+          type="submit"
+          [disabled]="!newMessage.trim()"
+          class="group relative px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+          [class]="
+            newMessage.trim()
+              ? 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
+              : 'bg-gray-100 text-gray-400'
+          "
+        >
+          <span class="relative z-10">Enviar</span>
+          <div
+            class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-out"
+          ></div>
+        </button>
+      </form>
+    </div>
   </div>
 </div>
