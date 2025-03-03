@@ -1,1 +1,60 @@
-<p>client-chat works!</p>
+<div class="flex flex-col h-screen bg-gray-50">
+  <!-- Chat Header-->
+  <div
+    class="bg-white/80 border-b border-gray-200 px-6 py-4 shadow-sm chat-header sticky top-0 z-10"
+  >
+    <h1 class="text-xl font-semibold text-gray-800">Dental Chat</h1>
+    <p class="text-sm text-gray-500">Consultas y Ayuda</p>
+  </div>
+
+  <!-- Chat conversaciones -->
+  <div class="flex-1 overflow-y-auto px-6 py-4">
+    <div class="space-y-4">
+      @for (message of messages; track message) {
+        <div
+          [class]="
+            message.isUser ? 'flex justify-end message-enter' : 'flex justify-start message-enter'
+          "
+        >
+          <div
+            [class]="
+              message.isUser
+                ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-2 max-w-[80%] message-bubble shadow-sm'
+                : 'bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 py-2 max-w-[80%] message-bubble shadow-sm'
+            "
+          >
+            <p class="text-sm">{{ message.text }}</p>
+            <p class="text-xs mt-1 opacity-70">
+              {{ message.timestamp | date: 'shortTime' }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Chat input y button enviar -->
+  <div class="bg-white/80 border-t border-gray-200 px-6 py-4 backdrop-blur-sm">
+    <form class="flex items-center space-x-3" (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        [(ngModel)]="newMessage"
+        name="message"
+        class="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all bg-white/90"
+        placeholder="Escribe tu mensaje..."
+        maxlength="250"
+      />
+      <button
+        type="submit"
+        [disabled]="!newMessage.trim()"
+        [class]="
+          newMessage.trim()
+            ? 'bg-blue-600 text-white rounded-full px-6 py-2 text-sm font-medium hover:bg-blue-700 transition-all transform hover:scale-105 active:scale-95 shadow-md'
+            : 'bg-gray-300 text-gray-500 rounded-full px-6 py-2 text-sm font-medium cursor-not-allowed'
+        "
+      >
+        Enviar
+      </button>
+    </form>
+  </div>
+</div>
