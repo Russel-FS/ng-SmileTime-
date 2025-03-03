@@ -11,28 +11,41 @@ import {
 import { MessageRepository } from '../../../../../data/repositories/message.repository';
 import { MessageDataSource } from '../../../../../data/datasources/message.datasource';
 import { MessageMapper } from '../../../../../data/mappers/message-mapper';
-import { IMessageRepository } from '../../../../../core/interfaces/message.repository'; 
+import { IMessageRepository } from '../../../../../core/interfaces/message.repository';
+import { HeaderComponent } from '../../components/header/header.component';
+import { FooterComponent } from '../../components/footer/footer.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HeaderComponent,
+    FooterComponent,
+    RouterOutlet,
+  ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
-  providers: [  
+  providers: [
     MessageUseCase,
     MessageDataSource,
-    MessageMapper, 
-    { 
+    MessageMapper,
+    {
       provide: IMessageRepository,
-      useClass: MessageRepository
-    }
+      useClass: MessageRepository,
+    },
   ],
 })
 export class LayoutComponent {
   public form: FormGroup;
 
-  constructor(private messageUseCase: MessageUseCase, fb: FormBuilder) {
+  constructor(
+    private messageUseCase: MessageUseCase,
+    fb: FormBuilder,
+  ) {
     this.form = fb.group({
       time: [''],
       message: [''],
