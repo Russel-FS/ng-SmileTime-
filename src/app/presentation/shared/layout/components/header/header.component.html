@@ -1,1 +1,108 @@
-<p>header works!</p>
+<!-- Header/Nav -->
+<nav class="backdrop-blur-xl bg-white/70 fixed w-full z-50 border-b border-gray-200/20">
+  <div class="max-w-[1500px] mx-auto relative">
+    <div class="flex items-center justify-between px-8 py-4">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <h3 class="text-xl font-semibold tracking-tight text-gray-900">
+          Smile<span class="font-bold">Time</span>
+        </h3>
+      </div>
+
+      <!-- Menu Principal -->
+      <div class="hidden md:flex space-x-14 text-sm font-medium mx-10">
+        <a
+          (click)="onNavigate('/home')"
+          class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3"
+        >
+          Inicio
+        </a>
+        <a
+          (click)="onNavigate('/find-dentist')"
+          class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3"
+        >
+          Buscar Odontólogo
+        </a>
+        <button
+          (mouseenter)="showToggle()"
+          (click)="showToggle()"
+          class="text-gray-600 hover:text-gray-900 transition-colors duration-300 flex items-center cursor-pointer py-3"
+        >
+          Servicios
+          <svg
+            class="w-4 h-4 ml-1 transition-all duration-200"
+            [class.rotate-180]="isMenuCollapsed"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a
+          (click)="onNavigate('/auth/login')"
+          class="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors duration-300"
+        >
+          Iniciar Sesión
+        </a>
+        <a
+          (click)="onNavigate('/appointments/schedule')"
+          class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300"
+        >
+          Agendar Cita
+        </a>
+      </div>
+
+      <!-- Menu desplegable -->
+      <div
+        *ngIf="!isMenuCollapsed"
+        (mouseleave)="showToggle()"
+        @fade
+        class="absolute left-0 right-0 top-full max-w-7xl px-10 mx-auto hidden md:block"
+      >
+        <div
+          class="backdrop-blur-xl bg-white/80 shadow-[0_4px_10px_rgba(0,0,0,0.1)] rounded-2xl p-6"
+        >
+          <div class="grid grid-cols-2 gap-4 z-20">
+            <a
+              (click)="onNavigate('/appointments')"
+              class="p-3 hover:bg-black/5 rounded-xl transition-all duration-300"
+            >
+              Mis Citas
+            </a>
+            <a (click)="onNavigate('/medical-history')" class="p-3 hover:bg-gray-50 rounded-lg">
+              Historial Clínico
+            </a>
+            <a (click)="onNavigate('/chat')" class="p-3 hover:bg-gray-50 rounded-lg">
+              Chat con Odontólogo
+            </a>
+            <a (click)="onNavigate('/reminders')" class="p-3 hover:bg-gray-50 rounded-lg">
+              Recordatorios
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón móvil -->
+      <button class="md:hidden p-2 hover:bg-black/5 rounded-full transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>

@@ -14,7 +14,7 @@ import { MessageMapper } from '../../../../../data/mappers/message-mapper';
 import { IMessageRepository } from '../../../../../core/interfaces/message.repository';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -40,21 +40,9 @@ import { RouterOutlet } from '@angular/router';
   ],
 })
 export class LayoutComponent {
-  public form: FormGroup;
+  constructor(private route: Router) {}
 
-  constructor(
-    private messageUseCase: MessageUseCase,
-    fb: FormBuilder,
-  ) {
-    this.form = fb.group({
-      time: [''],
-      message: [''],
-    });
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      this.messageUseCase.createMessage(this.form.value).subscribe();
-    }
+  handleNavigate(route: string): void {
+    this.route.navigate([route]); 
   }
 }
