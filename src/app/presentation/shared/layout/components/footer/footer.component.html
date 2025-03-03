@@ -1,1 +1,47 @@
-<p>footer works!</p>
+<footer class="bg-white border-t border-gray-100">
+  <div class="max-w-[1500px] mx-auto px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- Logo y descripción -->
+      <div class="space-y-4">
+        <h3 class="text-xl font-semibold tracking-tight text-gray-900">
+          Smile<span class="font-bold">Time</span>
+        </h3>
+        <p class="text-sm text-gray-500">Sistema de odontológica</p>
+      </div>
+
+      <!-- Enlaces Rápidos -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-medium text-gray-900">Enlaces Rápidos</h4>
+        <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+          <a (click)="onNavigate('/appointments')" class="hover:text-black cursor-pointer"
+            >Agendar Cita</a
+          >
+          <a (click)="onNavigate('/medical-history')" class="hover:text-black cursor-pointer"
+            >Historial Clínico</a
+          >
+
+          <a (click)="onNavigate('/help')" class="hover:text-black cursor-pointer">Ayuda</a>
+        </div>
+      </div>
+
+      <!-- Contacto -->
+      <div class="space-y-4">
+        <h4 class="text-sm font-medium text-gray-900">Contacto</h4>
+        <div class="text-sm text-gray-600">
+          <p>Soporte</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div
+      class="mt-8 pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4"
+    >
+      <p class="text-sm text-gray-400">&copy; 2024 SmileTime</p>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="#" class="hover:text-black">Términos</a>
+        <a href="#" class="hover:text-black">Privacidad</a>
+      </div>
+    </div>
+  </div>
+</footer>
