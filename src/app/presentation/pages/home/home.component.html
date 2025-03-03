@@ -1,1 +1,142 @@
-<p>home works!</p>
+<main>
+  <!-- Hero seccion -->
+  <section class="min-h-screen flex items-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-white z-0"></div>
+    <div class="max-w-[1500px] mx-auto px-8 py-20 z-10">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+            Gestiona tu salud dental de manera inteligente
+          </h1>
+          <p class="text-lg text-gray-600 leading-relaxed">
+            Conectamos pacientes con los mejores profesionales dentales. Agenda citas, accede a tu
+            historial clínico y recibe atención personalizada.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <button
+              (click)="onNavigate('/appointments')"
+              class="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-full text-sm font-medium transition-all duration-300"
+            >
+              Agendar Cita
+            </button>
+            <button
+              (click)="onNavigate('/find-dentist')"
+              class="bg-white hover:bg-gray-50 text-gray-900 px-8 py-3 rounded-full text-sm font-medium transition-all duration-300 border border-gray-200"
+            >
+              Buscar Odontólogo
+            </button>
+          </div>
+        </div>
+        <div class="relative w-full h-full">
+          <div
+            class="absolute inset-0 bg-gradient-to-tr from-white/50 via-transparent to-white/50"
+          ></div>
+          <img
+            src="images/hero-dental.svg"
+            alt="SmileTime Platform"
+            class="w-full h-full object-contain max-h-[600px]"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Caracteristicas -->
+  <section class="py-20 bg-white">
+    <div class="max-w-[1500px] mx-auto px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          Todo lo que necesitas en un solo lugar
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Simplificamos la gestión de tu salud dental con herramientas intuitivas y funciones
+          avanzadas
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Gestión de Citas</h3>
+          <p class="text-gray-600">
+            Agenda, reprograma o cancela citas fácilmente desde cualquier dispositivo.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-green-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Historial Digital</h3>
+          <p class="text-gray-600">
+            Accede a tu historial clínico, radiografías y tratamientos en cualquier momento.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-purple-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Chat en Tiempo Real</h3>
+          <p class="text-gray-600">
+            Comunícate directamente con tu odontólogo para consultas rápidas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA seccion -->
+  <section class="py-20 bg-gray-900">
+    <div class="max-w-[1500px] mx-auto px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-6">Comienza a cuidar tu sonrisa hoy</h2>
+      <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+        Únete a nosotros para el cuidado de su salud dental
+      </p>
+      <button
+        (click)="onNavigate('/auth/register')"
+        class="bg-white hover:bg-gray-100 text-gray-900 px-8 py-3 rounded-full text-sm font-medium transition-all duration-300"
+      >
+        Crear Cuenta Gratis
+      </button>
+    </div>
+  </section>
+</main>
