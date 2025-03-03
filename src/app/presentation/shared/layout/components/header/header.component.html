@@ -1,43 +1,76 @@
 <!-- Header/Nav -->
-<nav class="backdrop-blur-xl bg-white/70 fixed w-full z-50 border-b border-gray-200/20">
-  <div class="max-w-[1500px] mx-auto relative">
-    <div class="flex items-center justify-between px-8 py-4">
-      <!-- Logo -->
-      <div class="flex items-center">
-        <h3 class="text-xl font-semibold tracking-tight text-gray-900">
-          Smile<span class="font-bold">Time</span>
+<nav class="fixed w-full z-50 transition-all duration-300">
+  <div class="backdrop-blur-xl bg-white/80 border-b border-gray-200/10">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="flex items-center justify-between px-8 py-4">
+        <!-- Logo -->
+        <h3
+          class="text-xl tracking-tight text-gray-900 hover:opacity-75 transition-opacity cursor-pointer"
+        >
+          Smile<span class="font-medium">Time</span>
         </h3>
-      </div>
 
-      <!-- Menu Principal -->
-      <div class="hidden md:flex space-x-8 text-sm font-medium">
-        <a (click)="onNavigate('/appointments')" class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3 cursor-pointer">
-          Agendar Cita
-        </a>
-        <a (click)="onNavigate('/find-dentist')" class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3 cursor-pointer">
-          Buscar Odontólogo
-        </a>
-        <a (click)="onNavigate('/medical-history')" class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3 cursor-pointer">
-          Historial Clínico
-        </a>
-        <a (click)="onNavigate('/chat')" class="text-gray-600 hover:text-gray-900 transition-colors duration-300 py-3 cursor-pointer">
-          Chat
-        </a>
-      </div>
+        <!-- Menu Principal -->
+        <div class="hidden md:flex space-x-10 text-[13px] font-medium">
+          <a
+            (click)="onNavigate('/appointments')"
+            class="text-gray-600 hover:text-gray-900 transition-all duration-300 py-2 cursor-pointer relative group"
+          >
+            Agendar Cita
+            <span
+              class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+            ></span>
+          </a>
+          <a
+            (click)="onNavigate('/find-dentist')"
+            class="text-gray-600 hover:text-gray-900 transition-all duration-300 py-2 cursor-pointer relative group"
+          >
+            Buscar Odontólogo
+            <span
+              class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+            ></span>
+          </a>
+          <a
+            (click)="onNavigate('/medical-history')"
+            class="text-gray-600 hover:text-gray-900 transition-all duration-300 py-2 cursor-pointer relative group"
+          >
+            Historial Clínico
+            <span
+              class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+            ></span>
+          </a>
+          <a
+            (click)="onNavigate('/chat')"
+            class="text-gray-600 hover:text-gray-900 transition-all duration-300 py-2 cursor-pointer relative group"
+          >
+            Chat
+            <span
+              class="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+            ></span>
+          </a>
+        </div>
 
-      <!-- Botones de Acción -->
-      <div class="hidden md:flex items-center space-x-4">
-        <a (click)="onNavigate('/auth/login')" class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer">
-          Acceder
-        </a>
-      </div>
+        <!-- Botones de Acción -->
+        <div class="hidden md:flex items-center space-x-6">
+          <a
+            (click)="onNavigate('/auth/login')"
+            class="text-[13px] font-medium text-gray-600 hover:text-gray-900 transition-colors duration-300 cursor-pointer"
+          >
+            Iniciar Sesión
+          </a>
+          <a
+            (click)="onNavigate('/auth/register')"
+            class="bg-gray-900 hover:opacity-90 text-white px-5 py-2 rounded-full text-[13px] font-medium transition-all duration-300 cursor-pointer"
+          >
+            Crear Cuenta
+          </a>
+        </div>
 
-      <!-- Botón móvil -->
-      <button class="md:hidden p-2 hover:bg-black/5 rounded-full transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
+        <!-- Botón móvil -->
+        <button class="md:hidden relative w-8 h-8 flex items-center justify-center">
+          <span class="block w-5 h-0.5 bg-gray-600 transition-all duration-300"></span>
+        </button>
+      </div>
     </div>
   </div>
 </nav>
