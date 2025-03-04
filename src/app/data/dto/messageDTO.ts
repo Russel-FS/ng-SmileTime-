@@ -1,6 +1,6 @@
 export interface MessageDTO {
-    id: number;
-    message: string;
-    time: Date;  
+  id?: number;
+  message: string;
+  time: Date;
+  isUser?: boolean;
 }
-

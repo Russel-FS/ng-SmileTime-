@@ -15,9 +15,12 @@ export class MessageDataSource {
   getMessages(): Observable<MessageDTO[]> {
     return new Observable<MessageDTO[]>((observer) => {
       observer.next([
-        { id: 1, message: 'Message 1', time: new Date() },
-        { id: 2, message: 'Message 2', time: new Date() },
-        { id: 3, message: 'Message 3', time: new Date() },
+        {
+          id: 1,
+          message: 'Hola Dr. Flores Solano, ¿en que puedo ayudar?',
+          isUser: false,
+          time: new Date(),
+        },
       ]);
       observer.complete();
     });

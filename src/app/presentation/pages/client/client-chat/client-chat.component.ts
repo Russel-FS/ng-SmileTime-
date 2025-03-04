@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSidebarComponent } from '../../../../shared/components/chat/chat-sidebar/chat-sidebar.component';
@@ -9,6 +9,7 @@ import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-hea
 import { SendMessageUseCase } from '../../../../core/use-cases/send-message-use-case';
 import { IMessageRepository } from '../../../../core/interfaces/message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
+import { GetMessagesUseCase } from '../../../../core/use-cases/get-messages-use-case';
 
 @Component({
   selector: 'app-client-chat',
@@ -21,6 +22,11 @@ import { MessageRepository } from '../../../../data/repositories/message.reposit
     ChatHeaderComponent,
   ],
   providers: [
+    GetMessagesUseCase,
+    {
+      provide: IMessageRepository,
+      useClass: MessageRepository,
+    },
     SendMessageUseCase,
     {
       provide: IMessageRepository,
@@ -30,12 +36,14 @@ import { MessageRepository } from '../../../../data/repositories/message.reposit
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css'],
 })
-export class ClientChatComponent {
-  constructor(private sendMessageUseCase: SendMessageUseCase) {}
+export class ClientChatComponent implements OnInit {
+  constructor(
+    private getMessagesUseCase: GetMessagesUseCase,
+    private sendMessageUseCase: SendMessageUseCase,
+  ) {}
+
   contactSelected!: ContactMessage;
-  messages: Message[] = [
-    { text: 'Hola Dr. Flores Solano, ¿en que puedo ayudar?', isUser: false, timestamp: new Date() },
-  ];
+  messages: Message[] = [];
 
   contacts: ContactMessage[] = [
     {
@@ -73,6 +81,9 @@ export class ClientChatComponent {
     },
   ];
 
+  ngOnInit(): void {
+    this.initData();
+  }
   onContactClick(contact: ContactMessage) {
     this.contacts.forEach((c) => (c.isSelected = false));
     contact.isSelected = true;
@@ -80,19 +91,23 @@ export class ClientChatComponent {
     this.contactSelected = contact;
   }
 
+  onGetMessages(contact: ContactMessage) {}
+  initData() {
+    // obtener mensajes
+    this.getMessagesUseCase.execute().subscribe((messages) => {
+      this.messages = messages;
+    });
+  }
   onSendMessage(newMessage: string): void {
     if (newMessage.trim()) {
       // marcar como escribiendo
       const activeContact = this.contacts.find((c) => c.isSelected);
       if (activeContact) activeContact.isTyping = true;
 
-      // enviar mensaje
-      this.sendMessageUseCase.execute(new Message(newMessage, true, new Date(), 2)).subscribe({
-        next: (message) => {
-          this.messages.push(message);
-        },
-      });
+      this.messages.push({ text: newMessage, isUser: true, timestamp: new Date() });
 
+      // enviar mensaje
+      this.sendMessageUseCase.execute(new Message(newMessage, true, new Date(), 2)).subscribe();
       // simular respuesta
       setTimeout(() => {
         if (activeContact) activeContact.isTyping = false;
