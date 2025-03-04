@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ContactMessage } from '../../../../core/domain/models/contact-message';
+import { Contact } from '../../../../core/domain/models/contact';
 
 @Component({
   selector: 'app-chat-header',
@@ -8,5 +8,5 @@ import { ContactMessage } from '../../../../core/domain/models/contact-message';
   styleUrl: './chat-header.component.css',
 })
 export class ChatHeaderComponent {
-  @Input() contact!: ContactMessage;
+  @Input() contact!: Contact;
 }

@@ -1,4 +1,4 @@
-export interface ContactMessage {
+export interface ContactDTO {
   id: number;
   name: string;
   role: string;

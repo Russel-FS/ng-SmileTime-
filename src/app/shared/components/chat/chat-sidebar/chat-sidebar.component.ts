@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ContactMessage } from '../../../../core/domain/models/contact-message';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { Contact } from '../../../../core/domain/models/contact';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -23,14 +23,14 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class ChatSidebarComponent {
   searchQuery: string = '';
-  @Input() contacts: ContactMessage[] = [];
-  @Output() contactClick = new EventEmitter<ContactMessage>();
+  @Input() contacts: Contact[] = [];
+  @Output() contactClick = new EventEmitter<Contact>();
 
-  onContactClick(contact: ContactMessage): void {
+  onContactClick(contact: Contact): void {
     this.contactClick.emit(contact);
   }
 
-  get filteredContacts(): ContactMessage[] {
+  get filteredContacts(): Contact[] {
     return this.contacts.filter((contact) =>
       contact.name.toLowerCase().includes(this.searchQuery.toLowerCase()),
     );
