@@ -1,5 +1,5 @@
 export interface MessageDTO {
-    id: string;
+    id: number;
     message: string;
     time: Date;  
 }

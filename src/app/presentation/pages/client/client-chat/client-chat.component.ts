@@ -6,6 +6,9 @@ import { ContactMessage } from '../../../../core/domain/models/contact-message';
 import { Message } from '../../../../core/domain/models/messages';
 import { ChatMessagesComponent } from '../../../../shared/components/chat/chat-messages/chat-messages.component';
 import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-header/chat-header.component';
+import { SendMessageUseCase } from '../../../../core/use-cases/send-message-use-case';
+import { IMessageRepository } from '../../../../core/interfaces/message.repository';
+import { MessageRepository } from '../../../../data/repositories/message.repository';
 
 @Component({
   selector: 'app-client-chat',
@@ -17,10 +20,18 @@ import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-hea
     ChatMessagesComponent,
     ChatHeaderComponent,
   ],
+  providers: [
+    SendMessageUseCase,
+    {
+      provide: IMessageRepository,
+      useClass: MessageRepository,
+    },
+  ],
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css'],
 })
 export class ClientChatComponent {
+  constructor(private sendMessageUseCase: SendMessageUseCase) {}
   contactSelected!: ContactMessage;
   messages: Message[] = [
     { text: 'Hola Dr. Flores Solano, ¿en que puedo ayudar?', isUser: false, timestamp: new Date() },
@@ -75,11 +86,11 @@ export class ClientChatComponent {
       const activeContact = this.contacts.find((c) => c.isSelected);
       if (activeContact) activeContact.isTyping = true;
 
-      // agregar mensaje
-      this.messages.push({
-        text: newMessage,
-        isUser: true,
-        timestamp: new Date(),
+      // enviar mensaje
+      this.sendMessageUseCase.execute(new Message(newMessage, true, new Date(), 2)).subscribe({
+        next: (message) => {
+          this.messages.push(message);
+        },
       });
 
       // simular respuesta
