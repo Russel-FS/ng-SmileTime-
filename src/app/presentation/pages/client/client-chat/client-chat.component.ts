@@ -2,6 +2,8 @@ import { Component, ViewChild, ElementRef, AfterViewChecked, HostListener } from
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { ChatSidebarComponent } from '../../../../shared/components/chat/chat-sidebar/chat-sidebar.component';
+import { ContactMessage } from '../../../../core/domain/models/contact-message';
 
 interface Message {
   text: string;
@@ -9,21 +11,10 @@ interface Message {
   timestamp: Date;
 }
 
-interface Contact {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-  status: 'online' | 'offline' | 'typing';
-  lastMessage: string;
-  unread: number;
-  isActive?: boolean;
-}
-
 @Component({
   selector: 'app-client-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ChatSidebarComponent],
   templateUrl: './client-chat.component.html',
   styleUrl: './client-chat.component.css',
   animations: [
@@ -45,10 +36,10 @@ export class ClientChatComponent implements AfterViewChecked {
   searchQuery: string = '';
   isTyping: boolean = false;
 
-  contacts: Contact[] = [
+  contacts: ContactMessage[] = [
     {
       id: 1,
-      name: 'Dr. Flores Solano',
+      name: 'Flores',
       role: 'Dentista',
       avatar: 'assets/images/avatar1.svg',
       status: 'online',
@@ -58,7 +49,7 @@ export class ClientChatComponent implements AfterViewChecked {
     },
     {
       id: 2,
-      name: 'Dr. Flores solano',
+      name: 'James',
       role: 'Dentista',
       avatar: 'assets/images/avatar2.svg',
       status: 'offline',
@@ -67,7 +58,7 @@ export class ClientChatComponent implements AfterViewChecked {
     },
     {
       id: 3,
-      name: 'Dr. Flores Solano',
+      name: 'Mallca',
       role: 'soperte',
       avatar: 'assets/images/avatar3.svg',
       status: 'online',
@@ -90,7 +81,7 @@ export class ClientChatComponent implements AfterViewChecked {
     } catch (err) {}
   }
 
-  selectContact(contact: Contact) {
+  onContactClick(contact: ContactMessage) {
     this.contacts.forEach((c) => (c.isActive = false));
     contact.isActive = true;
     contact.unread = 0;
