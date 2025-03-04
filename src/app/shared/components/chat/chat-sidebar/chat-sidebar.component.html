@@ -42,7 +42,7 @@
         (click)="onContactClick(contact)"
         class="group transition-all duration-200 ease-out"
         [class]="
-          contact.isActive
+          contact.isSelected
             ? 'bg-blue-50/50 border-l-4 border-blue-500'
             : 'hover:bg-gray-50/50 border-l-4 border-transparent'
         "
@@ -57,9 +57,9 @@
               />
               <div
                 [class]="
-                  contact.status === 'online'
+                  contact.isOnline
                     ? 'absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full ring-2 ring-white'
-                    : contact.status === 'typing'
+                    : contact.isTyping
                       ? 'absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full ring-2 ring-white animate-pulse'
                       : 'absolute bottom-0 right-0 w-3 h-3 bg-gray-400 rounded-full ring-2 ring-white'
                 "
@@ -80,7 +80,7 @@
               </div>
               <p class="text-xs text-blue-600">{{ contact.role }}</p>
               <p class="text-xs text-gray-500 mt-1 truncate">
-                @if (contact.status === 'typing') {
+                @if (contact.isTyping) {
                   <span class="inline-flex items-center">
                     <span class="animate-bounce">•</span>
                     <span class="animate-bounce [animation-delay:0.2s]">•</span>

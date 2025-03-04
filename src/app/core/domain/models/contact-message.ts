@@ -3,8 +3,9 @@ export interface ContactMessage {
   name: string;
   role: string;
   avatar: string;
-  status: 'online' | 'offline' | 'typing';
+  isOnline: boolean;
+  isTyping: boolean;
   lastMessage: string;
   unread: number;
-  isActive?: boolean;
+  isSelected?: boolean;
 }

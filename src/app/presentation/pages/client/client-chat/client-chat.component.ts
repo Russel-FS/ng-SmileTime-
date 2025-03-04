@@ -25,7 +25,6 @@ export class ClientChatComponent {
   messages: Message[] = [
     { text: 'Hola Dr. Flores Solano, ¿en que puedo ayudar?', isUser: false, timestamp: new Date() },
   ];
-  isTyping: boolean = false;
 
   contacts: ContactMessage[] = [
     {
@@ -33,34 +32,39 @@ export class ClientChatComponent {
       name: 'Flores',
       role: 'Dentista',
       avatar: 'icons/user-profile.svg',
-      status: 'online',
+      isOnline: true,
+      isTyping: false,
       lastMessage: 'ultima vez, 10:00',
       unread: 2,
-      isActive: true,
+      isSelected: true,
     },
     {
       id: 2,
       name: 'James',
       role: 'Dentista',
       avatar: 'icons/user-profile.svg',
-      status: 'offline',
+      isOnline: false,
+      isTyping: false,
       lastMessage: 'ultima vez, 10:00',
       unread: 0,
+      isSelected: false,
     },
     {
       id: 3,
       name: 'Mallca',
       role: 'soperte',
       avatar: 'icons/user-profile.svg',
-      status: 'online',
+      isOnline: true,
+      isTyping: false,
       lastMessage: 'ultima vez, 10:00',
       unread: 1,
+      isSelected: false,
     },
   ];
 
   onContactClick(contact: ContactMessage) {
-    this.contacts.forEach((c) => (c.isActive = false));
-    contact.isActive = true;
+    this.contacts.forEach((c) => (c.isSelected = false));
+    contact.isSelected = true;
     contact.unread = 0;
     this.contactSelected = contact;
   }
@@ -68,8 +72,8 @@ export class ClientChatComponent {
   onSendMessage(newMessage: string): void {
     if (newMessage.trim()) {
       // marcar como escribiendo
-      const activeContact = this.contacts.find((c) => c.isActive);
-      if (activeContact) activeContact.status = 'typing';
+      const activeContact = this.contacts.find((c) => c.isSelected);
+      if (activeContact) activeContact.isTyping = true;
 
       // agregar mensaje
       this.messages.push({
@@ -80,7 +84,7 @@ export class ClientChatComponent {
 
       // simular respuesta
       setTimeout(() => {
-        if (activeContact) activeContact.status = 'online';
+        if (activeContact) activeContact.isTyping = false;
         this.messages.push({
           text: '¡Claro! ¿En qué puedo ayudarte?',
           isUser: false,
