@@ -1,1 +1,40 @@
-<p>chat-header works!</p>
+@if (contact) {
+  <div class="px-6 py-4 border-b border-gray-200/30 bg-white/80 backdrop-blur-xl">
+    @if (contact.isActive) {
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="relative">
+            <img
+              [src]="contact.avatar"
+              alt="avatar"
+              class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
+            />
+            <div
+              [class]="
+                contact.status === 'online'
+                  ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white'
+                  : contact.status === 'typing'
+                    ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-blue-500 rounded-full ring-2 ring-white animate-pulse'
+                    : 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-400 rounded-full ring-2 ring-white'
+              "
+            ></div>
+          </div>
+          <div class="ml-4">
+            <h2 class="text-lg font-semibold text-gray-900">
+              {{ contact.name }}
+            </h2>
+            <p class="text-sm text-gray-500">
+              {{
+                contact.status === 'typing'
+                  ? 'Escribiendo...'
+                  : contact.status === 'online'
+                    ? 'En línea'
+                    : 'Desconectado'
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}
