@@ -1,1 +1,129 @@
-<p>login works!</p>
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
+  @fadeAnimation
+>
+  <div
+    class="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_40px_rgb(0,0,0,0.08)] p-10 space-y-8 border border-white/40"
+  >
+    <!-- Header Section -->
+    <div class="text-center">
+      <img
+        class="mx-auto h-20 w-auto transform transition-transform hover:scale-105 duration-300"
+        src="icons/logo.svg"
+        alt="Smile Time"
+      />
+      <h2 class="mt-8 text-3xl font-extrabold text-gray-900 tracking-tight">
+        Bienvenido a Smile Time
+      </h2>
+      <p class="mt-3 text-base text-gray-500">Te esperamos aqui</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-10 space-y-8">
+      <div class="space-y-5">
+        <!-- Email -->
+        <div class="relative group">
+          <img
+            src="icons/email.svg"
+            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+            alt="email icon"
+          />
+          <input
+            id="email"
+            formControlName="email"
+            type="email"
+            class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+            placeholder="Correo electrónico"
+            required
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="relative group">
+          <img
+            src="icons/lock.svg"
+            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+            alt="lock icon"
+          />
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            class="w-full pl-12 pr-10 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+            placeholder="Contraseña"
+            required
+          /> 
+        </div>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input
+            id="remember_me"
+            name="remember_me"
+            type="checkbox"
+            class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded-lg transition-all duration-300"
+          />
+          <label
+            for="remember_me"
+            class="ml-2 block text-sm text-gray-500 hover:text-gray-700 transition-colors duration-300"
+          >
+            Recordarme
+          </label>
+        </div>
+
+        <a
+          href="#"
+          class="text-sm font-medium text-black hover:text-gray-600 transition-all duration-300 hover:underline"
+        >
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <!-- Button -->
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid"
+        class="w-full bg-black text-white px-8 py-4 rounded-2xl text-base font-medium transition-all duration-300 hover:bg-gray-800 shadow-xl shadow-black/5 hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Iniciar sesión
+      </button>
+
+      <div class="text-center space-y-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-200"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-4 bg-white/80 text-gray-500">O continúa con</span>
+          </div>
+        </div>
+
+        <div class="flex space-x-4 justify-center">
+          <!-- Botón de Google -->
+          <button
+            class="flex-1 flex items-center justify-center px-6 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <img src="icons/google.svg" class="h-5 w-5" alt="Google" />
+          </button>
+          <!-- Botón de Facebook -->
+          <button
+            class="flex-1 flex items-center justify-center px-6 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+          >
+            <img src="icons/facebook.svg" class="h-5 w-5" alt="Facebook" />
+          </button>
+        </div>
+
+        <p class="text-sm text-gray-500">
+          ¿No tienes una cuenta?
+          <a
+            [routerLink]="['/auth/register']"
+            class="font-medium text-black hover:text-gray-600 transition-all duration-300 hover:underline ml-1"
+          >
+            Regístrate aquí
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
