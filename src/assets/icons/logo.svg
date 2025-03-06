@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular -->
+  <circle cx="60" cy="60" r="58" fill="white" stroke="black" stroke-width="2"/>
+  
+  <!-- Casa/Nido estilizado -->
+  <path d="M30 70V50L60 30L90 50V70H80V55H70V70H30Z" fill="black"/>
+  
+  <!-- Entrada -->
+  <rect x="45" y="55" width="15" height="15" fill="black"/>
+  
+  <!-- Ventana -->
+  <circle cx="60" cy="45" r="5" fill="white"/>
+</svg>
