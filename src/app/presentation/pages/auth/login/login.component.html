@@ -21,20 +21,22 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-10 space-y-8">
       <div class="space-y-5">
         <!-- Email -->
-        <div class="relative group">
-          <img
-            src="icons/email.svg"
-            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
-            alt="email icon"
-          />
-          <input
-            id="email"
-            formControlName="email"
-            type="email"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
-            placeholder="Correo electrónico"
-            required
-          />
+        <div class="">
+          <div class="relative group">
+            <img
+              src="icons/email.svg"
+              class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+              alt="email icon"
+            />
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+              placeholder="Correo electrónico"
+              required
+            />
+          </div>
           <!-- Error mensaje -->
           <div
             *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
@@ -50,20 +52,22 @@
         </div>
 
         <!-- Password -->
-        <div class="relative group">
-          <img
-            src="icons/lock.svg"
-            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
-            alt="lock icon"
-          />
-          <input
-            id="password"
-            formControlName="password"
-            type="password"
-            class="w-full pl-12 pr-10 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
-            placeholder="Contraseña"
-            required
-          />
+        <div class="">
+          <div class="relative group">
+            <img
+              src="icons/lock.svg"
+              class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+              alt="lock icon"
+            />
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              class="w-full pl-12 pr-10 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+              placeholder="Contraseña"
+              required
+            />
+          </div>
           <!-- Error mensaje -->
           <div
             *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
