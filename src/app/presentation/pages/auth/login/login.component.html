@@ -35,6 +35,18 @@
             placeholder="Correo electrónico"
             required
           />
+          <!-- Error mensaje -->
+          <div
+            *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">
+              El correo es requerido
+            </span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">
+              Ingrese un correo válido
+            </span>
+          </div>
         </div>
 
         <!-- Password -->
@@ -52,6 +64,24 @@
             placeholder="Contraseña"
             required
           />
+          <!-- Error mensaje -->
+          <div
+            *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">
+              La contraseña es requerida
+            </span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
+              La contraseña debe tener al menos 6 caracteres
+            </span>
+            <span *ngIf="loginForm.get('password')?.errors?.['maxlength']">
+              La contraseña no puede exceder los 20 caracteres
+            </span>
+            <span *ngIf="loginForm.get('password')?.errors?.['pattern']">
+              La contraseña debe contener al menos una letra mayúscula y una minúscula
+            </span>
+          </div>
         </div>
       </div>
 
@@ -83,10 +113,28 @@
       <!-- Button -->
       <button
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || loading"
         class="w-full bg-black text-white px-8 py-4 rounded-2xl text-base font-medium transition-all duration-300 hover:bg-gray-800 shadow-xl shadow-black/5 hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Iniciar sesión
+        <span *ngIf="!loading">Iniciar sesión</span>
+        <div *ngIf="loading" class="flex items-center justify-center">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Cargando...
+        </div>
       </button>
 
       <div class="text-center space-y-6">
