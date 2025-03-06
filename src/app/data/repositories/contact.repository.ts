@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IContactRepository } from '../../core/interfaces/IContactRepository';
-import { ContactDataSource } from '../../infrastructure/datasources/contact.datasource';
+import { ContactDataSource } from '../../infrastructure/datasources/api-contact.datasource';
 import { ContactMapper } from '../mappers/contact-mapper';
 import { Contact } from '../../core/domain/models/contact';
+import { IContactDatasource } from '../../core/interfaces/IContactDatasource';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactRepository implements IContactRepository {
   constructor(
-    private dataSource: ContactDataSource,
+    @Inject(IContactDatasource)
+    private dataSource: IContactDatasource,
     private mapper: ContactMapper,
   ) {}
 

@@ -13,6 +13,10 @@ import { GetContactsUseCase } from '../../../../core/use-cases/get-contacts-use-
 import { Contact } from '../../../../core/domain/models/contact';
 import { IContactRepository } from '../../../../core/interfaces/IContactRepository';
 import { ContactRepository } from '../../../../data/repositories/contact.repository';
+import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
+import { IContactDatasource } from '../../../../core/interfaces/IContactDatasource';
+import { MessageDataSource } from '../../../../infrastructure/datasources/message.datasource';
+import { IMessageDatasource } from '../../../../core/interfaces/i-message-datasource';
 
 @Component({
   selector: 'app-client-chat',
@@ -27,15 +31,22 @@ import { ContactRepository } from '../../../../data/repositories/contact.reposit
   providers: [
     GetMessagesUseCase,
     SendMessageUseCase,
+    GetContactsUseCase,
     {
       provide: IMessageRepository,
       useClass: MessageRepository,
     },
-
-    GetContactsUseCase,
     {
       provide: IContactRepository,
       useClass: ContactRepository,
+    },
+    {
+      provide: IContactDatasource,
+      useClass: ContactDataSource,
+    },
+    {
+      provide: IMessageDatasource,
+      useClass: MessageDataSource,
     },
   ],
   templateUrl: './client-chat.component.html',

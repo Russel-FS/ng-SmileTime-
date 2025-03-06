@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ContactDTO } from '../../data/dto/contactDTO';
+import { IContactDatasource } from '../../core/interfaces/IContactDatasource';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ContactDataSource {
+export class ContactDataSource implements IContactDatasource {
   private apiUrl = 'api/messages';
 
   private mockContacts: ContactDTO[] = [
