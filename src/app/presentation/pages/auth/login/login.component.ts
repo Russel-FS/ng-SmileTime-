@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
@@ -6,11 +6,12 @@ import { IAuthRepository } from '../../../../core/interfaces/i-auth-repository';
 import { AuthRepository } from '../../../../data/repositories/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/i-auth-service';
 import { AuthService } from '../../../../infrastructure/datasources/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../../../core/services/notification.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [ReactiveFormsModule, RouterModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -37,10 +38,10 @@ export class LoginComponent {
   loading = false;
   loginForm: FormGroup;
   constructor(
-    private AuthService: IAuthRepository,
+    @Inject(IAuthRepository) private AuthService: IAuthRepository,
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -64,18 +65,12 @@ export class LoginComponent {
     this.loading = true;
     this.AuthService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        this.snackBar.open('¡Bienvenido!', 'Cerrar', {
-          duration: 3000,
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-        });
-        this.router.navigate(['/dashboard']);
+        this.notificationService.success('Inicio de sesión exitoso, bienvenido');
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         this.loading = false;
-        this.snackBar.open(error.error?.message || 'Error al iniciar sesión', 'Cerrar', {
-          duration: 5000,
-        });
+        this.notificationService.error('Error al iniciar sesión');
       },
       complete: () => {
         this.loading = false;
