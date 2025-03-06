@@ -10,6 +10,7 @@ export class AuthService implements IAuthService {
   constructor() {}
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {
+    console.log('AuthService.login'  + credentials);
     return new Observable<AuthResponse>();
   }
 
