@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IMessageRepository } from '../../core/interfaces/message.repository';
-import { MessageDataSource } from '../datasources/message.datasource';
+import { MessageDataSource } from '../../infrastructure/datasources/message.datasource';
 import { MessageMapper } from '../mappers/message-mapper';
 import { Message } from '../../core/domain/models/messages';
 

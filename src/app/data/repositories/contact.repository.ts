@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IContactRepository } from '../../core/interfaces/IContactRepository';
-import { ContactDataSource } from '../datasources/contact.datasource';
+import { ContactDataSource } from '../../infrastructure/datasources/contact.datasource';
 import { ContactMapper } from '../mappers/contact-mapper';
 import { Contact } from '../../core/domain/models/contact';
 
