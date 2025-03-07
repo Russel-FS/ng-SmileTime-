@@ -1,0 +1,14 @@
+<div class="search-container">
+  <input 
+    type="text" 
+    [(ngModel)]="searchTerm"
+    (input)="onSearch()"
+    placeholder="Buscar odontólogo..." 
+    class="search-input"
+  />
+  <button (click)="onSearch()" class="search-button">
+    🔍
+  </button>
+</div>
+
+<!--puede ser que aqui lo agrege como componenten eso puedes remplazar por el boton que tiene el html -->
