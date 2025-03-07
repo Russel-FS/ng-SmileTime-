@@ -8,10 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    SearchComponent
-  ]
+  imports: [CommonModule],
 })
 export class HomeComponent {
   constructor(private router: Router) {}
@@ -20,7 +17,7 @@ export class HomeComponent {
     console.log('Búsqueda:', searchTerm);
     // Implementa aquí la lógica de búsqueda
     this.router.navigate(['/find-dentist'], {
-      queryParams: { search: searchTerm }
+      queryParams: { search: searchTerm },
     });
   }
 
