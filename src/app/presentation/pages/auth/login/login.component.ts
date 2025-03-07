@@ -73,7 +73,7 @@ export class LoginComponent {
       },
       error: (error) => {
         this.loading = false; // carga 
-        this.notificationService.error('Error al iniciar sesión');
+        this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
       },
       complete: () => {
         this.loading = false;
