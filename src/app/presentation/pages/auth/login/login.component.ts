@@ -72,7 +72,7 @@ export class LoginComponent {
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        this.loading = false;
+        this.loading = false; // carga 
         this.notificationService.error('Error al iniciar sesión');
       },
       complete: () => {
