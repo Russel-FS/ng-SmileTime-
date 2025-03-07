@@ -12,11 +12,6 @@
             Conectamos pacientes con los mejores profesionales dentales. Agenda citas, accede a tu
             historial clínico y recibe atención personalizada.
           </p>
-          <!-- Añadir el componente de búsqueda aquí -->
-          <app-search 
-            (searched)="searchDentist($event)" 
-            class="w-full max-w-lg"
-          ></app-search>
           <div class="flex flex-col sm:flex-row gap-4">
             <button
               (click)="onNavigate('/appointments')"
