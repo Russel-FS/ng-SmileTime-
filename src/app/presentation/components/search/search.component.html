@@ -1,14 +1,104 @@
-<div class="search-container">
-  <input 
-    type="text" 
-    [(ngModel)]="searchTerm"
-    (input)="onSearch()"
-    placeholder="Buscar odontólogo..." 
-    class="search-input"
-  />
-  <button (click)="onSearch()" class="search-button">
-    🔍
-  </button>
-</div>
+<div class="bg-white p-4 rounded-lg shadow-md">
+  <!-- Search Header -->
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-700">Búsqueda Avanzada</h2>
+    <button (click)="toggleFilters()" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+      <img src="assets/icons/search.svg" alt="Buscar" class="h-5 w-5 mr-1">
+      Filtros
+    </button>
+  </div>
 
-<!--puede ser que aqui lo agrege como componenten eso puedes remplazar por el boton que tiene el html -->
+  <!-- Search Bar -->
+  <div class="relative">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+      placeholder="Buscar por nombre, especialidad o ubicación..." 
+      class="w-full px-4 py-2 pl-10 pr-12 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+    />
+    <span class="absolute left-3 top-2.5 text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </span>
+  </div>
+
+  <!-- Filters Section -->
+  <div *ngIf="showFilters" class="mt-4 pt-4 border-t border-gray-200">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Especialidad -->
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center">
+          <img src="assets/icons/Tooth.png" alt="Especialidad" class="h-5 w-5 mr-2">
+          Especialidad
+        </label>
+        <div class="relative group">
+          <select [(ngModel)]="selectedSpecialty" (change)="onSearch()" 
+                  class="w-full px-3 py-2 pl-10 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 group-hover:bg-gray-100 transition-colors duration-200">
+            <option value="">Todas las especialidades</option>
+            <option value="ortodoncia">Ortodoncia</option>
+            <option value="endodoncia">Endodoncia</option>
+            <option value="periodoncia">Periodoncia</option>
+            <option value="odontopediatria">Odontopediatría</option>
+          </select>
+          <img src="assets/icons/Tooth.png" alt="Especialidad" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50">
+        </div>
+      </div>
+
+      <!-- Sede -->
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+          Sede
+        </label>
+        <div class="relative group">
+          <select [(ngModel)]="selectedLocation" (change)="onSearch()"
+                  class="w-full px-3 py-2 pl-10 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 group-hover:bg-gray-100 transition-colors duration-200">
+            <option value="">Todas las sedes</option>
+            <option value="sede-central">SmileTime Central</option>
+            <option value="sede-premium">SmileTime Premium</option>
+            <option value="sede-elite">SmileTime Elite</option>
+            <option value="sede-kids">SmileTime Kids</option>
+          </select>
+          <img src="assets/icons/search.svg" alt="Buscar sede" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50">
+        </div>
+      </div>
+
+      <!-- Disponibilidad -->
+      <div class="space-y-2">
+        <label class="text-sm font-medium text-gray-700 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+          </svg>
+          Disponibilidad
+        </label>
+        <div class="relative group">
+          <select [(ngModel)]="selectedAvailability" (change)="onSearch()"
+                  class="w-full px-3 py-2 pl-10 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 group-hover:bg-gray-100 transition-colors duration-200">
+            <option value="">Cualquier horario</option>
+            <option value="manana">Mañana (8:00 - 12:00)</option>
+            <option value="tarde">Tarde (12:00 - 17:00)</option>
+            <option value="noche">Noche (17:00 - 21:00)</option>
+          </select>
+          <img src="assets/icons/search.svg" alt="Buscar horario" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 opacity-50">
+        </div>
+      </div>
+    </div>
+
+    <!-- Tags/Chips para filtros activos -->
+    <div class="flex flex-wrap gap-2 mt-4" *ngIf="hasActiveFilters()">
+      <div *ngFor="let filter of activeFilters" 
+           class="flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+        {{ filter }}
+        <button (click)="removeFilter(filter)" class="ml-2 focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
