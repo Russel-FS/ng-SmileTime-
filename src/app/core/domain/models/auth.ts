@@ -5,9 +5,7 @@ export interface AuthCredentials {
 
 export interface AuthResponse {
   token: string;
-  user: {
-    id: string;
-    email: string;
-    role: string;
-  };
+  userId: string;
+  email: string;
+  tokenExpiration: Date; 
 }

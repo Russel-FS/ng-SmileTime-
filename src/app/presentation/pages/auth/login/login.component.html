@@ -42,11 +42,8 @@
             *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
             class="text-red-500 text-sm mt-1"
           >
-            <span *ngIf="loginForm.get('email')?.errors?.['required']">
-              El correo es requerido
-            </span>
-            <span *ngIf="loginForm.get('email')?.errors?.['email']">
-              Ingrese un correo válido
+            <span>
+              {{ getErrorMessage('email') }}
             </span>
           </div>
         </div>
@@ -73,17 +70,8 @@
             *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
             class="text-red-500 text-sm mt-1"
           >
-            <span *ngIf="loginForm.get('password')?.errors?.['required']">
-              La contraseña es requerida
-            </span>
-            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">
-              La contraseña debe tener al menos 6 caracteres
-            </span>
-            <span *ngIf="loginForm.get('password')?.errors?.['maxlength']">
-              La contraseña no puede exceder los 20 caracteres
-            </span>
-            <span *ngIf="loginForm.get('password')?.errors?.['pattern']">
-              La contraseña debe contener al menos una letra mayúscula y una minúscula
+            <span>
+              {{ getErrorMessage('password') }}
             </span>
           </div>
         </div>
