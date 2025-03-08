@@ -1,11 +1,9 @@
 {
   "editor.formatOnSave": true,
-
   "prettier.singleQuote": true,
   "prettier.semi": true,
   "prettier.printWidth": 100,
   "prettier.tabWidth": 2,
-
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode" // or "prettier.prettier"
   },
@@ -26,5 +24,6 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "liveServer.settings.port": 5501
 }
