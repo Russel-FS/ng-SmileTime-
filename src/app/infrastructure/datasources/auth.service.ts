@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService implements IAuthService {
   // url de la api , en este caso es una api de prueba que se encuentra en github dev
-  private apiUrl = 'https://cuddly-space-rotary-phone-7v556pxvgx7x3v5-5011.app.github.dev';
+  private apiUrl = 'https://upgraded-invention-4jvv5wrjx6wq27g-5011.app.github.dev';
   constructor(private http: HttpClient) {}
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {

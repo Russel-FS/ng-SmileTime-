@@ -67,6 +67,7 @@ export class LoginComponent {
     this.loading = true;
     this.AuthService.login(this.loginForm.value).subscribe({
       next: (response) => {  
+        console.log(response); 
         this.storageService.setAuthData(response);
         this.notificationService.success('Inicio de sesión exitoso, bienvenido');
         this.router.navigate(['/home']);
