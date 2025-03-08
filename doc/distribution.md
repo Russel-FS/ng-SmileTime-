@@ -41,7 +41,7 @@ Entregables:
 • Elementos visuales estáticos
 
 ## Equipo 4: Contact View 📝
-**Líder: Mallca Tucto** 
+**Líder: Malca Tucto** 
 
 Responsabilidades:
 • Maquetación de formulario de contacto

@@ -1,0 +1,60 @@
+.contact-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .contact-info {
+    width: 45%;
+    color: #fff;
+    background-color: #000;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .contact-info h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .contact-info p {
+    font-size: 16px;
+  }
+  
+  .reviews {
+    margin-top: 20px;
+  }
+  
+  .contact-form {
+    width: 50%;
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 10px;
+  }
+  
+  input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .phone-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  button {
+    background: black;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #333;
+  }
+  
