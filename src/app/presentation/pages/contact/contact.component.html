@@ -1,36 +1,54 @@
 <div class="contact-container">
     <div class="contact-info">
-      <h1>Get in touch with our Sales team</h1>
-      <p>
-        Let one of our consultants walk you through the Brevo platform and help you define the best plan for your needs.
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+        Contáctanos para una consulta dental
+      </h1>
+      <p class="text-lg text-gray-600 leading-relaxed">
+        Agenda tu cita con uno de nuestros odontólogos y recibe la mejor atención personalizada.
       </p>
       <div class="reviews">
-        <p>★★★★★ <br> “Brevo is the ideal platform to execute marketing” - <strong>Eduardo R</strong></p>
-        <p>★★★★★ <br> “Excellent marketing tool at the best price” - <strong>Yomaira C.R.</strong></p>
+        <p>★★★★★ <br> “Excelente atención dental” - <strong>Eduardo R</strong></p>
+        <p>★★★★★ <br> “La mejor clínica dental que he visitado” - <strong>Yomaira C.R.</strong></p>
       </div>
     </div>
   
     <div class="contact-form">
       <form (ngSubmit)="submitForm()">
-        <input type="text" placeholder="First Name*" [(ngModel)]="formData.firstName" name="firstName" required>
-        <input type="text" placeholder="Last Name*" [(ngModel)]="formData.lastName" name="lastName" required>
-        <input type="email" placeholder="Work Email*" [(ngModel)]="formData.email" name="email" required>
-        <input type="text" placeholder="Company*" [(ngModel)]="formData.company" name="company" required>
-        <div class="phone-group">
-          <select [(ngModel)]="formData.countryCode" name="countryCode" required>
-            <option value="+1">+1 (USA)</option>
-            <option value="+51">+51 (Peru)</option>
-            <option value="+34">+34 (Spain)</option>
-            <!-- Agrega más códigos de país -->
-          </select>
-          <input type="tel" placeholder="Phone Number*" [(ngModel)]="formData.phone" name="phone" required>
-        </div>
-        <select [(ngModel)]="formData.language" name="language" required>
-          <option value="English">English</option>
-          <option value="Español">Español</option>
-        </select>
-        <button type="submit">Choose your timeslot</button>
+        <input type="text" placeholder="Nombre" [(ngModel)]="formData.firstName" name="firstName" required>
+        <input type="text" placeholder="Apellido" [(ngModel)]="formData.lastName" name="lastName" required>
+        <input type="email" placeholder="Correo Electrónico" [(ngModel)]="formData.email" name="email" required>
+        <input type="tel" placeholder="Celular" [(ngModel)]="formData.phone" name="phone" required>
+  
+        <!-- Descripción del problema dental -->
+        <textarea placeholder="Describe tu consulta dental*" [(ngModel)]="formData.dentalProblem" name="dentalProblem" required></textarea>
+  
+        <input type="date" placeholder="Fecha de la cita" [(ngModel)]="formData.date" name="date" required>
+  
+        <!-- Botón de envío -->
+        <button
+          type="submit"
+          class="bg-gray-900 text-white px-8 py-3 rounded-full text-sm font-medium transition-all duration-300"
+        >
+          Agendar Cita
+        </button>
+  
       </form>
+    </div>
+  
+    <!-- Modal de Confirmación -->
+    <div *ngIf="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Tu cita ha sido agendada</h2>
+        <div class="confirmation-message">
+          <div class="check-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-green-500">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p>Nos comunicaremos contigo pronto para confirmar tu cita.</p>
+        </div>
+        <button (click)="closeModal()" class="btn-close">Cerrar</button>
+      </div>
     </div>
   </div>
   
