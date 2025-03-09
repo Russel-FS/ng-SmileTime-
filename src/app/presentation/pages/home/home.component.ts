@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    SearchComponent
+    
   ]
 })
 export class HomeComponent {
