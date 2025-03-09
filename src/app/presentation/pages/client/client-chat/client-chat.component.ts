@@ -58,6 +58,7 @@ export class ClientChatComponent implements OnInit {
     private getMessagesUseCase: GetMessagesUseCase,
     private sendMessageUseCase: SendMessageUseCase,
     private getContactsUseCase: GetContactsUseCase,
+    private signalRService: SignalRService,
   ) {}
 
   contactSelected!: Contact;
@@ -66,6 +67,7 @@ export class ClientChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.initData();
+    this.initSignalR();
   }
 
   onContactClick(contact: Contact) {
@@ -92,6 +94,9 @@ export class ClientChatComponent implements OnInit {
       this.messages = messages;
     });
   }
+  private initSignalR(): void {
+    this.onMessageReceived();
+  }
 
   onSendMessage(newMessage: string): void {
     if (newMessage.trim()) {
@@ -101,7 +106,6 @@ export class ClientChatComponent implements OnInit {
       }
 
       this.messages.push({ text: newMessage, isUser: true, timestamp: new Date() });
-      // enviar mensaje
       this.sendMessageUseCase
         .execute(new Message(newMessage, true, new Date(), 2))
         .subscribe(() => {
@@ -109,6 +113,17 @@ export class ClientChatComponent implements OnInit {
             this.contactSelected.isTyping = false;
           }
         });
+    }
+  }
+
+  onMessageReceived() {
+    this.signalRService.messageReceived$.subscribe({
+      next: (message) => {
+        this.messages.push(message);
+      },
+    });
+    if (this.contactSelected) {
+      this.contactSelected.isTyping = false;
     }
   }
 }

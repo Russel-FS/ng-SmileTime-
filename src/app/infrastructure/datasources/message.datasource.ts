@@ -33,8 +33,7 @@ export class MessageDataSource {
     });
   }
 
-  sendMessage(message: MessageDTO): Observable<MessageDTO> {
-    console.log(message);
+  sendMessage(message: MessageDTO): Observable<MessageDTO> { 
     return new Observable<MessageDTO>((observer) => {
       observer.next({ id: message.id, message: message.message, time: new Date() });
       observer.complete();
