@@ -29,6 +29,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
 
+  @Output() EventTyping = new EventEmitter<string>();
   @Output() EventSendMessage = new EventEmitter<string>();
   @Input() messages!: Message[];
   newMessage: string = '';
@@ -58,5 +59,8 @@ export class ChatMessagesComponent implements AfterViewChecked {
       this.EventSendMessage.emit(this.newMessage);
       this.newMessage = '';
     }
+  }
+  onTyping() {
+    this.EventTyping.emit(this.newMessage);
   }
 }

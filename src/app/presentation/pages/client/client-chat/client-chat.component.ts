@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSidebarComponent } from '../../../../shared/components/chat/chat-sidebar/chat-sidebar.component';
 import { Message } from '../../../../core/domain/models/messages';
 import { ChatMessagesComponent } from '../../../../shared/components/chat/chat-messages/chat-messages.component';
 import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-header/chat-header.component';
-import { SendMessageUseCase } from '../../../../core/use-cases/send-message-use-case';
 import { IMessageRepository } from '../../../../core/interfaces/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { GetMessagesUseCase } from '../../../../core/use-cases/get-messages-use-case';
@@ -18,6 +17,9 @@ import { IContactDatasource } from '../../../../core/interfaces/IContactDatasour
 import { MessageDataSource } from '../../../../infrastructure/datasources/message.datasource';
 import { IMessageDatasource } from '../../../../core/interfaces/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
+import { IRealTimeComunication } from '../../../../core/interfaces/i-real-time-comunication';
+import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/manage-realtime-message-use-case';
+import { ManageTypingStatusUseCase } from '../../../../core/use-cases/manage-typing-status-use-case';
 
 @Component({
   selector: 'app-client-chat',
@@ -31,8 +33,13 @@ import { SignalRService } from '../../../../core/services/signal-r.service';
   ],
   providers: [
     GetMessagesUseCase,
-    SendMessageUseCase,
     GetContactsUseCase,
+    ManageRealtimeMessageUseCase,
+    ManageTypingStatusUseCase,
+    {
+      provide: IRealTimeComunication,
+      useClass: SignalRService,
+    },
     {
       provide: IMessageRepository,
       useClass: MessageRepository,
@@ -53,12 +60,12 @@ import { SignalRService } from '../../../../core/services/signal-r.service';
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css'],
 })
-export class ClientChatComponent implements OnInit {
+export class ClientChatComponent implements OnInit, OnDestroy {
   constructor(
     private getMessagesUseCase: GetMessagesUseCase,
-    private sendMessageUseCase: SendMessageUseCase,
     private getContactsUseCase: GetContactsUseCase,
-    private signalRService: SignalRService,
+    private manageRealTimeMessages: ManageRealtimeMessageUseCase,
+    private manageTypingStatus: ManageTypingStatusUseCase,
   ) {}
 
   contactSelected!: Contact;
@@ -67,7 +74,11 @@ export class ClientChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.initData();
-    this.initSignalR();
+    this.initRealTimeCommunication();
+  }
+
+  ngOnDestroy(): void {
+    this.manageRealTimeMessages.closeConnection();
   }
 
   onContactClick(contact: Contact) {
@@ -77,53 +88,71 @@ export class ClientChatComponent implements OnInit {
     this.contactSelected = contact;
   }
 
-  onGetMessages(contact: Contact) {}
-
   initData() {
     // obtener contactos
     this.getContactsUseCase.execute().subscribe((contacts) => {
       this.contacts = contacts;
-      const selectedContact = contacts.find((c) => c.isSelected);
-      if (selectedContact) {
-        this.contactSelected = selectedContact;
-      }
     });
-
+    // obtener contacto seleccionado
+    const selectedContact = this.contacts.find((c) => c.isSelected);
+    if (selectedContact) {
+      this.contactSelected = selectedContact;
+    }
     // obtener mensajes
     this.getMessagesUseCase.execute().subscribe((messages) => {
       this.messages = messages;
     });
   }
-  private initSignalR(): void {
-    this.onMessageReceived();
+
+  private initRealTimeCommunication(): void {
+    this.manageRealTimeMessages.initializeConnection();
+    this.listenForMessages();
+    this.listenForTypingStatus();
+  }
+  onTyping(text: string): void {
+    if (this.contactSelected) {
+      this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), text);
+    }
   }
 
   onSendMessage(newMessage: string): void {
-    if (newMessage.trim()) {
-      // marcar como escribiendo
-      if (this.contactSelected) {
-        this.contactSelected.isTyping = true;
-      }
+    if (newMessage.trim() && this.contactSelected) {
+      const message = new Message(newMessage, true, new Date());
+      this.messages.push(message);
 
-      this.messages.push({ text: newMessage, isUser: true, timestamp: new Date() });
-      this.sendMessageUseCase
-        .execute(new Message(newMessage, true, new Date(), 2))
-        .subscribe(() => {
-          if (this.contactSelected) {
-            this.contactSelected.isTyping = false;
-          }
-        });
+      this.manageRealTimeMessages.sendMessage(message).subscribe({
+        next: () => {
+          this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
+        },
+        error: (error) => {
+          console.error('Error enviando mensaje:', error);
+          this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
+        },
+      });
     }
   }
 
-  onMessageReceived() {
-    this.signalRService.messageReceived$.subscribe({
+  listenForMessages() {
+    this.manageRealTimeMessages.listenForMessages().subscribe({
       next: (message) => {
         this.messages.push(message);
+        if (this.contactSelected) {
+          this.contactSelected.isTyping = false;
+        }
       },
+      error: (error) => console.error('Error recibiendo mensajes:', error),
     });
-    if (this.contactSelected) {
-      this.contactSelected.isTyping = false;
-    }
+  }
+
+  private listenForTypingStatus(): void {
+    this.manageTypingStatus.listenTypingStatus().subscribe({
+      next: ({ userId, isTyping }) => {
+        const contact = this.contacts.find((c) => userId.includes(c.id.toString()));
+        if (contact) {
+          contact.isTyping = isTyping;
+        }
+      },
+      error: (error) => console.error('Error recibiendo estado de typing:', error),
+    });
   }
 }

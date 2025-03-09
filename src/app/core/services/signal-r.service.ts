@@ -2,22 +2,23 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { ApiConfig } from '../../infrastructure/config/app.config';
 import { StorageService } from './storage.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Message } from '../domain/models/messages';
+import { IRealTimeComunication } from '../interfaces/i-real-time-comunication';
 @Injectable({
   providedIn: 'root',
 })
-export class SignalRService {
+export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
   private messageReceived = new Subject<Message>();
-  messageReceived$ = this.messageReceived.asObservable();
+  private typingStatus = new Subject<{ userId: string; isTyping: boolean }>();
 
   constructor(
     private apiUrl: ApiConfig,
     private storageService: StorageService,
   ) {}
 
-  startConnection() {
+  connect() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.apiUrl.getEndpoint('chatHub'), {
         accessTokenFactory: () => this.storageService.getToken(),
@@ -28,13 +29,13 @@ export class SignalRService {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('Coneccion iniciada');
-        this.addReceiveMessageListener();
+        console.log('Coneccion SignalR iniciada');
+        this.setupMessageListener();
       })
       .catch((err) => console.log('Error al iniciar la coneccion: ' + err));
   }
 
-  stopConnection() {
+  disconnect() {
     if (this.hubConnection) {
       this.hubConnection
         .stop()
@@ -43,20 +44,8 @@ export class SignalRService {
     }
   }
 
-  /**
-   * Establece un listener para recibir mensajes de SignalR. Cuando se recibe
-   * un mensaje, se notifica a los subscriptores de `messageReceived$` con un
-   * objeto `Message` que contiene el texto del mensaje
-   */
-  addReceiveMessageListener() {
-    this.hubConnection.on('ReceiveMessage', (user: string, message: string) => {
-      const newMessage: Message = {
-        text: message,
-        isUser: false,
-        timestamp: new Date(),
-      };
-      this.messageReceived.next(newMessage);
-    });
+  onMessage(): Observable<Message> {
+    return this.messageReceived.asObservable();
   }
 
   /**
@@ -64,12 +53,48 @@ export class SignalRService {
    * establecido una coneccion con el hub, el mensaje no se envia.
    * @param message El texto del mensaje que se va a enviar.
    */
-  sendMessage(user: string, message: string) {
+  sendMessage(message: Message) {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('SendMessage', user, message)
-        .then(() => console.log('Mensaje enviado a', user))
+        .invoke('SendMessage', 'Russel', message.text)
+        .then(() => console.log('Mensaje enviado a', 'Russel'))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
+  }
+  // listener para el estado de typing
+  onTypingStatus(): Observable<{ userId: string; isTyping: boolean }> {
+    return this.typingStatus.asObservable();
+  }
+
+  // envia un estado de typing
+  setTypingStatus(userId: string, isTyping: boolean): void {
+    if (this.hubConnection) {
+      this.hubConnection
+        .invoke('UserTyping', userId, isTyping)
+        .then(() => console.log('Estado de typing actualizado'))
+        .catch((err) => console.log('Error al actualizar el estado de typing: ' + err));
+    }
+  }
+
+  /**
+   * Establece un listener para recibir mensajes de SignalR. Cuando se recibe
+   * un mensaje, se notifica a los subscriptores de `messageReceived` con un
+   * objeto `Message` que contiene el texto del mensaje
+   */
+  private setupMessageListener(): void {
+    // listener de mensajes
+    this.hubConnection.on('ReceiveMessage', (user: string, messageText: string) => {
+      const message: Message = {
+        text: messageText,
+        isUser: false,
+        timestamp: new Date(),
+      };
+      this.messageReceived.next(message);
+    });
+
+    // listener de estado de typing
+    this.hubConnection.on('UserTypingStatus', (userId: string, isTyping: boolean) => {
+      this.typingStatus.next({ userId, isTyping });
+    });
   }
 }
