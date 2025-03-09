@@ -9,6 +9,7 @@ import { AuthService } from '../../../../infrastructure/datasources/auth.service
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { StorageService } from '../../../../core/services/storage.service';
+import { SignalRService } from '../../../../core/services/signal-r.service';
 
 @Component({
   selector: 'app-login',
@@ -43,7 +44,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private notificationService: NotificationService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private signalR: SignalRService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -66,14 +68,14 @@ export class LoginComponent {
 
     this.loading = true;
     this.AuthService.login(this.loginForm.value).subscribe({
-      next: (response) => {  
-        console.log(response); 
+      next: (response) => {
+        console.log(response);
         this.storageService.setAuthData(response);
         this.notificationService.success('Inicio de sesión exitoso, bienvenido');
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        this.loading = false; // carga 
+        this.loading = false; // carga
         this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
       },
       complete: () => {

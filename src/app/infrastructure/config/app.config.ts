@@ -13,6 +13,7 @@ export class ApiConfig {
     endpoints: {
       login: `${this.apiUrlBase}/api/Auth/login`,
       register: `${this.apiUrlBase}/api/Auth/register`,
+      chatHub: `${this.apiUrlBase}/chathub`,
     },
   };
 
