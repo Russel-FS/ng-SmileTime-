@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { IMessageRepository } from '../../core/interfaces/message.repository';
+import { IMessageRepository } from '../../core/interfaces/i-message.repository';
 import { MessageMapper } from '../mappers/message-mapper';
 import { Message } from '../../core/domain/models/messages';
 import { IMessageDatasource } from '../../core/interfaces/i-message-datasource';
@@ -27,7 +27,7 @@ export class MessageRepository implements IMessageRepository {
   }
 
   sendMessage(message: Message): Observable<Message> {
-    const dto = this.mapper.toDTO(message); 
+    const dto = this.mapper.toDTO(message);
     return this.dataSource.sendMessage(dto).pipe(map((dto) => this.mapper.toModel(dto)));
   }
 }

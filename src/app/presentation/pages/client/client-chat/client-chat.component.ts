@@ -6,7 +6,7 @@ import { Message } from '../../../../core/domain/models/messages';
 import { ChatMessagesComponent } from '../../../../shared/components/chat/chat-messages/chat-messages.component';
 import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-header/chat-header.component';
 import { SendMessageUseCase } from '../../../../core/use-cases/send-message-use-case';
-import { IMessageRepository } from '../../../../core/interfaces/message.repository';
+import { IMessageRepository } from '../../../../core/interfaces/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { GetMessagesUseCase } from '../../../../core/use-cases/get-messages-use-case';
 import { GetContactsUseCase } from '../../../../core/use-cases/get-contacts-use-case';
@@ -58,7 +58,6 @@ export class ClientChatComponent implements OnInit {
     private getMessagesUseCase: GetMessagesUseCase,
     private sendMessageUseCase: SendMessageUseCase,
     private getContactsUseCase: GetContactsUseCase,
-    private signarlRService: SignalRService,
   ) {}
 
   contactSelected!: Contact;
@@ -103,20 +102,13 @@ export class ClientChatComponent implements OnInit {
 
       this.messages.push({ text: newMessage, isUser: true, timestamp: new Date() });
       // enviar mensaje
-      this.sendMessageUseCase.execute(new Message(newMessage, true, new Date(), 2)).subscribe();
-
-      this.signarlRService.sendMessage('Russel Flores solano', newMessage);
-      // simular respuesta
-      setTimeout(() => {
-        if (this.contactSelected) {
-          this.contactSelected.isTyping = false;
-        }
-        this.messages.push({
-          text: '¡Claro! ¿En qué puedo ayudarte?',
-          isUser: false,
-          timestamp: new Date(),
+      this.sendMessageUseCase
+        .execute(new Message(newMessage, true, new Date(), 2))
+        .subscribe(() => {
+          if (this.contactSelected) {
+            this.contactSelected.isTyping = false;
+          }
         });
-      }, 2000);
     }
   }
 }

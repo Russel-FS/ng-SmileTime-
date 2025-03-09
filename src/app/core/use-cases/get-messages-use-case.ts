@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { IMessageRepository } from '../interfaces/message.repository';
+import { IMessageRepository } from '../interfaces/i-message.repository';
 import { Message } from '../domain/models/messages';
 import { Inject, Injectable } from '@angular/core';
 
