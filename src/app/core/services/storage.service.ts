@@ -16,7 +16,7 @@ export class StorageService {
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
   }
-
+  // se obtiene el token
   getToken(): string {
     return localStorage.getItem('token') || '';
   }
