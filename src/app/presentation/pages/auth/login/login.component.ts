@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { SignalRService } from '../../../../core/services/signal-r.service';
+import { AuthResponse } from '../../../../core/domain/models/auth';
 
 @Component({
   selector: 'app-login',
@@ -69,17 +70,13 @@ export class LoginComponent {
     this.loading = true;
     this.AuthService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        console.log(response);
-        this.storageService.setAuthData(response);
-        this.notificationService.success('Inicio de sesión exitoso, bienvenido');
-        this.router.navigate(['/home']);
+        this.success(response);
       },
       error: (error) => {
-        this.loading = false; // carga
-        this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+        this.error(error);
       },
       complete: () => {
-        this.loading = false;
+        this.complete();
       },
     });
   }
@@ -93,6 +90,21 @@ export class LoginComponent {
     });
   }
 
+  success(response: AuthResponse) {
+    console.log(response);
+    this.storageService.setAuthData(response);
+    this.notificationService.success('Inicio de sesión exitoso, bienvenido');
+    this.signalR.startConnection();
+    this.router.navigate(['/home']);
+  }
+  error(eror: any) {
+    this.loading = false; // carga
+    this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+  }
+
+  complete() {
+    this.loading = false;
+  }
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control?.hasError('required')) {
