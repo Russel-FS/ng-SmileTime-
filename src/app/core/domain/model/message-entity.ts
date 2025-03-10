@@ -1,3 +1,5 @@
+import { AttachmentEntity } from "./attachment-entity";
+
 export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
