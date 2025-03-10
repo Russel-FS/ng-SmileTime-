@@ -71,6 +71,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   contactSelected!: Contact;
   messages: Message[] = [];
   contacts: Contact[] = [];
+  isTyping: boolean = false;
 
   ngOnInit(): void {
     this.initData();
@@ -150,6 +151,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         const contact = this.contacts.find((c) => userId.includes(c.id.toString()));
         if (contact) {
           contact.isTyping = isTyping;
+          this.isTyping = isTyping;
         }
       },
       error: (error) => console.error('Error recibiendo estado de typing:', error),
