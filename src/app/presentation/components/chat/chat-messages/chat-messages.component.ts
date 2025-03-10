@@ -71,6 +71,6 @@ export class ChatMessagesComponent implements AfterViewChecked {
     return message?.user?.id === this.currentUser?.id;
   }
   trackByMessageId(message: MessageEntity): string {
-    return message.id || message.createdAt.getTime().toString();
+    return message?.id.toString() || message.createdAt.getTime().toString();
   }
 }

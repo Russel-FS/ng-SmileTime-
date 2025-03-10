@@ -125,44 +125,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   onSendMessage(newMessage: string): void {
     if (newMessage.trim() && this.contactSelected) {
-      const sender = new ConversationParticipant(
-        1,
-        'Usuario Actual',
-        new Date(),
-        undefined,
-        'assets/images/avatar.png',
-      );
-      const receiver = new ConversationParticipant(
-        this.contactSelected.id,
-        this.contactSelected.username,
-        new Date(),
-      );
-      const conversation = new ConversationEntity(
-        crypto.randomUUID(),
-        ConversationType.INDIVIDUAL,
-        [sender, receiver],
-        undefined,
-        new Date(),
-        new Date(),
-        true,
-      );
-
-      const message = new MessageEntity(
-        crypto.randomUUID(),
-        conversation,
-        sender,
-        newMessage,
-        MessageType.TEXT,
-        new MessageStatus(this.contactSelected.id.toString(), Status.SENT, new Date()),
-        new Date(),
-        undefined,
-        [],
-        false,
-      );
-
-      this.messages.push(message);
-
-      this.manageRealTimeMessages.sendMessage(message).subscribe({
+      //this.messages.push(message);
+      /*  this.manageRealTimeMessages.sendMessage(message).subscribe({
         next: () => {
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
         },
@@ -171,6 +135,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
         },
       });
+      /*/
     }
   }
 

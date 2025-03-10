@@ -1,5 +1,4 @@
 import { AttachmentEntity } from './attachment-entity';
-import { ConversationEntity } from './conversation-entity';
 import { ConversationParticipant } from './conversation-participant';
 import { MessageStatus } from './message-status';
 
@@ -11,16 +10,35 @@ export enum MessageType {
 }
 
 export class MessageEntity {
-  constructor(
-    public id: string,
-    public conversation: ConversationEntity,
-    public senderId: ConversationParticipant,
-    public content: string,
-    public type: MessageType = MessageType.TEXT,
-    public status: MessageStatus,
-    public createdAt: Date = new Date(),
-    public modifiedAt?: Date,
-    public attachments?: AttachmentEntity[],
-    public isDeleted: boolean = false,
-  ) {}
+  id: string | number;
+  sender: ConversationParticipant;
+  content: string;
+  type: MessageType;
+  status: MessageStatus[];
+  createdAt: Date;
+  modifiedAt?: Date | null;
+  attachments?: AttachmentEntity[];
+  isDeleted: boolean;
+
+  constructor(params: {
+    id: string | number;
+    sender: ConversationParticipant;
+    content: string;
+    type?: MessageType;
+    status?: MessageStatus[];
+    createdAt?: Date;
+    modifiedAt?: Date | null;
+    attachments?: AttachmentEntity[];
+    isDeleted?: boolean;
+  }) {
+    this.id = params.id;
+    this.sender = params.sender;
+    this.content = params.content;
+    this.type = params.type || MessageType.TEXT;
+    this.status = params.status || [];
+    this.createdAt = params.createdAt || new Date();
+    this.modifiedAt = params.modifiedAt || null;
+    this.attachments = params.attachments || [];
+    this.isDeleted = params.isDeleted || false;
+  }
 }

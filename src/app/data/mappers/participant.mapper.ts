@@ -7,13 +7,22 @@ import { ConversationParticipantDTO } from '../dto/conversation-participant-DTO'
 })
 export class ParticipantMapper {
   toDomain(dto: ConversationParticipantDTO): ConversationParticipant {
-    return new ConversationParticipant(dto.userId, dto.userName, dto.joinedAt, dto.leftAt);
+    return new ConversationParticipant({
+      userId: dto.userId,
+      userName: dto.userName,
+      avatar: dto.avatar || '',
+      lastActive: dto.lastActive,
+      joinedAt: dto.joinedAt,
+      leftAt: dto.leftAt,
+    });
   }
 
   toDTO(entity: ConversationParticipant): ConversationParticipantDTO {
     return {
       userId: entity.userId,
       userName: entity.userName,
+      avatar: entity.avatar,
+      lastActive: entity.lastActive,
       joinedAt: entity.joinedAt,
       leftAt: entity.leftAt,
     };

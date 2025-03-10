@@ -3,16 +3,16 @@ import { MessageStatus } from '../../core/domain/model/chat/message-status';
 import { AttachmentEntityDTO } from './attachment-entity-DTO';
 import { ConversationEntityDTO } from './conversation-entity-DTO';
 import { ConversationParticipantDTO } from './conversation-participant-DTO';
+import { MessageStatusDTO } from './message-status-DTO';
 
 export interface MessageEntityDTO {
-  id: string;
-  conversation: ConversationEntityDTO;
-  senderId: ConversationParticipantDTO;
+  id: string | number;
+  sender: ConversationParticipantDTO;
   content: string;
   type: MessageType;
-  status: MessageStatus;
+  status: MessageStatusDTO[];
   createdAt: Date;
-  modifiedAt?: Date;
+  modifiedAt?: Date | null;
   attachments?: AttachmentEntityDTO[];
   isDeleted: boolean;
 }

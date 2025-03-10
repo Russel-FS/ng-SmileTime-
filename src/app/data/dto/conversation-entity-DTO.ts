@@ -4,9 +4,10 @@ import { MessageEntityDTO } from './message-DTO';
 
 export interface ConversationEntityDTO {
   id: string | number;
+  title: string;
   type: ConversationType;
   participants: ConversationParticipantDTO[];
-  lastMessage?: string;
+  messages: MessageEntityDTO[];
   createdAt: Date;
   updatedAt?: Date;
   isActive: boolean;

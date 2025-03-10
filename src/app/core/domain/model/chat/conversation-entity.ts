@@ -5,16 +5,36 @@ export enum ConversationType {
   INDIVIDUAL = 'individual',
   GROUP = 'group',
 }
+
 export class ConversationEntity {
-  constructor(
-    public id: string | number,
-    public type: ConversationType,
-    public participants: ConversationParticipant[],
-    public lastMessage?: string,
-    public createdAt: Date = new Date(),
-    public updatedAt?: Date,
-    public isActive: boolean = true,
-  ) {}
+  id: string | number;
+  title: string;
+  type: ConversationType;
+  participants: ConversationParticipant[];
+  messages: MessageEntity[];
+  createdAt: Date;
+  updatedAt?: Date;
+  isActive: boolean;
+
+  constructor(params: {
+    id: string | number;
+    title: string;
+    type: ConversationType;
+    participants: ConversationParticipant[];
+    messages?: MessageEntity[];
+    createdAt?: Date;
+    updatedAt?: Date;
+    isActive?: boolean;
+  }) {
+    this.id = params.id;
+    this.title = params.title;
+    this.type = params.type;
+    this.participants = params.participants;
+    this.messages = params.messages || [];
+    this.createdAt = params.createdAt || new Date();
+    this.updatedAt = params.updatedAt;
+    this.isActive = params.isActive ?? true;
+  }
 
   addParticipant(participant: ConversationParticipant): void {
     this.participants.push(participant);
@@ -25,5 +45,14 @@ export class ConversationEntity {
     if (index !== -1) {
       this.participants[index].leftAt = new Date();
     }
+  }
+
+  addMessage(message: MessageEntity): void {
+    this.messages.push(message);
+    this.updatedAt = new Date();
+  }
+
+  getLastMessage(): MessageEntity | undefined {
+    return this.messages[this.messages.length - 1];
   }
 }
