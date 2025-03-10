@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { TypingComponent } from "../../../components/typing/typing.component";
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [TypingComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css', 
 })

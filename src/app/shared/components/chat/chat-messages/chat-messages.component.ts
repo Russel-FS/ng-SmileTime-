@@ -11,10 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { Message } from '../../../../core/domain/models/messages';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { TypingComponent } from "../../../../presentation/components/typing/typing.component";
 
 @Component({
   selector: 'app-chat-messages',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, TypingComponent],
   templateUrl: './chat-messages.component.html',
   styleUrl: './chat-messages.component.css',
   animations: [
@@ -32,6 +33,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @Output() EventTyping = new EventEmitter<string>();
   @Output() EventSendMessage = new EventEmitter<string>();
   @Input() messages!: Message[];
+  @Input() isTyping: boolean = false;
   newMessage: string = '';
 
   onScroll(): void {
