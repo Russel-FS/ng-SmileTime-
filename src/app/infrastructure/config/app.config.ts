@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://upgraded-invention-4jvv5wrjx6wq27g-5011.app.github.dev';
+  private apiUrlBase = 'https://musical-broccoli-7v56j6q7rg6jfxx-5011.app.github.dev';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,

@@ -94,7 +94,6 @@ export class LoginComponent {
     console.log(response);
     this.storageService.setAuthData(response);
     this.notificationService.success('Inicio de sesión exitoso, bienvenido');
-    this.signalR.connect();
     this.router.navigate(['/home']);
   }
   error(eror: any) {
