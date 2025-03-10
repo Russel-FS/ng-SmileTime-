@@ -3,14 +3,14 @@ import * as signalR from '@microsoft/signalr';
 import { ApiConfig } from '../../infrastructure/config/app.config';
 import { StorageService } from './storage.service';
 import { Observable, Subject } from 'rxjs';
-import { Message } from '../domain/models/messages';
-import { IRealTimeComunication } from '../interfaces/i-real-time-comunication';
+import { IRealTimeComunication } from '../interfaces/signalR/i-real-time-comunication';
+import { MessageEntity, MessageStatus, MessageType } from '../domain/model/chat/message-entity';
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
-  private messageReceived = new Subject<Message>();
+  private messageReceived = new Subject<MessageEntity>();
   private typingStatus = new Subject<{ userId: string; isTyping: boolean }>();
 
   constructor(
@@ -44,7 +44,7 @@ export class SignalRService implements IRealTimeComunication {
     }
   }
 
-  onMessage(): Observable<Message> {
+  onMessage(): Observable<MessageEntity> {
     return this.messageReceived.asObservable();
   }
 
@@ -53,10 +53,10 @@ export class SignalRService implements IRealTimeComunication {
    * establecido una coneccion con el hub, el mensaje no se envia.
    * @param message El texto del mensaje que se va a enviar.
    */
-  sendMessage(message: Message) {
+  sendMessage(message: MessageEntity) {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('SendMessage', 'Russel', message.text)
+        .invoke('SendMessage', 'Russel', message.content)
         .then(() => console.log('Mensaje enviado a', 'Russel'))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
@@ -84,11 +84,15 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceiveMessage', (user: string, messageText: string) => {
-      const message: Message = {
-        text: messageText,
-        isUser: false,
-        timestamp: new Date(),
-      };
+      const message = new MessageEntity(
+        '',
+        'Russel',
+        1,
+        messageText,
+        MessageType.TEXT,
+        MessageStatus.SENT,
+        new Date(),
+      );
       this.messageReceived.next(message);
     });
 

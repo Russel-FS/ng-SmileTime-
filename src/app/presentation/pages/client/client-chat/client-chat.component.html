@@ -1,14 +1,14 @@
 <div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
   <!-- Sidebar -->
   <app-chat-sidebar
-    class="overflow-hidden"
     [contacts]="contacts"
     (contactClick)="onContactClick($event)"
+    class="overflow-hidden"
   ></app-chat-sidebar>
   <!-- Chat de Area -->
   <div class="flex-1 flex flex-col bg-white/50 backdrop-blur-xl">
     <!-- Encabezado Header -->
-    <app-chat-header [contact]="contactSelected"></app-chat-header>
+    <app-chat-header [user]="contactSelected"></app-chat-header>
 
     <!-- Mensajes -->
     <app-chat-messages

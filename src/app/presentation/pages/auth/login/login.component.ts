@@ -2,15 +2,15 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
-import { IAuthRepository } from '../../../../core/interfaces/i-auth-repository';
+import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
 import { AuthRepository } from '../../../../data/repositories/auth.repository';
-import { IAuthService } from '../../../../core/interfaces/i-auth-service';
+import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
 import { AuthService } from '../../../../infrastructure/datasources/auth.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { SignalRService } from '../../../../core/services/signal-r.service';
-import { AuthResponse } from '../../../../core/domain/models/auth';
+import { AuthResponse } from '../../../../core/domain/model/auth/auth';
 
 @Component({
   selector: 'app-login',

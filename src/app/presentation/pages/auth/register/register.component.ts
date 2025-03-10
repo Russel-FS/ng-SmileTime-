@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-import { TypingComponent } from "../../../components/typing/typing.component";
+import { TypingComponent } from '../../../components/chat/typing/typing.component';
 
 @Component({
   selector: 'app-register',
   imports: [TypingComponent],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css', 
+  styleUrl: './register.component.css',
 })
-export class RegisterComponent {
-  
-}
+export class RegisterComponent {}

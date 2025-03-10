@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MessageDTO } from '../../data/dto/messageDTO';
+import { MessageEntityDTO } from '../../data/dto/message-DTO';
+import { MessageStatus, MessageType } from '../../core/domain/model/chat/message-entity';
 
 @Injectable({
   providedIn: 'root',
@@ -12,30 +13,58 @@ export class MessageDataSource {
   constructor(private http: HttpClient) {}
 
   //test datos de prueba
-  getMessages(): Observable<MessageDTO[]> {
-    return new Observable<MessageDTO[]>((observer) => {
+  getMessages(): Observable<MessageEntityDTO[]> {
+    return new Observable<MessageEntityDTO[]>((observer) => {
       observer.next([
         {
-          id: 1,
-          message: 'Hola Dr. Flores Solano, ¿en que puedo ayudar?',
-          isUser: false,
-          time: new Date(),
+          id: '1',
+          conversationId: '1',
+          senderId: 1,
+          content: 'hola mundodd',
+          type: MessageType.TEXT,
+          status: MessageStatus.SENT,
+          createdAt: new Date(),
+          modifiedAt: new Date(),
+          attachments: [],
+          isDeleted: false,
         },
       ]);
       observer.complete();
     });
   }
 
-  getMessage(id: string): Observable<MessageDTO> {
-    return new Observable<MessageDTO>((observer) => {
-      observer.next({ id: 1, message: 'Message 1', time: new Date() });
+  getMessage(id: string): Observable<MessageEntityDTO> {
+    return new Observable<MessageEntityDTO>((observer) => {
+      observer.next({
+        id: '1',
+        conversationId: '1',
+        senderId: 1,
+        content: 'hola mundodd',
+        type: MessageType.TEXT,
+        status: MessageStatus.SENT,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        attachments: [],
+        isDeleted: false,
+      });
       observer.complete();
     });
   }
 
-  sendMessage(message: MessageDTO): Observable<MessageDTO> { 
-    return new Observable<MessageDTO>((observer) => {
-      observer.next({ id: message.id, message: message.message, time: new Date() });
+  sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO> {
+    return new Observable<MessageEntityDTO>((observer) => {
+      observer.next({
+        id: '1',
+        conversationId: '1',
+        senderId: 1,
+        content: message.content,
+        type: MessageType.TEXT,
+        status: MessageStatus.SENT,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        attachments: [],
+        isDeleted: false,
+      });
       observer.complete();
     });
   }

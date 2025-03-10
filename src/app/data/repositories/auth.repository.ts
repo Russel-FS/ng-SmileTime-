@@ -1,9 +1,9 @@
-import { Inject, Injectable } from "@angular/core";
-import { IAuthRepository } from "../../core/interfaces/i-auth-repository";
-import { AuthCredentials, AuthResponse } from "../../core/domain/models/auth";
-import { Observable } from "rxjs";
-import { AuthService } from "../../infrastructure/datasources/auth.service";
-import { IAuthService } from "../../core/interfaces/i-auth-service";
+import { Inject, Injectable } from '@angular/core';
+import { IAuthRepository } from '../../core/interfaces/repositorys/auth/i-auth-repository';
+import { AuthCredentials, AuthResponse } from '../../core/domain/model/auth/auth';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../infrastructure/datasources/auth.service';
+import { IAuthService } from '../../core/interfaces/datasource/auth/i-auth-service';
 
 @Injectable({
   providedIn: 'root',

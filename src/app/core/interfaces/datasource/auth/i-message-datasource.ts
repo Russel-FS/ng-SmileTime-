@@ -1,0 +1,11 @@
+import { Observable } from 'rxjs';
+import { InjectionToken } from '@angular/core';
+import { MessageEntityDTO } from '../../../../data/dto/message-DTO';
+
+export interface IMessageDatasource {
+  getMessages(): Observable<MessageEntityDTO[]>;
+  getMessage(id: string): Observable<MessageEntityDTO>;
+  sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO>;
+}
+
+export const IMessageDatasource = new InjectionToken<IMessageDatasource>('MessageDatasource');

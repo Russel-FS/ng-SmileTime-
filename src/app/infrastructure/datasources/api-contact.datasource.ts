@@ -1,59 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContactDTO } from '../../data/dto/contactDTO';
-import { IContactDatasource } from '../../core/interfaces/IContactDatasource';
+import { UserEntityDto } from '../../data/dto/user-DTO';
+import { IUserDatasource } from '../../core/interfaces/datasource/chat/I-user-datasource';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ContactDataSource implements IContactDatasource {
+export class ContactDataSource implements IUserDatasource {
   private apiUrl = 'api/messages';
 
-  private mockContacts: ContactDTO[] = [
+  private mockContacts: UserEntityDto[] = [
     {
       id: 1,
-      name: 'Flores',
-      role: 'Dentista',
-      avatar: 'icons/user-profile.svg',
-      isOnline: true,
-      isTyping: false,
-      lastMessage: 'ultima vez, 10:00',
-      unread: 2,
-      isSelected: true,
-    },
-    {
-      id: 2,
-      name: 'James',
-      role: 'Dentista',
-      avatar: 'icons/user-profile.svg',
-      isOnline: false,
-      isTyping: false,
-      lastMessage: 'ultima vez, 10:00',
-      unread: 0,
-      isSelected: false,
-    },
-    {
-      id: 3,
-      name: 'Mallca',
-      role: 'soperte',
-      avatar: 'icons/user-profile.svg',
-      isOnline: true,
-      isTyping: false,
-      lastMessage: 'ultima vez, 10:00',
-      unread: 1,
-      isSelected: false,
+      username: 'Russel',
+      email: 'smith@hospital.com',
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+      role: 'patient',
+      lastActive: new Date(),
+      isActive: true,
+      createdAt: new Date(),
     },
   ];
 
-  getContacts(): Observable<ContactDTO[]> {
-    return new Observable<ContactDTO[]>((observer) => {
+  getContacts(): Observable<UserEntityDto[]> {
+    return new Observable<UserEntityDto[]>((observer) => {
       observer.next(this.mockContacts);
       observer.complete();
     });
   }
 
-  getContact(id: string): Observable<ContactDTO> {
-    return new Observable<ContactDTO>((observer) => {
+  getContact(id: string): Observable<UserEntityDto> {
+    return new Observable<UserEntityDto>((observer) => {
       const contact = this.mockContacts.find((c) => c.id === Number(id));
       if (contact) {
         observer.next(contact);
@@ -64,8 +41,8 @@ export class ContactDataSource implements IContactDatasource {
     });
   }
 
-  createContact(contact: ContactDTO): Observable<ContactDTO> {
-    return new Observable<ContactDTO>((observer) => {
+  createContact(contact: UserEntityDto): Observable<UserEntityDto> {
+    return new Observable<UserEntityDto>((observer) => {
       const newContact = { ...contact, id: this.mockContacts.length + 1 };
       this.mockContacts.push(newContact);
       observer.next(newContact);
@@ -73,8 +50,8 @@ export class ContactDataSource implements IContactDatasource {
     });
   }
 
-  updateContact(contact: ContactDTO): Observable<ContactDTO> {
-    return new Observable<ContactDTO>((observer) => {
+  updateContact(contact: UserEntityDto): Observable<UserEntityDto> {
+    return new Observable<UserEntityDto>((observer) => {
       const index = this.mockContacts.findIndex((c) => c.id === contact.id);
       if (index !== -1) {
         this.mockContacts[index] = contact;

@@ -1,25 +1,30 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatSidebarComponent } from '../../../../shared/components/chat/chat-sidebar/chat-sidebar.component';
-import { Message } from '../../../../core/domain/models/messages';
-import { ChatMessagesComponent } from '../../../../shared/components/chat/chat-messages/chat-messages.component';
-import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-header/chat-header.component';
-import { IMessageRepository } from '../../../../core/interfaces/i-message.repository';
+import { ChatSidebarComponent } from '../../../components/chat/chat-sidebar/chat-sidebar.component';
+import { ChatMessagesComponent } from '../../../components/chat/chat-messages/chat-messages.component';
+import { ChatHeaderComponent } from '../../../components/chat/chat-header/chat-header.component';
+import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
-import { GetMessagesUseCase } from '../../../../core/use-cases/get-messages-use-case';
-import { GetContactsUseCase } from '../../../../core/use-cases/get-contacts-use-case';
-import { Contact } from '../../../../core/domain/models/contact';
-import { IContactRepository } from '../../../../core/interfaces/IContactRepository';
-import { ContactRepository } from '../../../../data/repositories/contact.repository';
+import { GetMessagesUseCase } from '../../../../core/use-cases/chat/get-messages-use-case';
+import { GetContactsUseCase } from '../../../../core/use-cases/chat/get-contacts-use-case';
+import { ContactRepository } from '../../../../data/repositories/userContact.repository';
 import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
-import { IContactDatasource } from '../../../../core/interfaces/IContactDatasource';
 import { MessageDataSource } from '../../../../infrastructure/datasources/message.datasource';
-import { IMessageDatasource } from '../../../../core/interfaces/i-message-datasource';
+import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
-import { IRealTimeComunication } from '../../../../core/interfaces/i-real-time-comunication';
-import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/manage-realtime-message-use-case';
-import { ManageTypingStatusUseCase } from '../../../../core/use-cases/manage-typing-status-use-case';
+import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
+import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR/manage-realtime-message-use-case';
+import { ManageTypingStatusUseCase } from '../../../../core/use-cases/chat/manage-typing-status-use-case';
+import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
+import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
+import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
+import {
+  MessageEntity,
+  MessageStatus,
+  MessageType,
+} from '../../../../core/domain/model/chat/message-entity';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-client-chat',
@@ -45,11 +50,11 @@ import { ManageTypingStatusUseCase } from '../../../../core/use-cases/manage-typ
       useClass: MessageRepository,
     },
     {
-      provide: IContactRepository,
+      provide: IUserRepository,
       useClass: ContactRepository,
     },
     {
-      provide: IContactDatasource,
+      provide: IUserDatasource,
       useClass: ContactDataSource,
     },
     {
@@ -68,9 +73,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private manageTypingStatus: ManageTypingStatusUseCase,
   ) {}
 
-  contactSelected!: Contact;
-  messages: Message[] = [];
-  contacts: Contact[] = [];
+  contactSelected!: UserEntity;
+  messages: MessageEntity[] = [];
+  contacts: UserEntity[] = [];
   isTyping: boolean = false;
 
   ngOnInit(): void {
@@ -82,10 +87,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.closeConnection();
   }
 
-  onContactClick(contact: Contact) {
-    this.contacts.forEach((c) => (c.isSelected = false));
-    contact.isSelected = true;
-    contact.unread = 0;
+  onContactClick(contact: UserEntity): void {
+    this.contacts.forEach((c) => (c.isActive = false));
+    contact.isActive = true;
     this.contactSelected = contact;
   }
 
@@ -95,7 +99,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       this.contacts = contacts;
     });
     // obtener contacto seleccionado
-    const selectedContact = this.contacts.find((c) => c.isSelected);
+    const selectedContact = this.contacts.find((c) => c.isActive);
     if (selectedContact) {
       this.contactSelected = selectedContact;
     }
@@ -118,7 +122,15 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   onSendMessage(newMessage: string): void {
     if (newMessage.trim() && this.contactSelected) {
-      const message = new Message(newMessage, true, new Date());
+      const message = new MessageEntity(
+        '1',
+        this.contactSelected.id.toString(),
+        1,
+        newMessage,
+        MessageType.TEXT,
+        MessageStatus.SENT,
+        new Date(),
+      );
       this.messages.push(message);
 
       this.manageRealTimeMessages.sendMessage(message).subscribe({
@@ -137,9 +149,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.listenForMessages().subscribe({
       next: (message) => {
         this.messages.push(message);
-        if (this.contactSelected) {
-          this.contactSelected.isTyping = false;
-        }
       },
       error: (error) => console.error('Error recibiendo mensajes:', error),
     });
@@ -150,11 +159,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       next: ({ userId, isTyping }) => {
         const contact = this.contacts.find((c) => userId.includes(c.id.toString()));
         if (contact) {
-          contact.isTyping = isTyping;
           this.isTyping = isTyping;
         }
       },
       error: (error) => console.error('Error recibiendo estado de typing:', error),
     });
   }
+
+  private loadMessages(): void {}
 }

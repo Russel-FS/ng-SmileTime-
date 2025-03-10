@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { IMessageRepository } from '../../core/interfaces/i-message.repository';
+import { IMessageRepository } from '../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageMapper } from '../mappers/message-mapper';
-import { Message } from '../../core/domain/models/messages';
-import { IMessageDatasource } from '../../core/interfaces/i-message-datasource';
+import { IMessageDatasource } from '../../core/interfaces/datasource/auth/i-message-datasource';
 import { Inject } from '@angular/core';
+import { MessageEntity } from '../../core/domain/model/chat/message-entity';
 
 @Injectable({
   providedIn: 'root',
@@ -16,17 +16,17 @@ export class MessageRepository implements IMessageRepository {
     private mapper: MessageMapper,
   ) {}
 
-  getMessages(): Observable<Message[]> {
+  getMessages(): Observable<MessageEntity[]> {
     return this.dataSource
       .getMessages()
       .pipe(map((dtos) => dtos.map((dto) => this.mapper.toModel(dto))));
   }
 
-  getMessage(id: string): Observable<Message> {
+  getMessage(id: string): Observable<MessageEntity> {
     return this.dataSource.getMessage(id).pipe(map((dto) => this.mapper.toModel(dto)));
   }
 
-  sendMessage(message: Message): Observable<Message> {
+  sendMessage(message: MessageEntity): Observable<MessageEntity> {
     const dto = this.mapper.toDTO(message);
     return this.dataSource.sendMessage(dto).pipe(map((dto) => this.mapper.toModel(dto)));
   }
