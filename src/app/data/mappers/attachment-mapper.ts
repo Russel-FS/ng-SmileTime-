@@ -9,7 +9,6 @@ export class AttachmentMapper {
   toModel(dto: AttachmentEntityDTO): AttachmentEntity {
     return new AttachmentEntity(
       dto.id,
-      dto.messageId,
       dto.fileUrl,
       dto.fileName,
       dto.fileType,
@@ -21,7 +20,6 @@ export class AttachmentMapper {
   toDTO(model: AttachmentEntity): AttachmentEntityDTO {
     return {
       id: model.id,
-      messageId: model.messageId,
       fileUrl: model.fileUrl,
       fileName: model.fileName,
       fileType: model.fileType,

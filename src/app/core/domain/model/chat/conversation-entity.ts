@@ -7,11 +7,10 @@ export enum ConversationType {
 }
 export class ConversationEntity {
   constructor(
-    public id: string,
+    public id: string | number,
     public type: ConversationType,
     public participants: ConversationParticipant[],
-    public title?: string,
-    public lastMessage?: MessageEntity,
+    public lastMessage?: string,
     public createdAt: Date = new Date(),
     public updatedAt?: Date,
     public isActive: boolean = true,
@@ -26,11 +25,5 @@ export class ConversationEntity {
     if (index !== -1) {
       this.participants[index].leftAt = new Date();
     }
-  }
-
-  getUnreadCount(userId: number): number {
-    const participant = this.participants.find((p) => p.userId === userId);
-    if (!participant || !this.lastMessage) return 0;
-    return participant.lastRead < this.lastMessage.createdAt ? 1 : 0;
   }
 }

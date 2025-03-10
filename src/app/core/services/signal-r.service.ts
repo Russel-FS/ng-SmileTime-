@@ -4,7 +4,7 @@ import { ApiConfig } from '../../infrastructure/config/app.config';
 import { StorageService } from './storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../interfaces/signalR/i-real-time-comunication';
-import { MessageEntity, MessageStatus, MessageType } from '../domain/model/chat/message-entity';
+import { MessageEntity } from '../domain/model/chat/message-entity';
 @Injectable({
   providedIn: 'root',
 })
@@ -84,16 +84,7 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceiveMessage', (user: string, messageText: string) => {
-      const message = new MessageEntity(
-        '',
-        'Russel',
-        1,
-        messageText,
-        MessageType.TEXT,
-        MessageStatus.SENT,
-        new Date(),
-      );
-      this.messageReceived.next(message);
+      //this.messageReceived.next(message);
     });
 
     // listener de estado de typing

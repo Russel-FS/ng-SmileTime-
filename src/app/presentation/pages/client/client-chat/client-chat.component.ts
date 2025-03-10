@@ -19,12 +19,15 @@ import { ManageTypingStatusUseCase } from '../../../../core/use-cases/chat/manag
 import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
-import {
-  MessageEntity,
-  MessageStatus,
-  MessageType,
-} from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
 import { map } from 'rxjs';
+import {
+  ConversationEntity,
+  ConversationType,
+} from '../../../../core/domain/model/chat/conversation-entity';
+import { join } from 'path';
+import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
+import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
 
 @Component({
   selector: 'app-client-chat',
@@ -122,15 +125,41 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   onSendMessage(newMessage: string): void {
     if (newMessage.trim() && this.contactSelected) {
-      const message = new MessageEntity(
-        '1',
-        this.contactSelected.id.toString(),
+      const sender = new ConversationParticipant(
         1,
-        newMessage,
-        MessageType.TEXT,
-        MessageStatus.SENT,
+        'Usuario Actual',
+        new Date(),
+        undefined,
+        'assets/images/avatar.png',
+      );
+      const receiver = new ConversationParticipant(
+        this.contactSelected.id,
+        this.contactSelected.username,
         new Date(),
       );
+      const conversation = new ConversationEntity(
+        crypto.randomUUID(),
+        ConversationType.INDIVIDUAL,
+        [sender, receiver],
+        undefined,
+        new Date(),
+        new Date(),
+        true,
+      );
+
+      const message = new MessageEntity(
+        crypto.randomUUID(),
+        conversation,
+        sender,
+        newMessage,
+        MessageType.TEXT,
+        new MessageStatus(this.contactSelected.id.toString(), Status.SENT, new Date()),
+        new Date(),
+        undefined,
+        [],
+        false,
+      );
+
       this.messages.push(message);
 
       this.manageRealTimeMessages.sendMessage(message).subscribe({

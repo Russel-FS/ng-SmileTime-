@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimations(),
     {
-      provide: 'ini',
+      provide: 'INIT',
       useFactory: (storageService: StorageInitializerService) => () => storageService.initialize(),
       deps: [StorageInitializerService],
       multi: true,

@@ -1,4 +1,7 @@
 import { AttachmentEntity } from './attachment-entity';
+import { ConversationEntity } from './conversation-entity';
+import { ConversationParticipant } from './conversation-participant';
+import { MessageStatus } from './message-status';
 
 export enum MessageType {
   TEXT = 'text',
@@ -7,30 +10,17 @@ export enum MessageType {
   SYSTEM = 'system',
 }
 
-export enum MessageStatus {
-  SENT = 'sent',
-  DELIVERED = 'delivered',
-  READ = 'read',
-}
 export class MessageEntity {
   constructor(
     public id: string,
-    public conversationId: string,
-    public senderId: number,
+    public conversation: ConversationEntity,
+    public senderId: ConversationParticipant,
     public content: string,
     public type: MessageType = MessageType.TEXT,
-    public status: MessageStatus = MessageStatus.SENT,
+    public status: MessageStatus,
     public createdAt: Date = new Date(),
     public modifiedAt?: Date,
-    public attachments: AttachmentEntity[] = [],
+    public attachments?: AttachmentEntity[],
     public isDeleted: boolean = false,
   ) {}
-
-  markAsRead(): void {
-    this.status = MessageStatus.READ;
-  }
-
-  markAsDelivered(): void {
-    this.status = MessageStatus.DELIVERED;
-  }
 }

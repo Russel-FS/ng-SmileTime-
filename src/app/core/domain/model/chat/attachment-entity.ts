@@ -1,12 +1,11 @@
 export class AttachmentEntity {
   constructor(
     public id: string,
-    public messageId: string,
     public fileUrl: string,
     public fileName: string,
     public fileType: string,
     public fileSize: number,
-    public uploadedAt: Date = new Date(),
+    public uploadedAt: Date,
   ) {}
 
   getFileExtension(): string {
