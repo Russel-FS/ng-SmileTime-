@@ -31,9 +31,11 @@ export class ManageRealtimeMessageUseCase {
     return new Observable<MessageEntity>((observer) => {
       this.messageRepository.sendMessage(message).subscribe({
         next: (savedMessage) => {
-          this.realTimeCommunication.sendMessage(savedMessage);
           observer.next(savedMessage);
           observer.complete();
+        },
+        complete: () => {
+          this.realTimeCommunication.sendMessage(message);
         },
         error: (error) => observer.error(error),
       });

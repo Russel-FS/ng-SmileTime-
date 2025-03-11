@@ -5,6 +5,7 @@ import { StorageService } from './storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../interfaces/signalR/i-real-time-comunication';
 import { MessageEntity } from '../domain/model/chat/message-entity';
+import { ConversationParticipant } from '../domain/model/chat/conversation-participant';
 @Injectable({
   providedIn: 'root',
 })
@@ -56,7 +57,7 @@ export class SignalRService implements IRealTimeComunication {
   sendMessage(message: MessageEntity) {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('SendMessage', 'Russel', message.content)
+        .invoke('SendMessage', 'mensaje', message.content)
         .then(() => console.log('Mensaje enviado a', 'Russel'))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
@@ -84,7 +85,12 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceiveMessage', (user: string, messageText: string) => {
-      //this.messageReceived.next(message);
+      const message = new MessageEntity({
+        id: 1,
+        sender: new ConversationParticipant({ userId: 1, userName: user, avatar: '' }),
+        content: messageText,
+      });
+      this.messageReceived.next(message);
     });
 
     // listener de estado de typing

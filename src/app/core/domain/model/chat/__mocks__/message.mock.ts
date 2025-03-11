@@ -6,7 +6,7 @@ import { mockMessageStatus } from './message-status.mock';
 export const mockMessage = new MessageEntity({
   id: '1',
   sender: mockParticipant,
-  content: 'Hello Worlds',
+  content: 'prueba',
   type: MessageType.TEXT,
   status: [mockMessageStatus],
   createdAt: new Date(),

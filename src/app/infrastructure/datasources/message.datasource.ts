@@ -29,7 +29,6 @@ export class MessageDataSource {
 
   sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO> {
     return new Observable<MessageEntityDTO>((observer) => {
-      observer.next(mockMessage);
       observer.complete();
     });
   }

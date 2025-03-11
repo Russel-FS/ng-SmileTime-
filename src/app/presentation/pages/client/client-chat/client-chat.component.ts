@@ -125,17 +125,37 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   onSendMessage(newMessage: string): void {
     if (newMessage.trim() && this.contactSelected) {
-      //this.messages.push(message);
-      /*  this.manageRealTimeMessages.sendMessage(message).subscribe({
+      // usuario que envia el mensaje
+      const sender = new ConversationParticipant({
+        userId: 2,
+        userName: 'Russel flores',
+        avatar: 'https://example.com/avatar2.jpg',
+      });
+
+      // estado de mensaje
+      const messageStatus = new MessageStatus(1, Status.DELIVERED, new Date());
+
+      //mensaje
+      const message = new MessageEntity({
+        id: 2,
+        sender: sender,
+        content: newMessage,
+        type: MessageType.TEXT,
+        status: [messageStatus],
+        createdAt: new Date(),
+        isDeleted: false,
+      });
+      console.log('Mensaje enviado:', message);
+      this.manageRealTimeMessages.sendMessage(message).subscribe({
         next: () => {
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
+          this.messages.push(message);
         },
         error: (error) => {
           console.error('Error enviando mensaje:', error);
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
         },
       });
-      /*/
     }
   }
 
