@@ -169,6 +169,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       message
     )
 
+    console.log(conversation);
     // Enviar mensaje en tiempo real
     this.manageRealTimeMessages.sendMessage(conversation)
       .pipe(takeUntil(this.unsubscribe$))
