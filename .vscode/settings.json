@@ -1,13 +1,11 @@
 {
   "editor.formatOnSave": true,
-
   "prettier.singleQuote": true,
   "prettier.semi": true,
   "prettier.printWidth": 100,
   "prettier.tabWidth": 2,
-
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode" // or "prettier.prettier"
+    "editor.defaultFormatter": "vscode.typescript-language-features" // or "prettier.prettier"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

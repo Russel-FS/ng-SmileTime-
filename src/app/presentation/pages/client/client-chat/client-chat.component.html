@@ -13,7 +13,6 @@
     <!-- Mensajes -->
     <app-chat-messages
       class="flex-1 overflow-hidden"
-      [messages]="messages"
       [isTyping]="isTyping"
       (EventTyping)="onTyping($event)"
       (EventSendMessage)="onSendMessage($event)"

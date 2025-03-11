@@ -17,18 +17,18 @@ export class ConversationEntity {
   isActive: boolean;
 
   constructor(params: {
-    id: string | number;
-    title: string;
-    type: ConversationType;
+    id?: string | number;
+    title?: string;
+    type?: ConversationType;
     participants: ConversationParticipant[];
     messages?: MessageEntity[];
     createdAt?: Date;
     updatedAt?: Date;
     isActive?: boolean;
   }) {
-    this.id = params.id;
-    this.title = params.title;
-    this.type = params.type;
+    this.id = params.id || '';
+    this.title = params.title || '';
+    this.type = params.type || ConversationType.INDIVIDUAL;
     this.participants = params.participants;
     this.messages = params.messages || [];
     this.createdAt = params.createdAt || new Date();

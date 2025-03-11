@@ -20,7 +20,7 @@ import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
 import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
-import { map } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import {
   ConversationEntity,
   ConversationType,
@@ -28,6 +28,7 @@ import {
 import { join } from 'path';
 import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
 import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+
 
 @Component({
   selector: 'app-client-chat',
@@ -74,12 +75,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private getContactsUseCase: GetContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
-  ) {}
+  ) { }
 
   contactSelected!: UserEntity;
-  messages: MessageEntity[] = [];
   contacts: UserEntity[] = [];
   isTyping: boolean = false;
+  conversation: ConversationEntity[] = [];
+  private unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
     this.initData();
@@ -87,6 +89,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
     this.manageRealTimeMessages.closeConnection();
   }
 
@@ -97,19 +101,25 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   initData() {
-    // obtener contactos
-    this.getContactsUseCase.execute().subscribe((contacts) => {
-      this.contacts = contacts;
-    });
-    // obtener contacto seleccionado
-    const selectedContact = this.contacts.find((c) => c.isActive);
-    if (selectedContact) {
-      this.contactSelected = selectedContact;
-    }
-    // obtener mensajes
-    this.getMessagesUseCase.execute().subscribe((messages) => {
-      this.messages = messages;
-    });
+    // Obtener contactos
+    this.getContactsUseCase.execute()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: contacts => {
+          this.contacts = contacts;
+          // Seleccionar un contacto primero
+          this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
+        },
+        error: err => console.error('Error obteniendo contactos:', err)
+      });
+
+    // Obtener conversaciones o mensajes
+    this.getMessagesUseCase.execute()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: messages => this.conversation = messages,
+        error: err => console.error('Error obteniendo mensajes:', err)
+      });
   }
 
   private initRealTimeCommunication(): void {
@@ -124,52 +134,123 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   onSendMessage(newMessage: string): void {
-    if (newMessage.trim() && this.contactSelected) {
-      // usuario que envia el mensaje
-      const sender = new ConversationParticipant({
-        userId: 2,
-        userName: 'Russel flores',
-        avatar: 'https://example.com/avatar2.jpg',
-      });
+    if (!newMessage.trim() || !this.contactSelected) {
+      return;
+    }
 
-      // estado de mensaje
-      const messageStatus = new MessageStatus(2, Status.SENT, new Date());
+    // usuario que envía el mensaje
+    const sender = new ConversationParticipant({
+      userId: 2,
+      userName: 'Solano flores',
+      avatar: 'https://example.com/avatar2.jpg'
+    });
 
-      //mensaje
-      const message = new MessageEntity({
-        id: 2,
-        sender: sender,
-        content: newMessage,
-        type: MessageType.TEXT,
-        status: [messageStatus],
-        createdAt: new Date(),
-        isDeleted: false,
-      });
-      this.messages.push(message);
-      this.manageRealTimeMessages.sendMessage(message).subscribe({
+    // usuario destinatario
+    const destin = new ConversationParticipant({
+      userId: 1,
+      userName: 'Freddy flores',
+      avatar: 'https://example.com/avatar2.jpg'
+    });
+
+    // creacion del mensaje
+    const message = new MessageEntity({
+      id: 2,
+      sender: sender,
+      content: newMessage,
+      type: MessageType.TEXT,
+      status: [new MessageStatus(2, Status.SENT, new Date())],
+      createdAt: new Date(),
+      isDeleted: false
+    });
+
+    const conversation = this.MessageConversation(
+      null,
+      destin,
+      message
+    )
+
+    // Enviar mensaje en tiempo real
+    this.manageRealTimeMessages.sendMessage(conversation)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
         next: () => {
+          // Notificar que el usuario dejó de escribir
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
         },
-        error: (error) => {
+        error: error => {
           console.error('Error enviando mensaje:', error);
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
-        },
+        }
       });
+  }
+
+
+  /**
+   * crea o actualiza una conversación 
+   * este metodo se encarga de buscar una conversación existente
+   * si la encuentra, crea un nuevo mensaje y actualiza la conversación
+   * si no la encuentra, crea una nueva conversación con el destinatario y el mensaje  
+   */
+  private MessageConversation(
+    conversationId: string | number | null,
+    destin: ConversationParticipant,
+    message: MessageEntity
+  ): ConversationEntity {
+
+    // Buscar la conversación existente
+    const existingConversation = this.conversation.find(conv => conv.id === conversationId);
+
+
+    if (existingConversation) {
+      const newConversationMessage = new ConversationEntity({
+        ...existingConversation,
+        messages: [message],
+        participants: [...existingConversation.participants],
+        updatedAt: new Date()
+      })
+
+      return newConversationMessage;
+    }
+    else {
+
+      const conversation = new ConversationEntity({
+        id: '',
+        title: `Conversación con ${destin.userName}`,
+        type: ConversationType.INDIVIDUAL,
+        participants: [destin,],
+        messages: [message],
+        createdAt: new Date(),
+        isActive: true
+      });
+      return conversation;
     }
   }
 
-  listenForMessages() {
-    this.manageRealTimeMessages.listenForMessages().subscribe({
-      next: (message) => {
-        const newMessaege = {
-          ...message,
-          status: [new MessageStatus(1, Status.DELIVERED, new Date())],
-        };
-        this.messages.push(newMessaege);
-      },
-      error: (error) => console.error('Error recibiendo mensajes:', error),
-    });
+  /**
+   * Escucha mensajes en tiempo real y actualiza la conversación local.
+   */
+  private listenForMessages(): void {
+    this.manageRealTimeMessages.listenForMessages()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (incomingConversation: ConversationEntity) => {
+          const index = this.conversation.findIndex(conv => conv.id === incomingConversation.id);
+          if (index !== -1) {
+            // Agregar solo los mensajes nuevos 
+            incomingConversation.messages.forEach(message => {
+              if (!this.conversation[index].messages.some(existingMessage => existingMessage.id === message.id)) {
+                this.conversation[index].messages.push(message);
+              }
+            });
+            this.conversation[index].updatedAt = incomingConversation.updatedAt || new Date();
+          } else {
+            this.conversation.push(incomingConversation);
+          }
+        },
+        error: error => console.error('Error recibiendo conversación:', error)
+      });
   }
+
 
   private listenForTypingStatus(): void {
     this.manageTypingStatus.listenTypingStatus().subscribe({
@@ -183,5 +264,5 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadMessages(): void {}
+  private loadMessages(): void { }
 }

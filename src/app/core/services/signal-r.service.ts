@@ -6,12 +6,13 @@ import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../interfaces/signalR/i-real-time-comunication';
 import { MessageEntity } from '../domain/model/chat/message-entity';
 import { ConversationParticipant } from '../domain/model/chat/conversation-participant';
+import { ConversationEntity } from '../domain/model/chat/conversation-entity';
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
-  private messageReceived = new Subject<MessageEntity>();
+  private messageReceived = new Subject<ConversationEntity>();
   private typingStatus = new Subject<{ userId: string; isTyping: boolean }>();
 
   constructor(
@@ -45,7 +46,7 @@ export class SignalRService implements IRealTimeComunication {
     }
   }
 
-  onMessage(): Observable<MessageEntity> {
+  onMessage(): Observable<ConversationEntity> {
     return this.messageReceived.asObservable();
   }
 
@@ -54,10 +55,10 @@ export class SignalRService implements IRealTimeComunication {
    * establecido una coneccion con el hub, el mensaje no se envia.
    * @param message El texto del mensaje que se va a enviar.
    */
-  sendMessage(message: MessageEntity) {
+  sendMessage(message: ConversationEntity) {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('SendMessage', 'mensaje', message.content)
+        .invoke('SendMessage', 'mensaje', message.messages.forEach((message) => {}))
         .then(() => console.log('Mensaje enviado a', 'Russel'))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
@@ -90,7 +91,7 @@ export class SignalRService implements IRealTimeComunication {
         sender: new ConversationParticipant({ userId: 1, userName: user, avatar: '' }),
         content: messageText,
       });
-      this.messageReceived.next(message);
+      //this.messageReceived.next();
     });
 
     // listener de estado de typing

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { MessageEntity } from '../../domain/model/message-entity';
+import { MessageEntity } from '../../../domain/model/chat/message-entity';
 
 export interface IMessageRepository {
   getByConversationId(conversationId: string): Observable<MessageEntity[]>;
