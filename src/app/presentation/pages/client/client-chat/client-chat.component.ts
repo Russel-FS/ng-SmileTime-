@@ -133,7 +133,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
 
       // estado de mensaje
-      const messageStatus = new MessageStatus(1, Status.DELIVERED, new Date());
+      const messageStatus = new MessageStatus(2, Status.SENT, new Date());
 
       //mensaje
       const message = new MessageEntity({
@@ -145,11 +145,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         createdAt: new Date(),
         isDeleted: false,
       });
-      console.log('Mensaje enviado:', message);
+      this.messages.push(message);
       this.manageRealTimeMessages.sendMessage(message).subscribe({
         next: () => {
           this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
-          this.messages.push(message);
         },
         error: (error) => {
           console.error('Error enviando mensaje:', error);
@@ -162,7 +161,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   listenForMessages() {
     this.manageRealTimeMessages.listenForMessages().subscribe({
       next: (message) => {
-        this.messages.push(message);
+        const newMessaege = {
+          ...message,
+          status: [new MessageStatus(1, Status.DELIVERED, new Date())],
+        };
+        this.messages.push(newMessaege);
       },
       error: (error) => console.error('Error recibiendo mensajes:', error),
     });

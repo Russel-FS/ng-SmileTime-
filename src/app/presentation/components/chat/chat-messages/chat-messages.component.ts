@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
 import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
+import { Status } from '../../../../core/domain/model/chat/message-status';
 
 @Component({
   selector: 'app-chat-messages',
@@ -33,7 +34,6 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @Output() EventTyping = new EventEmitter<string>();
   @Output() EventSendMessage = new EventEmitter<string>();
   @Input() messages!: MessageEntity[];
-  @Input() currentUser!: UserEntity;
   @Input() isTyping: boolean = false;
   newMessage: string = '';
 
@@ -67,8 +67,8 @@ export class ChatMessagesComponent implements AfterViewChecked {
     this.EventTyping.emit(this.newMessage);
   }
 
-  isUserMessage(message: any): boolean {
-    return message?.user?.id === this.currentUser?.id;
+  isUserMessage(message: MessageEntity): boolean {
+    return message.status.some((element) => element.status === Status.SENT);
   }
   trackByMessageId(message: MessageEntity): string {
     return message?.id.toString() || message.createdAt.getTime().toString();
