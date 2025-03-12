@@ -53,7 +53,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
       {
         id: '1',
         sender: mockParticipant,
-        content: 'prueba',
+        content: 'hola como  estas',
         type: MessageType.TEXT,
         status: [mockMessageStatus],
         createdAt: new Date(),
@@ -64,7 +64,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
       {
         id: '2',
         sender: mockParticipant,
-        content: 'prueba',
+        content: 'Estoy bien gracias',
         type: MessageType.TEXT,
         status: [mockMessageStatus],
         createdAt: new Date(),
