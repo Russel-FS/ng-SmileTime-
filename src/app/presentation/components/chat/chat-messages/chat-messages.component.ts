@@ -12,9 +12,12 @@ import { UserEntity, UserRole } from '../../../../core/domain/model/chat/user-en
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
-import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
 import { Status } from '../../../../core/domain/model/chat/message-status';
 import { ChatHeaderComponent } from "../chat-header/chat-header.component";
+import { mockMessageStatus } from '../../../../core/domain/model/chat/__mocks__/message-status.mock';
+import { mockAttachments } from '../../../../core/domain/model/chat/__mocks__/attachment.mock';
+import { mockParticipant } from '../../../../core/domain/model/chat/__mocks__/conversation-participant.mock';
 
 @Component({
   selector: 'app-chat-messages',
@@ -44,6 +47,32 @@ export class ChatMessagesComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+  constructor() {
+    this.messages = [
+      {
+        id: '1',
+        sender: mockParticipant,
+        content: 'prueba',
+        type: MessageType.TEXT,
+        status: [mockMessageStatus],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        attachments: mockAttachments,
+        isDeleted: false,
+      },
+      {
+        id: '2',
+        sender: mockParticipant,
+        content: 'prueba',
+        type: MessageType.TEXT,
+        status: [mockMessageStatus],
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        attachments: mockAttachments,
+        isDeleted: false,
+      }
+    ];
   }
 
   private checkScrollPosition(): void {
