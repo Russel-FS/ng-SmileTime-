@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatSidebarComponent } from '../../../components/chat/chat-sidebar/chat-sidebar.component';
 import { ChatMessagesComponent } from '../../../components/chat/chat-messages/chat-messages.component';
-import { ChatHeaderComponent } from '../../../components/chat/chat-header/chat-header.component';
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { GetMessagesUseCase } from '../../../../core/use-cases/chat/get-messages-use-case';
 import { GetContactsUseCase } from '../../../../core/use-cases/chat/get-contacts-use-case';
 import { ContactRepository } from '../../../../data/repositories/userContact.repository';
 import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
-import { MessageDataSource } from '../../../../infrastructure/datasources/message.datasource';
+import { MessageDataSource } from '../../../../infrastructure/datasources/message.sevice';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
@@ -24,8 +23,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 import {
   ConversationEntity,
   ConversationType,
-} from '../../../../core/domain/model/chat/conversation-entity';
-import { join } from 'path';
+} from '../../../../core/domain/model/chat/conversation-entity'; 
 import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
 import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
 
@@ -110,15 +108,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
-      });
-
-    // Obtener conversaciones o mensajes
-    this.getMessagesUseCase.execute()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: messages => this.conversation = messages,
-        error: err => console.error('Error obteniendo mensajes:', err)
-      });
+      }); 
   }
 
   private initRealTimeCommunication(): void {

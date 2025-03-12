@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MessageEntityDTO } from '../../data/dto/message-DTO';
 import { mockMessage } from '../../core/domain/model/chat/__mocks__/message.mock';
+import { IMessageDatasource } from '../../core/interfaces/datasource/auth/i-message-datasource';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MessageDataSource {
+export class MessageDataSource implements IMessageDatasource {
   private apiUrl = 'api/messages';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   //test datos de prueba
   getMessages(): Observable<MessageEntityDTO[]> {
