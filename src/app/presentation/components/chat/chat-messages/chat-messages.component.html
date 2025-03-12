@@ -1,46 +1,16 @@
-<div class="main">
-  <div class="chat-container">
-    <!--Encabezado-->
-    <app-chat-header></app-chat-header>
-    <!--cuerpo de mensajes-->
-    <div #messageContainer class="chat-messages">
-      @for (message of messages; track $index) {
-        <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
-          <div class="message-content">
-            <div class="avatar">RF</div>
-            <div>
-              <div class="content">{{ message.content }}</div>
-              <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>
-            </div>
-          </div>
+<!--cuerpo de mensajes-->
+<div #messageContainer class="chat-messages">
+  @for (message of messages; track $index) {
+    <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
+      <div class="message-content">
+        <div class="avatar">RF</div>
+        <div>
+          <div class="content">{{ message.content }}</div>
+          <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>
         </div>
-      }
-      <!--typing de escritura-->
-      <app-typing *ngIf="isTyping"></app-typing>
-    </div>
-
-    <!-- Input Area -->
-    <div class="chat-footer">
-      <div class="chat-input">
-        <form class="w-full flex" (ngSubmit)="sendMessage()">
-          <input
-            type="text"
-            [(ngModel)]="newMessage"
-            (input)="onTyping()"
-            name="message"
-            class="text"
-            placeholder="Type your message..."
-          />
-
-          <button
-            type="submit"
-            [disabled]="!newMessage.trim()"
-            [ngClass]="newMessage.trim() ? 'button' : 'button-disable '"
-          >
-            ➤
-          </button>
-        </form>
       </div>
     </div>
-  </div>
+  }
+  <!--typing de escritura-->
+  <app-typing *ngIf="isTyping"></app-typing>
 </div>

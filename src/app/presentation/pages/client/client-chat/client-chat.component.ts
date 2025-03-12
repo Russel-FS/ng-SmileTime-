@@ -25,6 +25,8 @@ import { ConversationParticipant } from '../../../../core/domain/model/chat/conv
 import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
+import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";
+import { ChatInputComponent } from "../../../components/chat/chat-input/chat-input.component";
 
 
 @Component({
@@ -35,6 +37,8 @@ import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-ca
     FormsModule,
     ChatSidebarComponent,
     ChatMessagesComponent,
+    ChatHeaderComponent,
+    ChatInputComponent
   ],
   providers: [
     ContactsUseCase,
@@ -73,8 +77,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   contactSelected!: ConversationParticipant;
   contacts: ConversationParticipant[] = [];
-  isTyping: boolean = false;
   conversation: ConversationEntity[] = [];
+  isTyping: boolean = true;
   private unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {

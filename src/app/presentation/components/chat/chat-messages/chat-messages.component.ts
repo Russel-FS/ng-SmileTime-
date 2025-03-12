@@ -2,26 +2,19 @@ import {
   AfterViewChecked,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
-  Output,
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserEntity, UserRole } from '../../../../core/domain/model/chat/user-entity';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
-import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
 import { Status } from '../../../../core/domain/model/chat/message-status';
-import { ChatHeaderComponent } from "../chat-header/chat-header.component";
-import { mockMessageStatus } from '../../../../core/domain/model/chat/__mocks__/message-status.mock';
-import { mockAttachments } from '../../../../core/domain/model/chat/__mocks__/attachment.mock';
-import { mockParticipant } from '../../../../core/domain/model/chat/__mocks__/conversation-participant.mock';
 
 @Component({
   selector: 'app-chat-messages',
-  imports: [FormsModule, CommonModule, TypingComponent, ChatHeaderComponent],
+  imports: [FormsModule, CommonModule, TypingComponent],
   templateUrl: './chat-messages.component.html',
   styleUrl: './chat-messages.component.css',
   animations: [
@@ -35,12 +28,8 @@ import { mockParticipant } from '../../../../core/domain/model/chat/__mocks__/co
 })
 export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
-  @Output() EventTyping = new EventEmitter<string>();
-  @Output() EventSendMessage = new EventEmitter<string>();
   @Input() messages!: MessageEntity[];
-  @Input() user!: UserEntity;
   @Input() isTyping: boolean = false;
-  newMessage: string = '';
 
   onScroll(): void {
     this.checkScrollPosition();
@@ -48,9 +37,6 @@ export class ChatMessagesComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
-  }
-  constructor() {
-
   }
 
   private checkScrollPosition(): void {
@@ -65,16 +51,6 @@ export class ChatMessagesComponent implements AfterViewChecked {
         this.messageContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.EventSendMessage.emit(this.newMessage);
-      this.newMessage = '';
-    }
-  }
-  onTyping() {
-    this.EventTyping.emit(this.newMessage);
-  }
-
   isUserMessage(message: MessageEntity): boolean {
     return message.status.some((element) => element.status === Status.SENT);
   }
