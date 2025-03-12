@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 import { IMessageRepository } from '../../interfaces/repositorys/chat/i-message.repository';
 import { MessageEntity } from '../../domain/model/chat/message-entity';
@@ -20,18 +20,45 @@ export class ManageRealtimeMessageUseCase {
     this.realTimeCommunication.disconnect();
   }
 
-  listenForMessages(): Observable<ConversationEntity> {
-    return this.realTimeCommunication.onMessage();
+  listenForMessages(): Observable<MessageEntity> {
+    return this.realTimeCommunication.onMessage().pipe(
+      map(message => {
+        if (!message) {
+          throw new Error('Mensaje recibido es nulo o indefinido');
+        }
+        return message;
+      }),
+      catchError(error => {
+        console.error('Error al recibir mensaje:', error);
+        return throwError(() => error);
+      })
+    );
   }
   /**
    * Envia un mensaje a traves del SignalR. Primero se guarda el mensaje en
    * la base de datos y luego se envia a traves del SignalR. El mensaje
    * guardado se devuelve como Observable.
    */
-  sendMessage(message: ConversationEntity): Observable<ConversationEntity> {
+  sendMessage(message: MessageEntity): Observable<ConversationEntity> {
+    if (!message) {
+      return throwError(() => new Error('El mensaje no puede ser nulo'));
+    }
+
     return this.messageRepository.sendMessage(message).pipe(
-      tap({
-        complete: () => this.realTimeCommunication.sendMessage(message)
+      map(conversation => {
+        if (!conversation) {
+          throw new Error('La conversación devuelta es nula o indefinida');
+        }
+        return conversation;
+      }),
+      tap(conversation => {
+        // se asigna el id de la conversación antes de enviarlo
+        message.conversationId = conversation.id;
+        this.realTimeCommunication.sendMessage(message);
+      }),
+      catchError(error => {
+        console.error('Error al enviar mensaje:', error);
+        return throwError(() => error);
       })
     );
   }

@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
-import { UserEntity } from '../../../domain/model/chat/user-entity';
+import { ConversationParticipant } from '../../../domain/model/chat/conversation-participant';
 
 export interface IUserRepository {
-  getContacts(): Observable<UserEntity[]>;
-  getContact(id: string): Observable<UserEntity>;
-  createContact(contact: UserEntity): Observable<UserEntity>;
-  updateContact(contact: UserEntity): Observable<UserEntity>;
+  getContacts(): Observable<ConversationParticipant[]>;
+  getContact(id: string): Observable<ConversationParticipant>;
+  createContact(contact: ConversationParticipant): Observable<ConversationParticipant>;
+  updateContact(contact: ConversationParticipant): Observable<ConversationParticipant>;
   deleteContact(id: string): Observable<void>;
 }
 

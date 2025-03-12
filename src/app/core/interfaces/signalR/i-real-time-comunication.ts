@@ -7,12 +7,12 @@ export interface IRealTimeComunication {
   connect(): void;
   disconnect(): void;
   // mensajes
-  onMessage(): Observable<ConversationEntity>;
-  sendMessage(message: ConversationEntity): void;
+  onMessage(): Observable<MessageEntity>;
+  sendMessage(message: MessageEntity): void;
 
   //estado de typing
   onTypingStatus(): Observable<{ userId: string; isTyping: boolean }>;
-  setTypingStatus(userId: string, isTyping: boolean): void;
+  setTypingStatus(userId: string | number, isTyping: boolean): void;
 }
 export const IRealTimeComunication = new InjectionToken<IRealTimeComunication>(
   'RealTimeComunication',

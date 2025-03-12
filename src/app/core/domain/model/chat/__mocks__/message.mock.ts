@@ -13,4 +13,5 @@ export const mockMessage = new MessageEntity({
   modifiedAt: new Date(),
   attachments: mockAttachments,
   isDeleted: false,
+  conversationId: '1',
 });

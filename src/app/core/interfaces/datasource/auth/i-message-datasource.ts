@@ -6,7 +6,7 @@ import { ConversationEntityDTO } from '../../../../data/dto/conversation-entity-
 export interface IMessageDatasource {
   getMessages(): Observable<MessageEntityDTO[]>;
   getMessage(id: string): Observable<MessageEntityDTO>;
-  sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO>;
+  sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO>;
 }
 
 export const IMessageDatasource = new InjectionToken<IMessageDatasource>('MessageDatasource');

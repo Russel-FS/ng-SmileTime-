@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
-import { UserEntityDto } from '../../../../data/dto/user-DTO';
+import { ConversationParticipantDTO } from '../../../../data/dto/conversation-participant-DTO';
 
 export interface IUserDatasource {
-  getContacts(): Observable<UserEntityDto[]>;
-  getContact(id: string): Observable<UserEntityDto>;
-  createContact(contact: UserEntityDto): Observable<UserEntityDto>;
-  updateContact(contact: UserEntityDto): Observable<UserEntityDto>;
+  getContacts(): Observable<ConversationParticipantDTO[]>;
+  getContact(id: string): Observable<ConversationParticipantDTO>;
+  createContact(contact: ConversationParticipantDTO): Observable<ConversationParticipantDTO>;
+  updateContact(contact: ConversationParticipantDTO): Observable<ConversationParticipantDTO>;
   deleteContact(id: string): Observable<void>;
 }
 

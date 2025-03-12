@@ -5,8 +5,6 @@ import { ChatSidebarComponent } from '../../../components/chat/chat-sidebar/chat
 import { ChatMessagesComponent } from '../../../components/chat/chat-messages/chat-messages.component';
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
-import { GetMessagesUseCase } from '../../../../core/use-cases/chat/get-messages-use-case';
-import { GetContactsUseCase } from '../../../../core/use-cases/chat/get-contacts-use-case';
 import { ContactRepository } from '../../../../data/repositories/userContact.repository';
 import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
 import { MessageDataSource } from '../../../../infrastructure/datasources/message.sevice';
@@ -19,13 +17,14 @@ import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
 import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
-import { map, Subject, takeUntil } from 'rxjs';
 import {
   ConversationEntity,
   ConversationType,
-} from '../../../../core/domain/model/chat/conversation-entity'; 
+} from '../../../../core/domain/model/chat/conversation-entity';
 import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
 import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+import { Subject, takeUntil } from 'rxjs';
+import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
 
 
 @Component({
@@ -38,8 +37,7 @@ import { MessageStatus, Status } from '../../../../core/domain/model/chat/messag
     ChatMessagesComponent,
   ],
   providers: [
-    GetMessagesUseCase,
-    GetContactsUseCase,
+    ContactsUseCase,
     ManageRealtimeMessageUseCase,
     ManageTypingStatusUseCase,
     {
@@ -68,14 +66,13 @@ import { MessageStatus, Status } from '../../../../core/domain/model/chat/messag
 })
 export class ClientChatComponent implements OnInit, OnDestroy {
   constructor(
-    private getMessagesUseCase: GetMessagesUseCase,
-    private getContactsUseCase: GetContactsUseCase,
+    private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
   ) { }
 
-  contactSelected!: UserEntity;
-  contacts: UserEntity[] = [];
+  contactSelected!: ConversationParticipant;
+  contacts: ConversationParticipant[] = [];
   isTyping: boolean = false;
   conversation: ConversationEntity[] = [];
   private unsubscribe$ = new Subject<void>();
@@ -91,15 +88,15 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.closeConnection();
   }
 
-  onContactClick(contact: UserEntity): void {
-    this.contacts.forEach((c) => (c.isActive = false));
-    contact.isActive = true;
+  onContactClick(contact: ConversationParticipant): void {
+    this.contacts.forEach((c) => (c.selected = false));
+    contact.selected = true;
     this.contactSelected = contact;
   }
 
   initData() {
     // Obtener contactos
-    this.getContactsUseCase.execute()
+    this.ContactsUseCase.execute()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: contacts => {
@@ -108,7 +105,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
-      }); 
+      });
   }
 
   private initRealTimeCommunication(): void {
@@ -118,7 +115,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
   onTyping(text: string): void {
     if (this.contactSelected) {
-      this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), text);
+      this.manageTypingStatus.notifyTyping(this.contactSelected.userId, text);
     }
   }
 
@@ -152,23 +149,23 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       isDeleted: false
     });
 
-    const conversation = this.MessageConversation(
-      null,
-      destin,
-      message
-    )
 
     // Enviar mensaje en tiempo real
-    this.manageRealTimeMessages.sendMessage(conversation)
+    this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: () => {
+        next: (conversation: ConversationEntity) => {
+          // verificamos que la conversacion no exista antes de añadir
+          const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
+          if (!existingConversation) {
+            this.conversation.push(conversation);
+          }
           // Notificar que el usuario dejó de escribir
-          this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
+          this.manageTypingStatus.notifyTyping(this.contactSelected.userId, '');
         },
         error: error => {
           console.error('Error enviando mensaje:', error);
-          this.manageTypingStatus.notifyTyping(this.contactSelected.id.toString(), '');
+          this.manageTypingStatus.notifyTyping(this.contactSelected.userId, '');
         }
       });
   }
@@ -222,21 +219,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.listenForMessages()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (incomingConversation: ConversationEntity) => {
-          const index = this.conversation.findIndex(conv => conv.id === incomingConversation.id);
+        next: (incomingMessage: MessageEntity) => {
+          const index = this.conversation.findIndex(conv => conv.id === incomingMessage.conversationId);
           if (index !== -1) {
-            // Agregar solo los mensajes nuevos 
-            incomingConversation.messages.forEach(message => {
-              if (!this.conversation[index].messages.some(existingMessage => existingMessage.id === message.id)) {
-                this.conversation[index].messages.push(message);
-              }
-            });
-            this.conversation[index].updatedAt = incomingConversation.updatedAt || new Date();
-          } else {
-            this.conversation.push(incomingConversation);
+            this.conversation[index].messages.push(incomingMessage);
           }
         },
-        error: error => console.error('Error recibiendo conversación:', error)
+        error: error => console.error('Error al recibir mensajes:', error)
       });
   }
 
@@ -244,14 +233,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   private listenForTypingStatus(): void {
     this.manageTypingStatus.listenTypingStatus().subscribe({
       next: ({ userId, isTyping }) => {
-        const contact = this.contacts.find((c) => userId.includes(c.id.toString()));
+        const contact = this.contacts.find((c) => userId.includes(c.userId?.toString()));
         if (contact) {
           this.isTyping = isTyping;
         }
       },
-      error: (error) => console.error('Error recibiendo estado de typing:', error),
+      error: (error) => console.error('Error al recibir el estado de escritura:', error),
     });
   }
 
-  private loadMessages(): void { }
 }

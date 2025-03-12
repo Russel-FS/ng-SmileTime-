@@ -13,10 +13,10 @@ import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comu
 
 @Injectable()
 export class ManageTypingStatusUseCase {
-  private typingSubject = new Subject<{ userId: string; text: string }>(); // Observable para notificar el estado de escritura
+  private typingSubject = new Subject<{ userId: string | number; text: string }>(); // Observable para notificar el estado de escritura
   private readonly TYPING_DEBOUNCE_TIME = 300; // 300ms de debounce
   private readonly STOP_TYPING_DELAY = 1000; // 1000ms de espera para detener el estado de typing
-  private previousState = new Map<string, boolean>(); // almacenar el estado anterior de cada usuario
+  private previousState = new Map<string | number, boolean>(); // almacenar el estado anterior de cada usuario
 
   constructor(private realTimeCommunication: IRealTimeComunication) {
     this.setupTypingDebounce();
@@ -71,7 +71,7 @@ export class ManageTypingStatusUseCase {
    * se encarga de procesar el evento de escritura y notificar el estado
    * de "escribiendo" o "no escribiendo" al servidor.
    */
-  notifyTyping(userId: string, text: string): void {
+  notifyTyping(userId: string | number, text: string): void {
     this.typingSubject.next({ userId, text });
   }
 

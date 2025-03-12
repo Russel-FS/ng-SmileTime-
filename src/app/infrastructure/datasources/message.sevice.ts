@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { MessageEntityDTO } from '../../data/dto/message-DTO';
 import { mockMessage } from '../../core/domain/model/chat/__mocks__/message.mock';
 import { IMessageDatasource } from '../../core/interfaces/datasource/auth/i-message-datasource';
+import { ConversationEntityDTO } from '../../data/dto/conversation-entity-DTO';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +29,8 @@ export class MessageDataSource implements IMessageDatasource {
     });
   }
 
-  sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO> {
-    return new Observable<MessageEntityDTO>((observer) => {
+  sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO> {
+    return new Observable<ConversationEntityDTO>((observer) => {
       observer.complete();
     });
   }

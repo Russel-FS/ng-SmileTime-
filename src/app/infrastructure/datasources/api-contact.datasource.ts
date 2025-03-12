@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserEntityDto } from '../../data/dto/user-DTO';
 import { IUserDatasource } from '../../core/interfaces/datasource/chat/I-user-datasource';
+import { ConversationParticipantDTO } from '../../data/dto/conversation-participant-DTO';
 
 @Injectable({
   providedIn: 'root',
@@ -9,29 +10,25 @@ import { IUserDatasource } from '../../core/interfaces/datasource/chat/I-user-da
 export class ContactDataSource implements IUserDatasource {
   private apiUrl = 'api/messages';
 
-  private mockContacts: UserEntityDto[] = [
+  private mockContacts: ConversationParticipantDTO[] = [
     {
-      id: 1,
-      username: 'Russel',
-      email: 'smith@hospital.com',
+      userId: 1,
+      userName: 'Russel',
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
-      role: 'patient',
       lastActive: new Date(),
-      isActive: true,
-      createdAt: new Date(),
     },
   ];
 
-  getContacts(): Observable<UserEntityDto[]> {
-    return new Observable<UserEntityDto[]>((observer) => {
+  getContacts(): Observable<ConversationParticipantDTO[]> {
+    return new Observable<ConversationParticipantDTO[]>((observer) => {
       observer.next(this.mockContacts);
       observer.complete();
     });
   }
 
-  getContact(id: string): Observable<UserEntityDto> {
-    return new Observable<UserEntityDto>((observer) => {
-      const contact = this.mockContacts.find((c) => c.id === Number(id));
+  getContact(id: string): Observable<ConversationParticipantDTO> {
+    return new Observable<ConversationParticipantDTO>((observer) => {
+      const contact = this.mockContacts.find((c) => c.userId === Number(id));
       if (contact) {
         observer.next(contact);
       } else {
@@ -41,8 +38,8 @@ export class ContactDataSource implements IUserDatasource {
     });
   }
 
-  createContact(contact: UserEntityDto): Observable<UserEntityDto> {
-    return new Observable<UserEntityDto>((observer) => {
+  createContact(contact: ConversationParticipantDTO): Observable<ConversationParticipantDTO> {
+    return new Observable<ConversationParticipantDTO>((observer) => {
       const newContact = { ...contact, id: this.mockContacts.length + 1 };
       this.mockContacts.push(newContact);
       observer.next(newContact);
@@ -50,9 +47,9 @@ export class ContactDataSource implements IUserDatasource {
     });
   }
 
-  updateContact(contact: UserEntityDto): Observable<UserEntityDto> {
-    return new Observable<UserEntityDto>((observer) => {
-      const index = this.mockContacts.findIndex((c) => c.id === contact.id);
+  updateContact(contact: ConversationParticipantDTO): Observable<ConversationParticipantDTO> {
+    return new Observable<ConversationParticipantDTO>((observer) => {
+      const index = this.mockContacts.findIndex((c) => c.userId === contact.userId);
       if (index !== -1) {
         this.mockContacts[index] = contact;
         observer.next(contact);
@@ -65,7 +62,7 @@ export class ContactDataSource implements IUserDatasource {
 
   deleteContact(id: string): Observable<void> {
     return new Observable<void>((observer) => {
-      const index = this.mockContacts.findIndex((c) => c.id === Number(id));
+      const index = this.mockContacts.findIndex((c) => c.userId === Number(id));
       if (index !== -1) {
         this.mockContacts.splice(index, 1);
         observer.next();

@@ -16,6 +16,7 @@ export class MessageRepository implements IMessageRepository {
     @Inject(IMessageDatasource)
     private dataSource: IMessageDatasource,
     private mapper: MessageMapper,
+    private converMapper: ConversationMapper
   ) { }
 
   getMessages(): Observable<MessageEntity[]> {
@@ -28,8 +29,8 @@ export class MessageRepository implements IMessageRepository {
     return this.dataSource.getMessage(id).pipe(map((dto) => this.mapper.toDomain(dto)));
   }
 
-  sendMessage(message: MessageEntity): Observable<MessageEntity> {
+  sendMessage(message: MessageEntity): Observable<ConversationEntity> {
     const dto = this.mapper.toDTO(message);
-    return this.dataSource.sendMessage(dto).pipe(map((dto) => this.mapper.toDomain(dto)));
+    return this.dataSource.sendMessage(dto).pipe(map((dto) => this.converMapper.toDomain(dto)));
   }
 }

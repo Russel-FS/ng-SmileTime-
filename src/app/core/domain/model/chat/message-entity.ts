@@ -19,6 +19,7 @@ export class MessageEntity {
   modifiedAt?: Date | null;
   attachments?: AttachmentEntity[];
   isDeleted: boolean;
+  conversationId?: string | number;
 
   constructor(params: {
     id: string | number;
@@ -30,6 +31,7 @@ export class MessageEntity {
     modifiedAt?: Date | null;
     attachments?: AttachmentEntity[];
     isDeleted?: boolean;
+    conversationId?: string | number
   }) {
     this.id = params.id;
     this.sender = params.sender;
@@ -40,5 +42,6 @@ export class MessageEntity {
     this.modifiedAt = params.modifiedAt || null;
     this.attachments = params.attachments || [];
     this.isDeleted = params.isDeleted || false;
+    this.conversationId = params.conversationId
   }
 }
