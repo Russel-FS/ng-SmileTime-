@@ -3,8 +3,8 @@ import { TypingComponent } from '../../../components/chat/typing/typing.componen
 
 @Component({
   selector: 'app-register',
-  imports: [TypingComponent],
+  imports: [],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent {}
+export class RegisterComponent { }

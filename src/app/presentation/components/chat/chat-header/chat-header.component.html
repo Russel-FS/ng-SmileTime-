@@ -1,26 +1,28 @@
 @if (user) {
-  <div class="px-6 py-4 border-b border-gray-200/30 bg-white/80 backdrop-blur-xl">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center">
-        <div class="relative">
-          <img
-            [src]="user.avatar"
-            alt="avatar"
-            class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
-          />
-          <div
-            [class]="
-              user.isOnline()
-                ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white'
-                : 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-400 rounded-full ring-2 ring-white'
-            "
-          ></div>
-        </div>
-        <div class="ml-4">
-          <h2 class="text-lg font-semibold text-gray-900">
-            {{ user.getFullName() }}
-          </h2>
-          <p class="text-sm text-gray-500">
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="relative">
+        <!--avatar-->
+        <img
+          [src]="user.avatar"
+          alt="avatar"
+          class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
+        />
+        <!--señal de estado-->
+        <div
+          [class]="
+            user.isOnline()
+              ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white'
+              : 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-400 rounded-full ring-2 ring-white'
+          "
+        ></div>
+      </div>
+      <div class="user-info">
+        <h2 class="text-lg font-semibold text-gray-900">
+          {{ user.getFullName() }}
+        </h2>
+        <div>
+          <p class="status">
             {{ user.isOnline() ? 'En línea' : 'Desconectado' }}
           </p>
         </div>

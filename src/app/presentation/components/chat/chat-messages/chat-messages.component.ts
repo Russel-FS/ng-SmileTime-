@@ -14,10 +14,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
 import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
 import { Status } from '../../../../core/domain/model/chat/message-status';
+import { ChatHeaderComponent } from "../chat-header/chat-header.component";
 
 @Component({
   selector: 'app-chat-messages',
-  imports: [FormsModule, CommonModule, TypingComponent],
+  imports: [FormsModule, CommonModule, TypingComponent, ChatHeaderComponent],
   templateUrl: './chat-messages.component.html',
   styleUrl: './chat-messages.component.css',
   animations: [
@@ -55,7 +56,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
     try {
       this.messageContainer.nativeElement.scrollTop =
         this.messageContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) { }
   }
   sendMessage() {
     if (this.newMessage.trim()) {

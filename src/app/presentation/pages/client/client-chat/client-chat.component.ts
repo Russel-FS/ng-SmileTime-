@@ -38,7 +38,6 @@ import { MessageStatus, Status } from '../../../../core/domain/model/chat/messag
     FormsModule,
     ChatSidebarComponent,
     ChatMessagesComponent,
-    ChatHeaderComponent,
   ],
   providers: [
     GetMessagesUseCase,
