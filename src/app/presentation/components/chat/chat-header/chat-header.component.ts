@@ -11,17 +11,6 @@ export class ChatHeaderComponent {
   @Input() user!: UserEntity;
 
   constructor() {
-    this.user = new UserEntity(
-      1,
-      'Russel',
-      'smith@hospital.com',
-      'https://randomuser.me/api/portraits/men/1.jpg',
-      'patient' as UserRole,
-      new Date(),
-      true,
-      new Date()
-    
-    );
   }
 
 

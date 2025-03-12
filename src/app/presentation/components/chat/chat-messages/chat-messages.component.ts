@@ -38,6 +38,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @Output() EventTyping = new EventEmitter<string>();
   @Output() EventSendMessage = new EventEmitter<string>();
   @Input() messages!: MessageEntity[];
+  @Input() user!: UserEntity;
   @Input() isTyping: boolean = false;
   newMessage: string = '';
 
@@ -49,30 +50,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
     this.scrollToBottom();
   }
   constructor() {
-    this.messages = [
-      {
-        id: '1',
-        sender: mockParticipant,
-        content: 'hola como  estas',
-        type: MessageType.TEXT,
-        status: [mockMessageStatus],
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        attachments: mockAttachments,
-        isDeleted: false,
-      },
-      {
-        id: '2',
-        sender: mockParticipant,
-        content: 'Estoy bien gracias',
-        type: MessageType.TEXT,
-        status: [mockMessageStatus],
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        attachments: mockAttachments,
-        isDeleted: false,
-      }
-    ];
+
   }
 
   private checkScrollPosition(): void {
