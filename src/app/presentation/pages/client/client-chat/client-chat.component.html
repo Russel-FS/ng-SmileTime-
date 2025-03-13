@@ -4,7 +4,11 @@
   <!-- Chat -->
   <div class="chat-container">
     <app-chat-header></app-chat-header>
-    <app-chat-messages class="flex-1 overflow-hidden" [isTyping]="isTyping"></app-chat-messages>
+    <app-chat-messages
+      class="flex-1 overflow-hidden"
+      [messages]="getMessages()"
+      [isTyping]="isTyping"
+    ></app-chat-messages>
     <app-chat-input
       (EventTyping)="onTyping($event)"
       (EventSendMessage)="onSendMessage($event)"

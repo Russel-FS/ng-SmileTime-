@@ -5,7 +5,7 @@ import { ChatSidebarComponent } from '../../../components/chat/chat-sidebar/chat
 import { ChatMessagesComponent } from '../../../components/chat/chat-messages/chat-messages.component';
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
-import { ContactRepository } from '../../../../data/repositories/userContact.repository';
+import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
 import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
 import { MessageDataSource } from '../../../../infrastructure/datasources/message.sevice';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
@@ -13,7 +13,6 @@ import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
 import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR/manage-realtime-message-use-case';
 import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
-import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
 import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
@@ -97,6 +96,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     contact.selected = true;
     this.contactSelected = contact;
   }
+  onTyping(text: string): void {
+    if (this.contactSelected && text?.length > 0) {
+      this.manageTypingStatus.notifyTyping(2, true);
+    }
+  }
 
   initData() {
     // Obtener contactos
@@ -111,6 +115,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         },
         error: err => console.error('Error obteniendo contactos:', err)
       });
+
+    // Obtener las conversaciones
   }
 
   private initRealTimeCommunication(): void {
@@ -118,11 +124,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.listenForMessages();
     this.listenForTypingStatus();
   }
-  onTyping(text: string): void {
-    if (this.contactSelected) {
-      this.manageTypingStatus.notifyTyping(2, true);
-    }
-  }
+
 
   onSendMessage(newMessage: string): void {
     if (!newMessage.trim() || !this.contactSelected) {
@@ -253,4 +255,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
   }
 
+
+  // obtener los mensajes de una conversación
+  getMessages(): MessageEntity[] {
+    const conversation = this.conversation.find(conv => conv.id === 1);
+    return conversation?.messages || [];
+  }
 }
