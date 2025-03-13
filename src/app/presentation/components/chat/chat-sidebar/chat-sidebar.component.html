@@ -2,9 +2,9 @@
 <aside class="w-110 border-r border-gray-200/30 bg-white/90 backdrop-blur-2xl h-full">
   <!-- Top controls -->
   <div class="border-b border-gray-200/30 px-2 pb-5">
-    <div class="flex items-center mb-6">
+    <div class="flex items-center p-4">
       <h1
-        class="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800"
+        class="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-950"
       >
         Mensajes
       </h1>
@@ -35,7 +35,7 @@
   </div>
 
   <!-- Lista de contactos con efectos de hover -->
-  <div class="overflow-y-auto h-full px-2">
+  <div class="overflow-y-auto h-full px-1">
     @for (contact of filteredContacts; track contact.userId) {
       <div
         @fadeSlide
