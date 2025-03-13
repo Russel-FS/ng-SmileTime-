@@ -8,6 +8,7 @@ import {
   timer,
   of,
   catchError,
+  map,
 } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 
@@ -25,6 +26,21 @@ export class ManageTypingStatusUseCase {
     this.typingSubject
       .pipe(
         debounceTime(this.TYPING_DEBOUNCE_TIME),
+        switchMap(({ userId, isTyping }) => {
+          if (isTyping) {
+            return timer(0, 1500).pipe(
+              map((index) => ({
+                userId,
+                isTyping: index === 0,
+              }
+              )),
+            );
+          }
+          return of({ userId, isTyping });
+        }),
+        distinctUntilChanged((prev, curr) =>
+          prev.isTyping === curr.isTyping && prev.userId === curr.userId,
+        ),
         catchError((error) => {
           console.error('Error al procesar la escritura:', error);
           return of({ userId: '', isTyping: false });
@@ -32,7 +48,7 @@ export class ManageTypingStatusUseCase {
       )
       .subscribe(({ userId, isTyping }) => {
         console.log(isTyping ? 'El usuario está escribiendo...' : 'El usuario dejó de escribir.'); // 🖨️ Mostrar en consola
-        this.realTimeCommunication.setTypingStatus(userId, isTyping);
+        this.realTimeCommunication.setTypingStatus('2', isTyping);
       });
   }
 

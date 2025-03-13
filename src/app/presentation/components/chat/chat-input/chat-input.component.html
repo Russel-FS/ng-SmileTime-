@@ -4,7 +4,7 @@
       <input
         type="text"
         [(ngModel)]="newMessage"
-        (input)="onTyping()"
+        (keyup)="onTyping()"
         name="message"
         class="text"
         placeholder="Escribe un mensaje..."
