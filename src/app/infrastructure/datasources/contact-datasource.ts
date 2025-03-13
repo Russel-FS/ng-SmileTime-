@@ -17,6 +17,7 @@ export class ContactDataSource implements IUserDatasource {
       lastActive: new Date(),
       selected: true,
       conversationId:'1',
+      isOnline :true,
     },
     {
       userId: 2,

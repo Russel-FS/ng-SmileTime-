@@ -16,5 +16,6 @@ export const mockParticipants = [
     avatar: 'https://example.com/avatar2.jpg',
     lastActive: new Date(),
     joinedAt: new Date(),
+    isOnline :true,
   }),
 ];
