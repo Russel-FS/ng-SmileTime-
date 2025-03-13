@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserEntityDto } from '../../data/dto/user-DTO';
 import { IUserDatasource } from '../../core/interfaces/datasource/chat/I-user-datasource';
 import { ConversationParticipantDTO } from '../../data/dto/conversation-participant-DTO';
 
