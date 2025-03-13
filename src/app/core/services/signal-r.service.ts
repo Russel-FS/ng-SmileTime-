@@ -33,22 +33,23 @@ export class SignalRService implements IRealTimeComunication {
         .withUrl(this.apiUrl.getEndpoint('chatHub'), {
           accessTokenFactory: () => this.storageService.getToken(),
           transport: signalR.HttpTransportType.WebSockets,
-          skipNegotiation: true
         })
         .withAutomaticReconnect([0, 2000, 5000, 10000])
         .configureLogging(signalR.LogLevel.Debug)
         .build();
 
-      // eventos de conexión
+      // eventos de reconexión
       this.setupConnectionEvents();
 
       //  iniciar la conexión
-      await this.hubConnection.start();
-      console.log('Conexión SignalR iniciada');
+      await this.hubConnection.start().then(() => {
+        console.log('Conexión SignalR iniciada');
+      });
+
       // listener de mensajes
       this.setupMessageListener();
     } catch (err) {
-      console.error('Error al iniciar la conexión:', err);
+      console.error('Error al iniciar la conexión:');
     }
   }
 
@@ -65,7 +66,7 @@ export class SignalRService implements IRealTimeComunication {
       console.log('Conexión cerrada:', error);
     });
   }
- 
+
   disconnect() {
     if (this.hubConnection) {
       this.hubConnection

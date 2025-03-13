@@ -1,9 +1,13 @@
 <div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
   <!-- Sidebar -->
-  <app-chat-sidebar class="overflow-hidden" [contacts]="contacts"></app-chat-sidebar>
+  <app-chat-sidebar
+    class="overflow-hidden"
+    [contacts]="contacts"
+    (contactClick)="onContactClick($event)"
+  ></app-chat-sidebar>
   <!-- Chat -->
   <div class="chat-container">
-    <app-chat-header></app-chat-header>
+    <app-chat-header [userHeader]="contactSelected"> </app-chat-header>
     <app-chat-messages
       class="flex-1 overflow-hidden"
       [messages]="getMessages()"

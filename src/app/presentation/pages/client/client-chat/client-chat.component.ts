@@ -45,7 +45,6 @@ import { IConversationDatasource } from '../../../../core/interfaces/datasource/
     ChatInputComponent
   ],
   providers: [
-    ContactsUseCase,
     ManageRealtimeMessageUseCase,
     ManageTypingStatusUseCase,
     {
@@ -56,6 +55,7 @@ import { IConversationDatasource } from '../../../../core/interfaces/datasource/
       provide: IMessageRepository,
       useClass: MessageRepository,
     },
+    ContactsUseCase,
     {
       provide: IUserRepository,
       useClass: ContactRepository,

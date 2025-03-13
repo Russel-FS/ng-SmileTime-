@@ -1,17 +1,17 @@
-@if (user) {
+@if (userHeader) {
   <div class="chat-container">
     <div class="chat-header">
       <div class="relative">
         <!--avatar-->
         <img
-          [src]="user.avatar"
+          [src]="userHeader.avatar"
           alt="avatar"
           class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
         />
         <!--señal de estado-->
         <div
-          [class]="
-            user.isOnline()
+          [ngClass]="
+            userHeader.isActive()
               ? 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full ring-2 ring-white'
               : 'absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-400 rounded-full ring-2 ring-white'
           "
@@ -19,11 +19,11 @@
       </div>
       <div class="user-info">
         <h2 class="text-lg font-semibold text-gray-900">
-          {{ user.getFullName() }}
+          {{ userHeader.userName }}
         </h2>
         <div>
           <p class="status">
-            {{ user.isOnline() ? 'En línea' : 'Desconectado' }}
+            {{ userHeader.isActive() ? 'En línea' : 'Desconectado' }}
           </p>
         </div>
       </div>
