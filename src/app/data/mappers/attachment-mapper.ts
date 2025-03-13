@@ -6,6 +6,8 @@ import { AttachmentEntityDTO } from '../dto/attachment-entity-DTO';
   providedIn: 'root',
 })
 export class AttachmentMapper {
+
+  
   toModel(dto: AttachmentEntityDTO): AttachmentEntity {
     return new AttachmentEntity(
       dto.id,

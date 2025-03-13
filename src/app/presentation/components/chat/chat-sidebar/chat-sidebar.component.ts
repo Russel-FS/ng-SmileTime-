@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { UserEntity, UserRole } from '../../../../core/domain/model/chat/user-entity';
 import { CommonModule } from '@angular/common';
+import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -24,16 +25,16 @@ import { CommonModule } from '@angular/common';
 })
 export class ChatSidebarComponent {
   searchQuery: string = '';
-  @Input() contacts: UserEntity[] = [];
-  @Output() contactClick = new EventEmitter<UserEntity>();
+  @Input() contacts: ConversationParticipant[] = [];
+  @Output() contactClick = new EventEmitter<ConversationParticipant>();
 
-  onContactClick(contact: UserEntity): void {
+  onContactClick(contact: ConversationParticipant): void {
     this.contactClick.emit(contact);
   }
 
-  get filteredContacts(): UserEntity[] {
+  get filteredContacts(): ConversationParticipant[] {
     return this.contacts.filter((contact) =>
-      contact.username.toLowerCase().includes(this.searchQuery.toLowerCase()),
+      contact.userName.toLowerCase().includes(this.searchQuery.toLowerCase()),
     );
   }
 }

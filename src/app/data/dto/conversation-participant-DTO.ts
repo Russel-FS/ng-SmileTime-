@@ -5,4 +5,7 @@ export interface ConversationParticipantDTO {
   lastActive?: Date;
   joinedAt?: Date;
   leftAt?: Date;
+  selected?: boolean;
+  role?: string;
+  isOnline?: boolean;
 }

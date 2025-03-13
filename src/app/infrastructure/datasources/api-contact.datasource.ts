@@ -16,6 +16,21 @@ export class ContactDataSource implements IUserDatasource {
       userName: 'Russel',
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
       lastActive: new Date(),
+      selected: true
+    },
+    {
+      userId: 2,
+      userName: 'Solano',
+      avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
+      lastActive: new Date(),
+      selected: false
+    },
+    {
+      userId: 3,
+      userName: 'Freddy',
+      avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
+      lastActive: new Date(),
+      selected: false
     },
   ];
 

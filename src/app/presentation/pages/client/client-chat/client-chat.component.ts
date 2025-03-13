@@ -105,6 +105,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
+          console.log('Contactos obtenidos:', contacts);
           // Seleccionar un contacto primero
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
