@@ -16,7 +16,7 @@ export class GetMessagesUseCase {
   getMessage(id: string): Observable<MessageEntity> {
     return this.messageRepository.getMessage(id);
   }
-  sendMessage(message: MessageEntity): Observable<MessageEntity> {
+  sendMessage(message: MessageEntity): Observable<ConversationEntity> {
     return this.messageRepository.sendMessage(message);
   }
 }

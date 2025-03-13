@@ -26,6 +26,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
 import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";
 import { ChatInputComponent } from "../../../components/chat/chat-input/chat-input.component";
+import { ConversationUseCase } from '../../../../core/use-cases/chat/conversation-use-case';
+import { IConversationRepository } from '../../../../core/interfaces/repositorys/chat/i-conversation-repository';
+import { ConversationService } from '../../../../infrastructure/datasources/conversation.service';
+import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
+import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 
 
 @Component({
@@ -63,6 +68,15 @@ import { ChatInputComponent } from "../../../components/chat/chat-input/chat-inp
       provide: IMessageDatasource,
       useClass: MessageDataSource,
     },
+    ConversationUseCase,
+    {
+      provide: IConversationRepository,
+      useClass: ConversationRepository,
+    },
+    {
+      provide: IConversationDatasource,
+      useClass: ConversationService,
+    }
   ],
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css'],
@@ -72,6 +86,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
+    private conversationUseCase: ConversationUseCase
   ) { }
 
   contactSelected!: ConversationParticipant;
@@ -116,7 +131,16 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: err => console.error('Error obteniendo contactos:', err)
       });
 
-    // Obtener las conversaciones
+    // Obtener una conversacion
+    this.conversationUseCase.getConversationByParticipants(2, 1)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: conversations => {
+          this.conversation.push(conversations);
+          console.log('Conversaciones obtenidas:', conversations);
+        },
+        error: err => console.error('Error obteniendo conversaciones:', err)
+      });
   }
 
   private initRealTimeCommunication(): void {
@@ -258,7 +282,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   // obtener los mensajes de una conversación
   getMessages(): MessageEntity[] {
-    const conversation = this.conversation.find(conv => conv.id === 1);
+    const conversation = this.conversation.find(conv => conv.id === 1 || conv.id.toString().includes('1'));
     return conversation?.messages || [];
   }
 }

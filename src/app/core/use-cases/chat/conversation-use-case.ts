@@ -7,7 +7,7 @@ import { IConversationRepository } from '../../interfaces/repositorys/chat/i-con
 @Injectable({
     providedIn: 'root',
 })
-export class GetMessagesUseCase {
+export class ConversationUseCase {
     constructor(@Inject(IConversationRepository) private conversationRepository: IConversationRepository) { }
 
     createConversation(conversation: ConversationEntity): Observable<ConversationEntity> {

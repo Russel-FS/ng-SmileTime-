@@ -4,13 +4,14 @@ import { map, Observable } from "rxjs";
 import { ConversationEntity } from "../../core/domain/model/chat/conversation-entity";
 import { ConversationMapper } from "../mappers/conversation.mapper";
 import { ConversationService } from "../../infrastructure/datasources/conversation.service";
+import { IConversationDatasource } from "../../core/interfaces/datasource/chat/i-conversation-datasource";
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConversationRepository implements IConversationRepository {
     constructor(
-        private conversationDatasource: ConversationService,
+        private conversationDatasource: IConversationDatasource,
         private conversationMapper: ConversationMapper,
     ) { }
     getByUserId(userId: number | string): Observable<ConversationEntity[]> {
