@@ -12,12 +12,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
-    provideAnimations(),
-    {
-      provide: 'INIT',
-      useFactory: (storageService: StorageInitializerService) => () => storageService.initialize(),
-      deps: [StorageInitializerService],
-      multi: true,
-    },
+    provideAnimations(), 
   ],
 };

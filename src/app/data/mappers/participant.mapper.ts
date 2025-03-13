@@ -19,7 +19,8 @@ export class ParticipantMapper {
       leftAt: dto.leftAt,
       selected: dto.selected,
       role: dto.role,
-      isOnline: dto.isOnline
+      isOnline: dto.isOnline,
+      conversationId: dto.conversationId
     });
   }
 
@@ -33,7 +34,8 @@ export class ParticipantMapper {
       leftAt: entity.leftAt,
       selected: entity.selected,
       role: entity.role,
-      isOnline: entity.isOnline
+      isOnline: entity.isOnline,
+      conversationId: entity.conversationId
     };
   }
 }

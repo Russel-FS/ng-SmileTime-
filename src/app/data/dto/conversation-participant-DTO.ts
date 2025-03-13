@@ -8,4 +8,6 @@ export interface ConversationParticipantDTO {
   selected?: boolean;
   role?: string;
   isOnline?: boolean;
+  isTyping?: boolean;
+  conversationId?: string | number;
 }

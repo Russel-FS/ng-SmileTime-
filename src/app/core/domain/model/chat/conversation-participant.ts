@@ -11,6 +11,8 @@ export class ConversationParticipant {
   selected?: boolean;
   role?: string;
   isOnline?: boolean;
+  isTyping?: boolean;
+  conversationId?: string | number;
 
   constructor(params: {
     userId: number | string;
@@ -22,7 +24,8 @@ export class ConversationParticipant {
     selected?: boolean;
     role?: string;
     isOnline?: boolean;
-
+    isTyping?: boolean;
+    conversationId?: string | number
   }) {
     this.userId = params.userId;
     this.userName = params.userName;
@@ -33,6 +36,8 @@ export class ConversationParticipant {
     this.selected = params.selected;
     this.role = params.role;
     this.isOnline = params.isOnline;
+    this.isTyping = params.isTyping;
+    this.conversationId = params.conversationId
   }
 
   isActive(): boolean {

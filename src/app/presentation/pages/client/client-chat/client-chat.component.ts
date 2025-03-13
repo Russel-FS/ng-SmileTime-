@@ -31,6 +31,7 @@ import { IConversationRepository } from '../../../../core/interfaces/repositorys
 import { ConversationService } from '../../../../infrastructure/datasources/conversation.service';
 import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
+import { StorageService } from '../../../../core/services/storage.service';
 
 
 @Component({
@@ -86,7 +87,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
-    private conversationUseCase: ConversationUseCase
+    private conversationUseCase: ConversationUseCase,
+    private storage: StorageService
   ) { }
 
   contactSelected!: ConversationParticipant;
@@ -290,7 +292,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   // obtener los mensajes de una conversación
   getMessages(): MessageEntity[] {
-    const conversation = this.conversation.find(conv => conv.id === 1 || conv.id.toString().includes('1'));
+    const conversation = this.conversation.find(
+      conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
+    );
     return conversation?.messages || [];
   }
 }
