@@ -6,8 +6,8 @@ import { ChatMessagesComponent } from '../../../components/chat/chat-messages/ch
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
-import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
-import { MessageDataSource } from '../../../../infrastructure/datasources/message.sevice';
+import { ContactDataSource } from '../../../../infrastructure/datasources/contact-datasource';
+import { MessageDataSource } from '../../../../infrastructure/datasources/message-datasource';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
