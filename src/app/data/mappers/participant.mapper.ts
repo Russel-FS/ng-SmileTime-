@@ -9,17 +9,17 @@ import { classes } from '@automapper/classes';
 })
 export class ParticipantMapper {
 
-
-
-
   toDomain(dto: ConversationParticipantDTO): ConversationParticipant {
     return new ConversationParticipant({
       userId: dto.userId,
       userName: dto.userName,
-      avatar: dto.avatar || '',
+      avatar: dto.avatar,
       lastActive: dto.lastActive,
       joinedAt: dto.joinedAt,
       leftAt: dto.leftAt,
+      selected: dto.selected,
+      role: dto.role,
+      isOnline: dto.isOnline
     });
   }
 
@@ -31,6 +31,9 @@ export class ParticipantMapper {
       lastActive: entity.lastActive,
       joinedAt: entity.joinedAt,
       leftAt: entity.leftAt,
+      selected: entity.selected,
+      role: entity.role,
+      isOnline: entity.isOnline
     };
   }
 }
