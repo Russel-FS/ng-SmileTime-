@@ -180,25 +180,34 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       isDeleted: false
     });
 
+    const idTest = '1';
+    const existingConversation = this.conversation.find(c => {
+      if (!c.id || !idTest) return false;
+      return c.id?.toString().trim() === idTest?.toString().trim();
+    });
+
+    existingConversation?.messages?.push(message);
 
     // Enviar mensaje en tiempo real
-    this.manageRealTimeMessages.sendMessage(message)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (conversation: ConversationEntity) => {
-          // verificamos que la conversacion no exista antes de añadir
-          const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
-          if (!existingConversation) {
-            this.conversation.push(conversation);
-          }
-          // Notificar que el usuario dejó de escribir
-          this.manageTypingStatus.notifyTyping(2, false);
-        },
-        error: error => {
-          console.error('Error enviando mensaje:', error);
-          this.manageTypingStatus.notifyTyping(2, false);
-        }
-      });
+    /*   this.manageRealTimeMessages.sendMessage(message)
+         .pipe(takeUntil(this.unsubscribe$))
+         .subscribe({
+           next: (conversation: ConversationEntity) => {
+             // verificamos que la conversacion no exista antes de añadir
+             const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
+             if (!existingConversation) {
+               this.conversation.push(conversation);
+             }
+             // Notificar que el usuario dejó de escribir
+             this.manageTypingStatus.notifyTyping(2, false);
+           },
+           error: error => {
+             console.error('Error enviando mensaje:', error);
+             this.manageTypingStatus.notifyTyping(2, false);
+           }
+         });
+         */
+
   }
 
 
@@ -268,7 +277,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         next: ({ userId, isTyping }) => {
           const contact = this.contacts.find((c) => {
             if (!c.userId || !userId) return false;
-            return String(c.userId).trim() === String(userId).trim();
+            return c.userId?.toString().trim() === userId?.toString().trim();
           });
           // 
           if (contact) { }
@@ -278,7 +287,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: (error) => console.error('Error al recibir el estado de escritura:', error),
       });
   }
-
 
   // obtener los mensajes de una conversación
   getMessages(): MessageEntity[] {
