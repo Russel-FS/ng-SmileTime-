@@ -61,7 +61,7 @@ export class ManageTypingStatusUseCase {
       )
       .subscribe(({ userId, isTyping }) => {
         this.previousState.set(userId, isTyping); // actualizar el estado anterior
-        this.realTimeCommunication.setTypingStatus(userId, isTyping); // notificar al servidor
+        this.realTimeCommunication.setTypingStatus('2', isTyping); // notificar al servidor
       });
   }
 
