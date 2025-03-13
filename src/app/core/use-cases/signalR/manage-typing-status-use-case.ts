@@ -48,7 +48,7 @@ export class ManageTypingStatusUseCase {
       )
       .subscribe(({ userId, isTyping }) => {
         console.log(isTyping ? 'El usuario está escribiendo...' : 'El usuario dejó de escribir.'); // 🖨️ Mostrar en consola
-        this.realTimeCommunication.setTypingStatus('2', isTyping);
+        this.realTimeCommunication.setTypingStatus(userId, isTyping);
       });
   }
 

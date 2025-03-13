@@ -236,16 +236,21 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
 
   private listenForTypingStatus(): void {
-    this.manageTypingStatus.listenTypingStatus().subscribe({
-      next: ({ userId, isTyping }) => {
-        const contact = this.contacts.find((c) => userId.includes(c.userId?.toString()));
-        if (contact) {
-
-        }
-        this.isTyping = isTyping;
-      },
-      error: (error) => console.error('Error al recibir el estado de escritura:', error),
-    });
+    this.manageTypingStatus.listenTypingStatus()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: ({ userId, isTyping }) => {
+          const contact = this.contacts.find((c) => {
+            if (!c.userId || !userId) return false;
+            return String(c.userId).trim() === String(userId).trim();
+          });
+          // 
+          if (contact) { }
+          // Actualizar el estado de escritura
+          this.isTyping = isTyping;
+        },
+        error: (error) => console.error('Error al recibir el estado de escritura:', error),
+      });
   }
 
 }
