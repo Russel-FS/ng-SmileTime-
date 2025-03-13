@@ -5,6 +5,9 @@
   <div class="chat-container">
     <app-chat-header></app-chat-header>
     <app-chat-messages class="flex-1 overflow-hidden" [isTyping]="isTyping"></app-chat-messages>
-    <app-chat-input></app-chat-input>
+    <app-chat-input
+      (EventTyping)="onTyping($event)"
+      (EventSendMessage)="onSendMessage($event)"
+    ></app-chat-input>
   </div>
 </div>

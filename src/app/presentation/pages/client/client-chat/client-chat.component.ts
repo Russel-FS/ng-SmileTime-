@@ -78,7 +78,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   contactSelected!: ConversationParticipant;
   contacts: ConversationParticipant[] = [];
   conversation: ConversationEntity[] = [];
-  isTyping: boolean = true;
+  isTyping: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -120,7 +120,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
   onTyping(text: string): void {
     if (this.contactSelected) {
-      this.manageTypingStatus.notifyTyping(this.contactSelected.userId, text);
+      this.manageTypingStatus.notifyTyping(2, 'texto');
     }
   }
 
@@ -166,11 +166,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
             this.conversation.push(conversation);
           }
           // Notificar que el usuario dejó de escribir
-          this.manageTypingStatus.notifyTyping(this.contactSelected.userId, '');
+          this.manageTypingStatus.notifyTyping(2, '');
         },
         error: error => {
           console.error('Error enviando mensaje:', error);
-          this.manageTypingStatus.notifyTyping(this.contactSelected.userId, '');
+          this.manageTypingStatus.notifyTyping(2, '');
         }
       });
   }
@@ -240,8 +240,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       next: ({ userId, isTyping }) => {
         const contact = this.contacts.find((c) => userId.includes(c.userId?.toString()));
         if (contact) {
-          this.isTyping = isTyping;
+
         }
+        this.isTyping = isTyping;
       },
       error: (error) => console.error('Error al recibir el estado de escritura:', error),
     });

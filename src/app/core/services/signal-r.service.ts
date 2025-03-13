@@ -19,23 +19,53 @@ export class SignalRService implements IRealTimeComunication {
     private storageService: StorageService,
   ) { }
 
-  connect() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.apiUrl.getEndpoint('chatHub'), {
-        accessTokenFactory: () => this.storageService.getToken(),
-        transport: signalR.HttpTransportType.WebSockets,
-      })
-      .build();
+  async connect() {
+    try {
 
-    this.hubConnection
-      .start()
-      .then(() => {
-        console.log('Coneccion SignalR iniciada');
-        this.setupMessageListener();
-      })
-      .catch((err) => console.log('Error al iniciar la coneccion: ' + err));
+      // si ya existe una conexión activa, no se intenta crear una nueva
+      if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
+        console.log('Ya existe una conexión SignalR activa');
+        return;
+      }
+
+      // crea una nueva conexión con el hub de SignalR
+      this.hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(this.apiUrl.getEndpoint('chatHub'), {
+          accessTokenFactory: () => this.storageService.getToken(),
+          transport: signalR.HttpTransportType.WebSockets,
+          skipNegotiation: true
+        })
+        .withAutomaticReconnect([0, 2000, 5000, 10000])
+        .configureLogging(signalR.LogLevel.Debug)
+        .build();
+
+      // eventos de conexión
+      this.setupConnectionEvents();
+
+      //  iniciar la conexión
+      await this.hubConnection.start();
+      console.log('Conexión SignalR iniciada');
+      // listener de mensajes
+      this.setupMessageListener();
+    } catch (err) {
+      console.error('Error al iniciar la conexión:', err);
+    }
   }
 
+  setupConnectionEvents(): void {
+    this.hubConnection.onreconnecting((error) => {
+      console.log('Intentando reconectar...', error);
+    });
+
+    this.hubConnection.onreconnected((connectionId) => {
+      console.log('Reconectado exitosamente. ID:', connectionId);
+    });
+
+    this.hubConnection.onclose((error) => {
+      console.log('Conexión cerrada:', error);
+    });
+  }
+ 
   disconnect() {
     if (this.hubConnection) {
       this.hubConnection
