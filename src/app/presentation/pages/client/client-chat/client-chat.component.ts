@@ -12,7 +12,7 @@ import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/
 import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
 import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR/manage-realtime-message-use-case';
-import { ManageTypingStatusUseCase } from '../../../../core/use-cases/chat/manage-typing-status-use-case';
+import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
 import { UserEntity } from '../../../../core/domain/model/chat/user-entity';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
@@ -120,7 +120,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
   onTyping(text: string): void {
     if (this.contactSelected) {
-      this.manageTypingStatus.notifyTyping(2, 'texto');
+      this.manageTypingStatus.notifyTyping(2, true);
     }
   }
 
@@ -166,11 +166,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
             this.conversation.push(conversation);
           }
           // Notificar que el usuario dejó de escribir
-          this.manageTypingStatus.notifyTyping(2, '');
+          this.manageTypingStatus.notifyTyping(2, false);
         },
         error: error => {
           console.error('Error enviando mensaje:', error);
-          this.manageTypingStatus.notifyTyping(2, '');
+          this.manageTypingStatus.notifyTyping(2, false);
         }
       });
   }
