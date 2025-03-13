@@ -10,16 +10,16 @@ import { mockConversation } from '../../core/domain/model/chat/__mocks__/convers
 export class ConversationService implements IConversationDatasource {
 
   constructor() { }
-  getByUserId(userId: number): Observable<ConversationEntityDTO[]> {
+  getByUserId(userId: number | string): Observable<ConversationEntityDTO[]> {
     throw new Error('Method not implemented.');
   }
   create(conversation: ConversationEntityDTO): Observable<ConversationEntityDTO> {
     throw new Error('Method not implemented.');
   }
-  update(id: string, conversation: Partial<ConversationEntityDTO>): Observable<ConversationEntityDTO> {
+  update(id: number | string, conversation: Partial<ConversationEntityDTO>): Observable<ConversationEntityDTO> {
     throw new Error('Method not implemented.');
   }
-  getConversationByParticipants(userId: number, contactId: number): Observable<ConversationEntityDTO> {
+  getConversationByParticipants(userId: number | string, contactId: number | string): Observable<ConversationEntityDTO> {
     return new Observable<ConversationEntityDTO>(observer => {
       observer.next(mockConversation);
       observer.complete();

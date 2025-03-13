@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConversationEntity } from '../../core/domain/model/chat/conversation-entity';
+import { ConversationEntity, ConversationType } from '../../core/domain/model/chat/conversation-entity';
 import { ConversationEntityDTO } from '../dto/conversation-entity-DTO';
 import { MessageMapper } from './message.mapper';
 import { ParticipantMapper } from './participant.mapper';
@@ -26,16 +26,16 @@ export class ConversationMapper {
     });
   }
 
-  toDTO(entity: ConversationEntity): ConversationEntityDTO {
+  toDTO(entity: ConversationEntity | Partial<ConversationEntity>): ConversationEntityDTO {
     return {
-      id: entity.id,
-      title: entity.title,
-      type: entity.type,
+      id: entity.id || '',
+      title: entity.title || '',
+      type: entity.type || ConversationType.INDIVIDUAL,
       participants: entity.participants?.map((p) => this.participantMapper.toDTO(p)) || [],
-      messages: entity.messages.map((m) => this.messageMapper.toDTO(m)),
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      isActive: entity.isActive,
+      messages: entity.messages?.map((m) => this.messageMapper.toDTO(m)) || [],
+      createdAt: entity.createdAt || new Date(),
+      updatedAt: entity.updatedAt || new Date(),
+      isActive: entity.isActive ?? true,
     };
   }
 }

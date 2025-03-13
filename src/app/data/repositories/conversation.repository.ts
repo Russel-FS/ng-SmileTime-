@@ -1,27 +1,45 @@
 import { Injectable } from "@angular/core";
 import { IConversationRepository } from "../../core/interfaces/repositorys/chat/i-conversation-repository";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { ConversationEntity } from "../../core/domain/model/chat/conversation-entity";
 import { ConversationMapper } from "../mappers/conversation.mapper";
+import { ConversationService } from "../../infrastructure/datasources/conversation.service";
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConversationRepository implements IConversationRepository {
     constructor(
+        private conversationDatasource: ConversationService,
         private conversationMapper: ConversationMapper,
     ) { }
     getByUserId(userId: number | string): Observable<ConversationEntity[]> {
-        throw new Error("Method not implemented.");
+        return this.conversationDatasource.getByUserId(userId)
+            .pipe(
+                map(
+                    (dto) => dto.map((conversation) => this.conversationMapper.toDomain(conversation))
+                ));
     }
     create(conversation: ConversationEntity): Observable<ConversationEntity> {
-        throw new Error("Method not implemented.");
+        return this.conversationDatasource.create(this.conversationMapper.toDTO(conversation))
+            .pipe(
+                map(
+                    (dto) => this.conversationMapper.toDomain(dto)
+                ));
     }
     update(id: number | string, conversation: Partial<ConversationEntity>): Observable<ConversationEntity> {
-        throw new Error("Method not implemented.");
+        return this.conversationDatasource.update(id, this.conversationMapper.toDTO(conversation))
+            .pipe(
+                map(
+                    (dto) => this.conversationMapper.toDomain(dto)
+                ));
     }
     getConversationByParticipants(userId: number | string, contactId: number | string): Observable<ConversationEntity> {
-        throw new Error("Method not implemented.");
+        return this.conversationDatasource.getConversationByParticipants(userId, contactId)
+            .pipe(
+                map(
+                    (dto) => this.conversationMapper.toDomain(dto)
+                ));
     }
 
 }
