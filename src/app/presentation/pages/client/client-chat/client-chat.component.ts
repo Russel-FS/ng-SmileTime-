@@ -1,22 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatSidebarComponent } from '../../../../shared/components/chat/chat-sidebar/chat-sidebar.component';
-import { Message } from '../../../../core/domain/models/messages';
-import { ChatMessagesComponent } from '../../../../shared/components/chat/chat-messages/chat-messages.component';
-import { ChatHeaderComponent } from '../../../../shared/components/chat/chat-header/chat-header.component';
-import { SendMessageUseCase } from '../../../../core/use-cases/send-message-use-case';
-import { IMessageRepository } from '../../../../core/interfaces/message.repository';
+import { ChatSidebarComponent } from '../../../components/chat/chat-sidebar/chat-sidebar.component';
+import { ChatMessagesComponent } from '../../../components/chat/chat-messages/chat-messages.component';
+import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
-import { GetMessagesUseCase } from '../../../../core/use-cases/get-messages-use-case';
-import { GetContactsUseCase } from '../../../../core/use-cases/get-contacts-use-case';
-import { Contact } from '../../../../core/domain/models/contact';
-import { IContactRepository } from '../../../../core/interfaces/IContactRepository';
-import { ContactRepository } from '../../../../data/repositories/contact.repository';
-import { ContactDataSource } from '../../../../infrastructure/datasources/api-contact.datasource';
-import { IContactDatasource } from '../../../../core/interfaces/IContactDatasource';
-import { MessageDataSource } from '../../../../infrastructure/datasources/message.datasource';
-import { IMessageDatasource } from '../../../../core/interfaces/i-message-datasource';
+import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
+import { ContactDataSource } from '../../../../infrastructure/datasources/contact-datasource';
+import { MessageDataSource } from '../../../../infrastructure/datasources/message-datasource';
+import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
+import { SignalRService } from '../../../../core/services/signal-r.service';
+import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
+import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR/manage-realtime-message-use-case';
+import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
+import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
+import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
+import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
+import {
+  ConversationEntity,
+  ConversationType,
+} from '../../../../core/domain/model/chat/conversation-entity';
+import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
+import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+import { Subject, takeUntil } from 'rxjs';
+import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
+import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";
+import { ChatInputComponent } from "../../../components/chat/chat-input/chat-input.component";
+import { ConversationUseCase } from '../../../../core/use-cases/chat/conversation-use-case';
+import { IConversationRepository } from '../../../../core/interfaces/repositorys/chat/i-conversation-repository';
+import { ConversationService } from '../../../../infrastructure/datasources/conversation.service';
+import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
+import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
+import { StorageService } from '../../../../core/services/storage.service';
+
 
 @Component({
   selector: 'app-client-chat',
@@ -27,94 +43,258 @@ import { IMessageDatasource } from '../../../../core/interfaces/i-message-dataso
     ChatSidebarComponent,
     ChatMessagesComponent,
     ChatHeaderComponent,
+    ChatInputComponent
   ],
   providers: [
-    GetMessagesUseCase,
-    SendMessageUseCase,
-    GetContactsUseCase,
+    ManageRealtimeMessageUseCase,
+    ManageTypingStatusUseCase,
+    {
+      provide: IRealTimeComunication,
+      useClass: SignalRService,
+    },
     {
       provide: IMessageRepository,
       useClass: MessageRepository,
     },
+    ContactsUseCase,
     {
-      provide: IContactRepository,
+      provide: IUserRepository,
       useClass: ContactRepository,
     },
     {
-      provide: IContactDatasource,
+      provide: IUserDatasource,
       useClass: ContactDataSource,
     },
     {
       provide: IMessageDatasource,
       useClass: MessageDataSource,
     },
+    ConversationUseCase,
+    {
+      provide: IConversationRepository,
+      useClass: ConversationRepository,
+    },
+    {
+      provide: IConversationDatasource,
+      useClass: ConversationService,
+    }
   ],
   templateUrl: './client-chat.component.html',
   styleUrls: ['./client-chat.component.css'],
 })
-export class ClientChatComponent implements OnInit {
+export class ClientChatComponent implements OnInit, OnDestroy {
   constructor(
-    private getMessagesUseCase: GetMessagesUseCase,
-    private sendMessageUseCase: SendMessageUseCase,
-    private getContactsUseCase: GetContactsUseCase,
-  ) {}
+    private ContactsUseCase: ContactsUseCase,
+    private manageRealTimeMessages: ManageRealtimeMessageUseCase,
+    private manageTypingStatus: ManageTypingStatusUseCase,
+    private conversationUseCase: ConversationUseCase,
+    private storage: StorageService
+  ) { }
 
-  contactSelected!: Contact;
-  messages: Message[] = [];
-  contacts: Contact[] = [];
+  contactSelected!: ConversationParticipant;
+  contacts: ConversationParticipant[] = [];
+  conversation: ConversationEntity[] = [];
+  isTyping: boolean = false;
+  private unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
     this.initData();
+    this.initRealTimeCommunication();
   }
 
-  onContactClick(contact: Contact) {
-    this.contacts.forEach((c) => (c.isSelected = false));
-    contact.isSelected = true;
-    contact.unread = 0;
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.manageRealTimeMessages.closeConnection();
+  }
+
+  onContactClick(contact: ConversationParticipant): void {
+    this.contacts.forEach((c) => (c.selected = false));
+    contact.selected = true;
     this.contactSelected = contact;
   }
-
-  onGetMessages(contact: Contact) {}
-
-  initData() {
-    // obtener contactos
-    this.getContactsUseCase.execute().subscribe((contacts) => {
-      this.contacts = contacts;
-      const selectedContact = contacts.find((c) => c.isSelected);
-      if (selectedContact) {
-        this.contactSelected = selectedContact;
-      }
-    });
-
-    // obtener mensajes
-    this.getMessagesUseCase.execute().subscribe((messages) => {
-      this.messages = messages;
-    });
+  onTyping(text: string): void {
+    if (this.contactSelected && text?.length > 0) {
+      this.manageTypingStatus.notifyTyping(2, true);
+    }
   }
 
+  initData() {
+    // Obtener contactos
+    this.ContactsUseCase.execute()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: contacts => {
+          this.contacts = contacts;
+          console.log('Contactos obtenidos:', contacts);
+          // Seleccionar un contacto primero
+          this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
+        },
+        error: err => console.error('Error obteniendo contactos:', err)
+      });
+
+    // Obtener una conversacion
+    this.conversationUseCase.getConversationByParticipants(2, 1)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: conversations => {
+          this.conversation.push(conversations);
+          console.log('Conversaciones obtenidas:', conversations);
+        },
+        error: err => console.error('Error obteniendo conversaciones:', err)
+      });
+  }
+
+  private initRealTimeCommunication(): void {
+    this.manageRealTimeMessages.initializeConnection();
+    this.listenForMessages();
+    this.listenForTypingStatus();
+  }
+
+
   onSendMessage(newMessage: string): void {
-    if (newMessage.trim()) {
-      // marcar como escribiendo
-      if (this.contactSelected) {
-        this.contactSelected.isTyping = true;
-      }
-
-      this.messages.push({ text: newMessage, isUser: true, timestamp: new Date() });
-
-      // enviar mensaje
-      this.sendMessageUseCase.execute(new Message(newMessage, true, new Date(), 2)).subscribe();
-
-      // simular respuesta
-      setTimeout(() => {
-        if (this.contactSelected) {
-          this.contactSelected.isTyping = false;
-        }
-        this.messages.push({
-          text: '¡Claro! ¿En qué puedo ayudarte?',
-          isUser: false,
-          timestamp: new Date(),
-        });
-      }, 2000);
+    if (!newMessage.trim() || !this.contactSelected) {
+      return;
     }
+
+    // usuario que envía el mensaje
+    const sender = new ConversationParticipant({
+      userId: 2,
+      userName: 'Solano flores',
+      avatar: 'https://example.com/avatar2.jpg'
+    });
+
+    // usuario destinatario
+    const destin = new ConversationParticipant({
+      userId: 1,
+      userName: 'Freddy flores',
+      avatar: 'https://example.com/avatar2.jpg'
+    });
+
+    // creacion del mensaje
+    const message = new MessageEntity({
+      id: 2,
+      sender: sender,
+      content: newMessage,
+      type: MessageType.TEXT,
+      status: [new MessageStatus(2, Status.SENT, new Date())],
+      createdAt: new Date(),
+      isDeleted: false
+    });
+
+    const idTest = '1';
+    const existingConversation = this.conversation.find(c => {
+      if (!c.id || !idTest) return false;
+      return c.id?.toString().trim() === idTest?.toString().trim();
+    });
+
+    existingConversation?.messages?.push(message);
+
+    // Enviar mensaje en tiempo real
+    /*   this.manageRealTimeMessages.sendMessage(message)
+         .pipe(takeUntil(this.unsubscribe$))
+         .subscribe({
+           next: (conversation: ConversationEntity) => {
+             // verificamos que la conversacion no exista antes de añadir
+             const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
+             if (!existingConversation) {
+               this.conversation.push(conversation);
+             }
+             // Notificar que el usuario dejó de escribir
+             this.manageTypingStatus.notifyTyping(2, false);
+           },
+           error: error => {
+             console.error('Error enviando mensaje:', error);
+             this.manageTypingStatus.notifyTyping(2, false);
+           }
+         });
+         */
+
+  }
+
+
+  /**
+   * crea o actualiza una conversación 
+   * este metodo se encarga de buscar una conversación existente
+   * si la encuentra, crea un nuevo mensaje y actualiza la conversación
+   * si no la encuentra, crea una nueva conversación con el destinatario y el mensaje  
+   */
+  private MessageConversation(
+    conversationId: string | number | null,
+    destin: ConversationParticipant,
+    message: MessageEntity
+  ): ConversationEntity {
+
+    // Buscar la conversación existente
+    const existingConversation = this.conversation.find(conv => conv.id === conversationId);
+
+
+    if (existingConversation) {
+      const newConversationMessage = new ConversationEntity({
+        ...existingConversation,
+        messages: [message],
+        participants: [...existingConversation.participants],
+        updatedAt: new Date()
+      })
+
+      return newConversationMessage;
+    }
+    else {
+
+      const conversation = new ConversationEntity({
+        id: '',
+        title: `Conversación con ${destin.userName}`,
+        type: ConversationType.INDIVIDUAL,
+        participants: [destin,],
+        messages: [message],
+        createdAt: new Date(),
+        isActive: true
+      });
+      return conversation;
+    }
+  }
+
+  /**
+   * Escucha mensajes en tiempo real y actualiza la conversación local.
+   */
+  private listenForMessages(): void {
+    this.manageRealTimeMessages.listenForMessages()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (incomingMessage: MessageEntity) => {
+          const index = this.conversation.findIndex(conv => conv.id === incomingMessage.conversationId);
+          if (index !== -1) {
+            this.conversation[index].messages.push(incomingMessage);
+          }
+        },
+        error: error => console.error('Error al recibir mensajes:', error)
+      });
+  }
+
+
+  private listenForTypingStatus(): void {
+    this.manageTypingStatus.listenTypingStatus()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: ({ userId, isTyping }) => {
+          const contact = this.contacts.find((c) => {
+            if (!c.userId || !userId) return false;
+            return c.userId?.toString().trim() === userId?.toString().trim();
+          });
+          // 
+          if (contact) { }
+          // Actualizar el estado de escritura
+          this.isTyping = isTyping;
+        },
+        error: (error) => console.error('Error al recibir el estado de escritura:', error),
+      });
+  }
+
+  // obtener los mensajes de una conversación
+  getMessages(): MessageEntity[] {
+    const conversation = this.conversation.find(
+      conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
+    );
+    return conversation?.messages || [];
   }
 }

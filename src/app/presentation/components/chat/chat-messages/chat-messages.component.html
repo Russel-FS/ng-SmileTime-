@@ -1,0 +1,16 @@
+<!--cuerpo de mensajes-->
+<div #messageContainer class="chat-messages">
+  @for (message of messages; track $index) {
+    <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
+      <div class="message-content">
+        <div class="avatar">RF</div>
+        <div>
+          <div class="content">{{ message.content }}</div>
+          <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>
+        </div>
+      </div>
+    </div>
+  }
+  <!--typing de escritura-->
+  <app-typing *ngIf="isTyping" [@fadeSlide] ></app-typing>
+</div>

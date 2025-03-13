@@ -1,23 +1,27 @@
 import { Injectable } from '@angular/core';
-import { IAuthService } from '../../core/interfaces/i-auth-service';
-import { AuthCredentials, AuthResponse } from '../../core/domain/models/auth';
+import { IAuthService } from '../../core/interfaces/datasource/auth/i-auth-service';
+import { AuthCredentials, AuthResponse } from '../../core/domain/model/auth/auth';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ApiConfig } from '../../infrastructure/config/app.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements IAuthService {
   // url de la api , en este caso es una api de prueba que se encuentra en github dev
-  private apiUrl = 'https://cuddly-space-rotary-phone-7v556pxvgx7x3v5-5011.app.github.dev';
-  constructor(private http: HttpClient) {}
+
+  constructor(
+    private http: HttpClient,
+    private apiUrl: ApiConfig,
+  ) {}
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/api/Auth/login`, credentials);
+    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('login')}`, credentials);
   }
 
   logout(): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/logout`, {});
+    return this.http.post<void>(`${this.apiUrl.get('apiUrl')}/logout`, {});
   }
 
   isAuthenticated(): Observable<boolean> {
