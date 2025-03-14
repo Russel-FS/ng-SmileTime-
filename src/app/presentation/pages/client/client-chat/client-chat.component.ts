@@ -93,7 +93,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   contactSelected!: ConversationParticipant;
   contacts: ConversationParticipant[] = [];
-  conversation: ConversationEntity[] = [];
+  conversations: ConversationEntity[] = [];
   isTyping: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
@@ -137,9 +137,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.conversationUseCase.getConversationByParticipants(2, 1)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: conversations => {
-          this.conversation.push(conversations);
-          console.log('Conversaciones obtenidas:', conversations);
+        next: (conversation) => {
+          this.conversations.push(conversation);
+          console.log('Conversaciones obtenidas:', conversation);
         },
         error: err => console.error('Error obteniendo conversaciones:', err)
       });
@@ -153,10 +153,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
 
   onSendMessage(newMessage: string): void {
-    if (!newMessage.trim() || !this.contactSelected) {
-      return;
-    }
-
     // usuario que envía el mensaje
     const sender = new ConversationParticipant({
       userId: 2,
@@ -182,77 +178,25 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       isDeleted: false
     });
 
-    const idTest = '1';
-    const existingConversation = this.conversation.find(c => {
-      if (!c.id || !idTest) return false;
-      return c.id?.toString().trim() === idTest?.toString().trim();
-    });
 
-    existingConversation?.messages?.push(message);
-
-    // Enviar mensaje en tiempo real
-    /*   this.manageRealTimeMessages.sendMessage(message)
-         .pipe(takeUntil(this.unsubscribe$))
-         .subscribe({
-           next: (conversation: ConversationEntity) => {
-             // verificamos que la conversacion no exista antes de añadir
-             const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
-             if (!existingConversation) {
-               this.conversation.push(conversation);
-             }
-             // Notificar que el usuario dejó de escribir
-             this.manageTypingStatus.notifyTyping(2, false);
-           },
-           error: error => {
-             console.error('Error enviando mensaje:', error);
-             this.manageTypingStatus.notifyTyping(2, false);
-           }
-         });
-         */
-
-  }
-
-
-  /**
-   * crea o actualiza una conversación 
-   * este metodo se encarga de buscar una conversación existente
-   * si la encuentra, crea un nuevo mensaje y actualiza la conversación
-   * si no la encuentra, crea una nueva conversación con el destinatario y el mensaje  
-   */
-  private MessageConversation(
-    conversationId: string | number | null,
-    destin: ConversationParticipant,
-    message: MessageEntity
-  ): ConversationEntity {
-
-    // Buscar la conversación existente
-    const existingConversation = this.conversation.find(conv => conv.id === conversationId);
-
-
-    if (existingConversation) {
-      const newConversationMessage = new ConversationEntity({
-        ...existingConversation,
-        messages: [message],
-        participants: [...existingConversation.participants],
-        updatedAt: new Date()
-      })
-
-      return newConversationMessage;
-    }
-    else {
-
-      const conversation = new ConversationEntity({
-        id: '',
-        title: `Conversación con ${destin.userName}`,
-        type: ConversationType.INDIVIDUAL,
-        participants: [destin,],
-        messages: [message],
-        createdAt: new Date(),
-        isActive: true
+    this.manageRealTimeMessages.sendMessage(message)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (incomingConversation) => {
+          const exist = this.conversations.find(conv => {
+            conv?.id?.toString() === incomingConversation?.id?.toString();
+          });
+          if (!exist) {
+            this.conversations.push(incomingConversation);
+          }
+        },
+        error: error => {
+          console.error('Error enviando mensaje:', error);
+          this.manageTypingStatus.notifyTyping(2, false);
+        }
       });
-      return conversation;
-    }
   }
+
 
   /**
    * Escucha mensajes en tiempo real y actualiza la conversación local.
@@ -262,9 +206,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage: MessageEntity) => {
-          const index = this.conversation.findIndex(conv => conv.id === incomingMessage.conversationId);
+          console.log("mensaje Recibido", incomingMessage)
+
+          const index = this.conversations.findIndex(conv => {
+            conv?.id?.toString() === incomingMessage?.conversationId?.toString()
+          });
           if (index !== -1) {
-            this.conversation[index].messages.push(incomingMessage);
+            this.conversations[index].messages.push(incomingMessage);
           }
         },
         error: error => console.error('Error al recibir mensajes:', error)
@@ -292,9 +240,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   // obtener los mensajes de una conversación
   getMessages(): MessageEntity[] {
-    const conversation = this.conversation.find(
+    const conversation = this.conversations.find(
       conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
     );
     return conversation?.messages || [];
   }
+
 }

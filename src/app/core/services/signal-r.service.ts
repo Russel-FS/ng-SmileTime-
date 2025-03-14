@@ -115,13 +115,8 @@ export class SignalRService implements IRealTimeComunication {
    */
   private setupMessageListener(): void {
     // listener de mensajes
-    this.hubConnection.on('ReceiveMessage', (user: string, messageText: string) => {
-      const message = new MessageEntity({
-        id: 1,
-        sender: new ConversationParticipant({ userId: 1, userName: user, avatar: '' }),
-        content: messageText,
-      });
-      //this.messageReceived.next();
+    this.hubConnection.on('ReceiveMessage', (message: MessageEntity) => {
+      this.messageReceived.next(message);
     });
 
     // listener de estado de typing

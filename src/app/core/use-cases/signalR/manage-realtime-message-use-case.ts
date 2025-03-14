@@ -52,8 +52,8 @@ export class ManageRealtimeMessageUseCase {
         return conversation;
       }),
       tap(conversation => {
-        // se asigna el id de la conversación antes de enviarlo
-        message.conversationId = conversation.id;
+        // se asigna el id de la conversación antes de enviarlo 
+        message.conversationId = conversation?.id;
         this.realTimeCommunication.sendMessage(message);
       }),
       catchError(error => {
@@ -61,7 +61,7 @@ export class ManageRealtimeMessageUseCase {
         return throwError(() => error);
       })
     );
-    
+
   }
 
 }

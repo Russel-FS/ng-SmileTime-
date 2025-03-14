@@ -6,6 +6,7 @@ import { mockMessage } from '../../core/domain/model/chat/__mocks__/message.mock
 import { IMessageDatasource } from '../../core/interfaces/datasource/auth/i-message-datasource';
 import { ConversationEntityDTO } from '../../data/dto/conversation-entity-DTO';
 import { Mapper } from '@automapper/core';
+import { ConversationType } from '../../core/domain/model/chat/conversation-entity';
 
 
 @Injectable({
@@ -34,6 +35,18 @@ export class MessageDataSource implements IMessageDatasource {
 
   sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO> {
     return new Observable<ConversationEntityDTO>((observer) => {
+      const mockConversation: ConversationEntityDTO = {
+        id: '2',
+        participants: [],
+        messages: [message],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isActive: true,
+        type: ConversationType.INDIVIDUAL,
+        title: "mensaje",
+      };
+
+      observer.next(mockConversation);
       observer.complete();
     });
   }
