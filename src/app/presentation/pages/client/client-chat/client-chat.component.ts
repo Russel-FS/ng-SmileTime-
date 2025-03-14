@@ -151,6 +151,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.listenForTypingStatus();
   }
 
+  private messageIdCounter: number = 1;
 
   onSendMessage(newMessage: string): void {
     // usuario que envía el mensaje
@@ -169,7 +170,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
     // creacion del mensaje
     const message = new MessageEntity({
-      id: 2,
+      id: this.messageIdCounter++,
       sender: sender,
       content: newMessage,
       type: MessageType.TEXT,
@@ -184,7 +185,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (incomingConversation) => {
           const exist = this.conversations.find(conv => {
-            conv?.id?.toString() === incomingConversation?.id?.toString();
+            return conv?.id?.toString() === incomingConversation?.id?.toString();
           });
           if (!exist) {
             this.conversations.push(incomingConversation);
@@ -209,8 +210,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           console.log("mensaje Recibido", incomingMessage)
 
           const index = this.conversations.findIndex(conv => {
-            conv?.id?.toString() === incomingMessage?.conversationId?.toString()
+            return conv?.id?.toString() === incomingMessage?.conversationId?.toString()
           });
+
           if (index !== -1) {
             this.conversations[index].messages.push(incomingMessage);
           }
