@@ -1,44 +1,35 @@
-.chat-header {
-  padding: 16px;
-  border-bottom: 1px solid #e4e6eb;
+:host {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
-
-.chat-header .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e4e6eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: #65676b;
-}
-
-.chat-header .user-info {
-  flex: 1;
-}
-
-.chat-header .user-info h2 {
-  font-size: 16px;
-  color: #050505;
-  margin-bottom: 2px;
-}
-
-.chat-header .user-info .status {
-  font-size: 13px;
-  color: #65676b;
-}
-
 .chat-messages {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+/* Estilos para scroll */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(167, 167, 168, 0.993);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(110, 110, 110, 0.8);
 }
 
 .message {

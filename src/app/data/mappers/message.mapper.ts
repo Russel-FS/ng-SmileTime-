@@ -13,7 +13,7 @@ export class MessageMapper {
     private participantMapper: ParticipantMapper,
     private attachmentMapper: AttachmentMapper,
     private messageStatusMapper: MessageStatusMapper,
-  ) {}
+  ) { }
 
   toDomain(dto: MessageEntityDTO): MessageEntity {
     return new MessageEntity({
@@ -26,13 +26,14 @@ export class MessageMapper {
       modifiedAt: dto.modifiedAt,
       attachments: dto.attachments?.map((a) => this.attachmentMapper.toModel(a)),
       isDeleted: dto.isDeleted,
+      conversationId: dto.conversationId,
     });
   }
 
   toDTO(entity: MessageEntity): MessageEntityDTO {
     return {
-      id: entity.id ,
-      sender: this.participantMapper.toDTO(entity.sender),  
+      id: entity.id,
+      sender: this.participantMapper.toDTO(entity.sender),
       content: entity.content,
       type: entity.type,
       status: entity.status.map((s) => this.messageStatusMapper.toDTO(s)),
@@ -40,6 +41,7 @@ export class MessageMapper {
       modifiedAt: entity.modifiedAt,
       attachments: entity.attachments?.map((a) => this.attachmentMapper.toDTO(a)),
       isDeleted: entity.isDeleted,
+      conversationId: entity.conversationId,
     };
   }
 }

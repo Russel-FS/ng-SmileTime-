@@ -15,4 +15,5 @@ export interface MessageEntityDTO {
   modifiedAt?: Date | null;
   attachments?: AttachmentEntityDTO[];
   isDeleted: boolean;
+  conversationId?: string | number;
 }

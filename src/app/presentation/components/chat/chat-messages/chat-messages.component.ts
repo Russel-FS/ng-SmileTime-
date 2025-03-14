@@ -22,7 +22,7 @@ import { Status } from '../../../../core/domain/model/chat/message-status';
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
         animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),  
+      ]),
       transition(':leave', [
         style({ opacity: 1, transform: 'translateY(0)' }),
         animate('300ms ease-out', style({ opacity: 0, transform: 'translateY(10px)' })),
@@ -33,14 +33,14 @@ import { Status } from '../../../../core/domain/model/chat/message-status';
 export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @Input() messages!: MessageEntity[];
-  @Input() isTyping: boolean = false;   
+  @Input() isTyping: boolean = false;
 
   onScroll(): void {
     this.checkScrollPosition();
   }
 
   ngAfterViewChecked() {
-    this.scrollToBottom();
+   // this.scrollToBottom();
   }
 
   private checkScrollPosition(): void {
