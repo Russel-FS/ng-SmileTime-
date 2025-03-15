@@ -11,7 +11,7 @@ export interface IRealTimeComunication {
   sendMessage(message: MessageEntity): void;
 
   //estado de typing
-  onTypingStatus(): Observable<{ userId: string; isTyping: boolean }>;
+  onTypingStatus(): Observable<{ userId: string | number; isTyping: boolean }>;
   setTypingStatus(userId: string | number, isTyping: boolean): void;
 }
 export const IRealTimeComunication = new InjectionToken<IRealTimeComunication>(

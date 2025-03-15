@@ -68,7 +68,7 @@ export class ManageTypingStatusUseCase {
    * con el userId correspondiente y una propiedad "isTyping" que indica
    * si el usuario est  escribiendo o no.
    */
-  listenTypingStatus(): Observable<{ userId: string; isTyping: boolean }> {
+  listenTypingStatus(): Observable<{ userId: string | number; isTyping: boolean }> {
     return this.realTimeCommunication.onTypingStatus();
   }
 }
