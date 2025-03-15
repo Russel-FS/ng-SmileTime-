@@ -38,6 +38,7 @@
           </div>
           <!-- Error mensaje -->
           <div
+            @fadeAnimation
             *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
             class="text-red-500 text-sm mt-1"
           >
@@ -66,6 +67,7 @@
           </div>
           <!-- Error mensaje -->
           <div
+            @fadeAnimation
             *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
             class="text-red-500 text-sm mt-1"
           >
