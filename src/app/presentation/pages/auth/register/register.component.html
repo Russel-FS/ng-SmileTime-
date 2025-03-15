@@ -18,9 +18,9 @@
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-10 space-y-8">
-      <div class="space-y-5">
+      <div class="space-y-4">
         <!-- Nombre Completo -->
-        <div class="">
+        <div class="space-y-1.5">
           <input
             id="fullName"
             formControlName="fullName"
@@ -29,10 +29,19 @@
             placeholder="Nombre completo"
             required
           />
+          <!--Mensajes-->
+          <div
+            *ngIf="registerForm.get('fullName')?.errors && registerForm.get('fullName')?.touched"
+            @fadeAnimation
+          >
+            <span class="text-red-500 pl-3 text-sm">
+              {{ getErrorMessage('fullName') }}
+            </span>
+          </div>
         </div>
 
         <!-- Email -->
-        <div class="">
+        <div class="space-y-1.5">
           <input
             id="email"
             formControlName="email"
@@ -41,10 +50,18 @@
             placeholder="Correo electrónico"
             required
           />
+          <div
+            *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.errors"
+            @fadeAnimation
+          >
+            <span class="text-red-500 pl-3 text-sm">
+              {{ getErrorMessage('email') }}
+            </span>
+          </div>
         </div>
 
         <!-- Contraseña -->
-        <div class="">
+        <div class="space-y-1.5">
           <input
             id="password"
             formControlName="password"
@@ -53,10 +70,18 @@
             placeholder="Contraseña"
             required
           />
+          <div
+            *ngIf="registerForm.get('password')?.errors && registerForm.get('password')?.touched"
+            @fadeAnimation
+          >
+            <span class="text-red-500 pl-3 text-sm">
+              {{ getErrorMessage('password') }}
+            </span>
+          </div>
         </div>
 
         <!-- Confirmar Contraseña -->
-        <div class="">
+        <div class="space-y-1.5">
           <input
             id="confirmPassword"
             formControlName="confirmPassword"
@@ -65,6 +90,17 @@
             placeholder="Confirmar contraseña"
             required
           />
+          <div
+            *ngIf="
+              registerForm.get('confirmPassword')?.errors &&
+              registerForm.get('confirmPassword')?.touched
+            "
+            @fadeAnimation
+          >
+            <span class="text-red-500 p-3 text-sm mt-2">
+              {{ getErrorMessage('confirmPassword') }}
+            </span>
+          </div>
         </div>
       </div>
 
