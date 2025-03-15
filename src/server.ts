@@ -38,19 +38,23 @@ app.get(
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.get('**', (req, res, next) => {
-  const { protocol, originalUrl, baseUrl, headers } = req;
+app.get('**', async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+    const { protocol, originalUrl, baseUrl, headers } = req;
 
-  commonEngine
-    .render({
+    const html = await commonEngine.render({
       bootstrap,
       documentFilePath: indexHtml,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
       providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
-    })
-    .then((html) => res.send(html))
-    .catch((err) => next(err));
+    });
+
+    res.send(html);
+  } catch (error) {
+    console.error('Error during SSR:', error);
+    next(error);
+  }
 });
 
 /**

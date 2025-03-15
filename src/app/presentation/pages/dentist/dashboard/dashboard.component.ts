@@ -1,8 +1,12 @@
 import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { DashboardService } from '../../../../infrastructure/datasources/dashboard.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Chart } from 'chart.js/auto';
+import { DataEntity } from '../../../../core/domain/model/dashboard/data-entity';
+import { CiteEntity } from '../../../../core/domain/model/dashboard/cite-entity';
+import { PacientEntity } from '../../../../core/domain/model/dashboard/pacient-entity';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,17 +16,43 @@ import { Chart } from 'chart.js/auto';
   standalone: true
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  public numero: number = 5456465;
+  public dashboardData: DataEntity | null = null;
+  public appointments: CiteEntity[] = [];
+  public patients: PacientEntity[] = [];
   private appointmentsChart: Chart | null = null;
   private treatmentsChart: Chart | null = null;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private dashboardService: DashboardService
+  ) { }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
+      this.loadDashboardData();
+      this.loadAppointments();
+      this.loadPatients();
+    }
+  }
+
+  private loadDashboardData() {
+    this.dashboardService.getDashboardData().subscribe(data => {
+      this.dashboardData = data;
       this.initializeAppointmentsChart();
       this.initializeTreatmentsChart();
-    }
+    });
+  }
+
+  private loadAppointments() {
+    this.dashboardService.getAppointments().subscribe(appointments => {
+      this.appointments = appointments;
+    });
+  }
+
+  private loadPatients() {
+    this.dashboardService.getPatients().subscribe(patients => {
+      this.patients = patients;
+    });
   }
 
   ngOnDestroy() {
@@ -42,27 +72,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.appointmentsChart = new Chart(canvas, {
-        type: 'bar',
-        data: {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-          datasets: [{
-            label: 'Citas por Mes',
-            data: [60, 75, 45, 90, 65, 80],
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            borderColor: 'rgb(59, 130, 246)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true
+      this.dashboardService.getMonthlyAppointments().subscribe(monthlyData => {
+        const labels = Array.from(monthlyData.keys());
+        const data = Array.from(monthlyData.values());
+
+        this.appointmentsChart = new Chart(canvas, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Citas por Mes',
+              data: data,
+              backgroundColor: 'rgba(59, 130, 246, 0.2)',
+              borderColor: 'rgb(59, 130, 246)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true
+              }
             }
           }
-        }
+        });
       });
     } catch (error) {
       console.error('Error initializing appointments chart:', error);
@@ -77,29 +112,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.treatmentsChart = new Chart(canvas, {
-        type: 'doughnut',
-        data: {
-          labels: ['Limpiezas', 'Extracciones', 'Empastes'],
-          datasets: [{
-            data: [40, 35, 25],
-            backgroundColor: [
-              'rgba(59, 130, 246, 0.2)',
-              'rgba(34, 197, 94, 0.2)',
-              'rgba(234, 179, 8, 0.2)'
-            ],
-            borderColor: [
-              'rgb(59, 130, 246)',
-              'rgb(34, 197, 94)',
-              'rgb(234, 179, 8)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
+      this.dashboardService.getTreatmentStats().subscribe(treatments => {
+        this.treatmentsChart = new Chart(canvas, {
+          type: 'doughnut',
+          data: {
+            labels: ['Limpiezas', 'Extracciones', 'Empastes'],
+            datasets: [{
+              data: [treatments.cleanings, treatments.extractions, treatments.fillings],
+              backgroundColor: [
+                'rgba(59, 130, 246, 0.2)',
+                'rgba(34, 197, 94, 0.2)',
+                'rgba(234, 179, 8, 0.2)'
+              ],
+              borderColor: [
+                'rgb(59, 130, 246)',
+                'rgb(34, 197, 94)',
+                'rgb(234, 179, 8)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
       });
     } catch (error) {
       console.error('Error initializing treatments chart:', error);

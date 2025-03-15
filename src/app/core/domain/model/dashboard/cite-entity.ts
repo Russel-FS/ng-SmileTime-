@@ -1,4 +1,4 @@
-export class Datadashboard {
+export class CiteEntity {
     public paciente: string;
     public doctor: string;
     public fecha: string;
