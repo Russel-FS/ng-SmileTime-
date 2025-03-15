@@ -5,16 +5,17 @@
     [contacts]="contacts"
     (contactClick)="onContactClick($event)"
   ></app-chat-sidebar>
-  <!-- Chat de Area -->
-  <div class="flex-1 flex flex-col bg-white/50 backdrop-blur-xl">
-    <!-- Encabezado Header -->
-    <app-chat-header [contact]="contactSelected"></app-chat-header>
-
-    <!-- Mensajes -->
+  <!-- Chat -->
+  <div class="chat-container">
+    <app-chat-header [userHeader]="contactSelected"> </app-chat-header>
     <app-chat-messages
-      class="flex-1 overflow-hidden"
-      [messages]="messages"
-      (EventSendMessage)="onSendMessage($event)"
+      class="flex-1"
+      [messages]="getMessages()"
+      [isTyping]="isTyping"
     ></app-chat-messages>
+    <app-chat-input
+      (EventTyping)="onTyping($event)"
+      (EventSendMessage)="onSendMessage($event)"
+    ></app-chat-input>
   </div>
 </div>

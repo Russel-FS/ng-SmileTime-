@@ -21,37 +21,59 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-10 space-y-8">
       <div class="space-y-5">
         <!-- Email -->
-        <div class="relative group">
-          <img
-            src="icons/email.svg"
-            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
-            alt="email icon"
-          />
-          <input
-            id="email"
-            formControlName="email"
-            type="email"
-            class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
-            placeholder="Correo electrónico"
-            required
-          />
+        <div class="">
+          <div class="relative group">
+            <img
+              src="icons/email.svg"
+              class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+              alt="email icon"
+            />
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+              placeholder="Correo electrónico"
+              required
+            />
+          </div>
+          <!-- Error mensaje -->
+          <div
+            *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span>
+              {{ getErrorMessage('email') }}
+            </span>
+          </div>
         </div>
 
         <!-- Password -->
-        <div class="relative group">
-          <img
-            src="icons/lock.svg"
-            class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
-            alt="lock icon"
-          />
-          <input
-            id="password"
-            formControlName="password"
-            type="password"
-            class="w-full pl-12 pr-10 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
-            placeholder="Contraseña"
-            required
-          />
+        <div class="">
+          <div class="relative group">
+            <img
+              src="icons/lock.svg"
+              class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors duration-300 group-hover:text-gray-600"
+              alt="lock icon"
+            />
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              class="w-full pl-12 pr-10 py-4 bg-gray-50/50 border border-gray-100 rounded-2xl text-base focus:ring-2 focus:ring-black/5 focus:border-gray-200 placeholder-gray-400 transition-all duration-300 hover:bg-gray-50/80"
+              placeholder="Contraseña"
+              required
+            />
+          </div>
+          <!-- Error mensaje -->
+          <div
+            *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span>
+              {{ getErrorMessage('password') }}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -83,10 +105,28 @@
       <!-- Button -->
       <button
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || loading"
         class="w-full bg-black text-white px-8 py-4 rounded-2xl text-base font-medium transition-all duration-300 hover:bg-gray-800 shadow-xl shadow-black/5 hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Iniciar sesión
+        <span *ngIf="!loading">Iniciar sesión</span>
+        <div *ngIf="loading" class="flex items-center justify-center">
+          <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Cargando...
+        </div>
       </button>
 
       <div class="text-center space-y-6">
