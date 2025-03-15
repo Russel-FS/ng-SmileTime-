@@ -21,4 +21,8 @@ export class AuthRepository implements IAuthRepository {
   isAuthenticated(): Observable<boolean> {
     return this.dataSource.isAuthenticated();
   }
+
+  register(credentials: AuthCredentials): Observable<void> {
+    return this.dataSource.register(credentials);
+  }
 }
