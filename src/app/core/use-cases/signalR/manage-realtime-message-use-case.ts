@@ -34,16 +34,15 @@ export class ManageRealtimeMessageUseCase {
       })
     );
   }
+
+
   /**
-   * Envia un mensaje a traves del SignalR. Primero se guarda el mensaje en
-   * la base de datos y luego se envia a traves del SignalR. El mensaje
-   * guardado se devuelve como Observable.
-   */
+  * Guarda el mensaje en la base de datos 
+  */
   sendMessage(message: MessageEntity): Observable<ConversationEntity> {
     if (!message) {
       return throwError(() => new Error('El mensaje no puede ser nulo'));
     }
-
     return this.messageRepository.sendMessage(message).pipe(
       map(conversation => {
         if (!conversation) {
@@ -51,17 +50,20 @@ export class ManageRealtimeMessageUseCase {
         }
         return conversation;
       }),
-      tap(conversation => {
-        // se asigna el id de la conversación antes de enviarlo 
-        message.conversationId = conversation?.id;
-        this.realTimeCommunication.sendMessage(message);
-      }),
       catchError(error => {
         console.error('Error al enviar mensaje:', error);
         return throwError(() => error);
       })
     );
+  }
 
+  /**
+   * Envía el mensaje por SignalR después de que se haya guardado localmente
+   */
+  broadcastMessage(message: MessageEntity): void {
+    if (message && message.conversationId) {
+      this.realTimeCommunication.sendMessage(message);
+    }
   }
 
 }

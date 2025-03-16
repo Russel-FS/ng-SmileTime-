@@ -178,60 +178,65 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.listenForTypingStatus();
   }
 
-  /**
-   * Se llama cuando se envia un nuevo mensaje de texto.
-   * Crea un objeto MessageEntity con el texto del mensaje y lo envia
-   * a traves del SignalR y la base de datos. Luego se suscribe a la respuesta para
-   * manejar el resultado de la operacion.
-   * @param newMessage El texto del nuevo mensaje.
+  /** 
+   * MENSAJE RELACIONADO MÉTODOS
    */
+
+  /**
+  * Se llama cuando se envía un nuevo mensaje de texto.
+  * Si no existe una conversación, primero la crea y luego envía el mensaje.
+  * @param newMessage El texto del nuevo mensaje.
+  */
   onSendMessage(newMessage: string): void {
-    // se crea la mensaje
     const message = this.createMessage(newMessage);
+    const existingConversation = this.findConversationByParticipant(this.contactSelected);
+
+    if (existingConversation) {
+      message.conversationId = existingConversation.id;
+      this.sendExistingConversationMessage(message);
+    } else {
+      this.createNewConversationAndSendMessage(message);
+    }
+  }
+
+  /**
+   * Envía un mensaje en una conversación existente
+   */
+  private sendExistingConversationMessage(message: MessageEntity): void {
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: this.handleNewConversation.bind(this),
+        next: (conversation) => {
+          const conv = this.findConversationById(conversation.id);
+          if (conv) {
+            conv.messages.push(message);
+          }
+          this.manageRealTimeMessages.broadcastMessage(message);
+        },
         error: this.handleMessageError.bind(this)
       });
   }
 
   /**
-   * Se llama cuando se recibe una conversación nueva desde el SignalR.
-   * Verifica si la conversación ya existe en la lista de conversaciones locales.
-   * Si no existe, se agrega a la lista de conversaciones. De lo contrario, no se hace nada.
-   * @param incomingConversation La conversación recibida desde el SignalR.
+   * Crea una nueva conversación y envía el primer mensaje
    */
-  private handleNewConversation(incomingConversation: ConversationEntity): void {
-    const conversationExists = this.conversations.some(conv =>
-      conv?.id?.toString() === incomingConversation?.id?.toString()
-    );
-    if (!conversationExists) {
-      this.conversations.push(incomingConversation);
-    }
-  }
-
-  /**
-   * Maneja el error cuando se produce un error al enviar un mensaje.
-   * Limpia el estado de escritura y muestra el error en la consola.
-   * @param error El error producido al enviar el mensaje.
-   */
-  private handleMessageError(error: any): void {
-    console.error('Error enviando mensaje:', error);
-    this.manageTypingStatus.notifyTyping(2, false);
+  private createNewConversationAndSendMessage(message: MessageEntity): void {
+    this.manageRealTimeMessages.sendMessage(message)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (conversation) => {
+          this.conversations.push(conversation);
+          this.manageRealTimeMessages.broadcastMessage(message);
+        },
+        error: this.handleMessageError.bind(this)
+      });
   }
 
   /**
    * Crea un nuevo objeto MessageEntity con el contenido proporcionado.
-   * Asigna un remitente utilizando el método createParticipant.
-   * El tipo de mensaje es TEXT y se inicializa con un estado de enviado.
-   * 
-   * @param content El contenido del mensaje a enviar.
-   * @returns Un objeto MessageEntity representando el mensaje creado.
    */
   private createMessage(content: string): MessageEntity {
     const sender = this.createParticipant(2, 'Solano flores');
-
     return new MessageEntity({
       id: 2,
       sender: sender,
@@ -244,12 +249,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Crea un nuevo objeto ConversationParticipant con el ID de usuario y nombre proporcionados.
-   * Asigna un avatar basado en el ID de usuario.
-   * 
-   * @param userId El ID del usuario.
+   * Crea un nuevo objeto ConversationParticipant con los datos proporcionados.
+   * @param userId El id del usuario.
    * @param userName El nombre del usuario.
-   * @returns Un objeto ConversationParticipant que representa al participante creado.
+   * @returns Un objeto ConversationParticipant con los datos proporcionados.
    */
   private createParticipant(userId: number, userName: string): ConversationParticipant {
     return new ConversationParticipant({
@@ -258,10 +261,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       avatar: `https://example.com/avatar${userId}.jpg`
     });
   }
+  /**
+   * Maneja el error cuando se produce un error al enviar un mensaje.
+   */
+  private handleMessageError(error: any): void {
+    console.error('Error enviando mensaje:', error);
+    this.manageTypingStatus.notifyTyping(2, false);
+  }
 
   /**
-   * Escucha mensajes en tiempo real y actualiza la conversación local.
+   * MENSAJE TIEMPO REAL MÉTODOS
    */
+
   private listenForMessages(): void {
     this.manageRealTimeMessages.listenForMessages()
       .pipe(takeUntil(this.unsubscribe$))
@@ -272,23 +283,24 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: error => console.error('Error al recibir mensajes:', error)
       });
   }
-  /**
- * Procesa un mensaje entrante y lo agrega a la conversaci n correspondiente.
- *
- * @param incomingMessage El mensaje entrante que se va a procesar.
- */
+
   private handleIncomingMessage(incomingMessage: MessageEntity): void {
     const conversation = this.findConversationById(incomingMessage.conversationId);
     if (conversation) {
       conversation.messages.push(incomingMessage);
     }
   }
+
   /**
-   * Encuentra una conversaci n por su ID.
-   * 
-   * @param conversationId El ID de la conversaci n a buscar.
-   * @returns La conversaci n con el ID proporcionado, o undefined si no se encuentra.
+   * UTILIDADES Y BÚSQUEDA
    */
+
+  private findConversationByParticipant(participant: ConversationParticipant): ConversationEntity | undefined {
+    return this.conversations.find(conv =>
+      conv.participants.some(p => p.userId === participant.userId)
+    );
+  }
+
   private findConversationById(conversationId: string | number | undefined): ConversationEntity | undefined {
     return this.conversations.find(conv =>
       conv?.id?.toString() === conversationId?.toString()
