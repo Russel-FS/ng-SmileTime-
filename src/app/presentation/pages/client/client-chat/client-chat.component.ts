@@ -101,11 +101,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
+  /**
+   * Inicializa los datos de la pantalla y la comunicación en tiempo real.
+   * Se llama cuando el componente se inicializa.
+   */
   ngOnInit(): void {
     this.initData();
     this.initRealTimeCommunication();
   }
 
+  /**
+   * Destruye la suscripción y cierra la conexión con SignalR cuando el componente se destruye.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
