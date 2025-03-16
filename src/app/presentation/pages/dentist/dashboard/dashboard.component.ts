@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
-import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { MockDashboardService } from '../../../../infrastructure/datasources/mock/mock-dashboard.service';
 import { DashboardService } from '../../../../infrastructure/datasources/dashboard.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -15,7 +15,7 @@ import { PacientEntity } from '../../../../core/domain/model/dashboard/pacient-e
   styleUrl: './dashboard.component.css',
   standalone: true
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public dashboardData: DataEntity | null = null;
   public appointments: CiteEntity[] = [];
   public patients: PacientEntity[] = [];
@@ -24,22 +24,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private dashboardService: DashboardService
+    private dashboardService: MockDashboardService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.loadDashboardData();
       this.loadAppointments();
       this.loadPatients();
+      this.loadDashboardData();
+    }
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.initializeCharts();
+        this.cdr.detectChanges();
+      }, 0);
     }
   }
 
   private loadDashboardData() {
     this.dashboardService.getDashboardData().subscribe(data => {
       this.dashboardData = data;
-      this.initializeAppointmentsChart();
-      this.initializeTreatmentsChart();
+      this.initializeCharts();
+      this.cdr.detectChanges();
     });
   }
 
@@ -64,6 +74,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  private initializeCharts() {
+    this.initializeAppointmentsChart();
+    this.initializeTreatmentsChart();
+  }
+
   private initializeAppointmentsChart() {
     const canvas = document.getElementById('appointmentsChart') as HTMLCanvasElement | null;
     if (!canvas) {
@@ -72,6 +87,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     try {
+      if (this.appointmentsChart) {
+        this.appointmentsChart.destroy();
+      }
+
       this.dashboardService.getMonthlyAppointments().subscribe(monthlyData => {
         const labels = Array.from(monthlyData.keys());
         const data = Array.from(monthlyData.values());
@@ -112,7 +131,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.dashboardService.getTreatmentStats().subscribe(treatments => {
+      if (this.treatmentsChart) {
+        this.treatmentsChart.destroy();
+      }
+
+      if (this.dashboardData && this.dashboardData.treatments) {
+        const treatments = this.dashboardData.treatments;
+        const total = treatments.cleanings + treatments.extractions + treatments.fillings;
+
         this.treatmentsChart = new Chart(canvas, {
           type: 'doughnut',
           data: {
@@ -120,24 +146,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
             datasets: [{
               data: [treatments.cleanings, treatments.extractions, treatments.fillings],
               backgroundColor: [
-                'rgba(59, 130, 246, 0.2)',
-                'rgba(34, 197, 94, 0.2)',
-                'rgba(234, 179, 8, 0.2)'
+                'rgba(59, 130, 246, 0.8)',
+                'rgba(34, 197, 94, 0.8)',
+                'rgba(234, 179, 8, 0.8)'
               ],
               borderColor: [
                 'rgb(59, 130, 246)',
                 'rgb(34, 197, 94)',
                 'rgb(234, 179, 8)'
               ],
-              borderWidth: 1
+              borderWidth: 2
             }]
           },
           options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  usePointStyle: true,
+                  padding: 20
+                }
+              }
+            }
           }
         });
-      });
+      }
     } catch (error) {
       console.error('Error initializing treatments chart:', error);
     }
