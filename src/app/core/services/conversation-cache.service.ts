@@ -17,11 +17,11 @@ export class ConversationCacheService {
   }
 
   getConversation(id: string | number): ConversationEntity | undefined {
-    return this.conversationsCache.get(id.toString());
+    return this.conversationsCache.get(id?.toString());
   }
 
   updateConversation(conversation: ConversationEntity): void {
-    this.conversationsCache.set(conversation.id.toString(), conversation);
+    this.conversationsCache.set(conversation.id?.toString(), conversation);
     this.notifyChanges();
   }
 
