@@ -6,8 +6,7 @@ import { ChatMessagesComponent } from '../../../components/chat/chat-messages/ch
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
-import { ContactDataSource } from '../../../../infrastructure/datasources/contact-datasource';
-import { MessageDataSource } from '../../../../infrastructure/datasources/message-datasource';
+import { ContactDataSource } from '../../../../infrastructure/datasources/contact.service';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
@@ -32,6 +31,7 @@ import { ConversationService } from '../../../../infrastructure/datasources/conv
 import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage.service';
+import { MessageDataSource } from '../../../../infrastructure/datasources/message.service';
 
 
 @Component({
@@ -90,11 +90,15 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
   ) { }
-
+  /** Contacto actualmente seleccionado en la conversación */
   contactSelected!: ConversationParticipant;
+  /** Lista de todos los contactos disponibles */
   contacts: ConversationParticipant[] = [];
-  conversation: ConversationEntity[] = [];
+  /** Almacena todas las conversaciones activas */
+  conversations: ConversationEntity[] = [];
+  /** Indica si el contacto está escribiendo actualmente */
   isTyping: boolean = false;
+  /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -108,17 +112,31 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.closeConnection();
   }
 
+  /**
+   * Cambia el estado de un contacto y actualiza la conversacion activa.
+   * @param contact El contacto seleccionado.
+   */
   onContactClick(contact: ConversationParticipant): void {
     this.contacts.forEach((c) => (c.selected = false));
     contact.selected = true;
     this.contactSelected = contact;
   }
+  /**
+   * Notifica al servidor que el usuario esta escribiendo actualmente.
+   * @param text El texto ingresado por el usuario.
+   */
   onTyping(text: string): void {
     if (this.contactSelected && text?.length > 0) {
       this.manageTypingStatus.notifyTyping(2, true);
     }
   }
 
+  /**
+   * Inicializa los datos de la pantalla, obteniendo la lista de contactos y una conversacion de ejemplo.
+   * Selecciona el primer contacto activo o el primero de la lista si no hay ninguno activo.
+   * Se suscribe a los eventos de ContactUseCase y ConversationUseCase para obtener los datos.
+   * Se cancelan las subscripciones cuando el componente se destruye.
+   */
   initData() {
     // Obtener contactos
     this.ContactsUseCase.execute()
@@ -126,8 +144,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
-          console.log('Contactos obtenidos:', contacts);
-          // Seleccionar un contacto primero
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
@@ -137,121 +153,103 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.conversationUseCase.getConversationByParticipants(2, 1)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: conversations => {
-          this.conversation.push(conversations);
-          console.log('Conversaciones obtenidas:', conversations);
+        next: (conversation) => {
+          this.conversations.push(conversation);
+          console.log('Conversaciones obtenidas:', conversation);
         },
         error: err => console.error('Error obteniendo conversaciones:', err)
       });
   }
 
+  /**
+   * Incializa la comunicación en tiempo real, 
+   * escucha los mensajes y actualiza la conversación local.
+   */
   private initRealTimeCommunication(): void {
     this.manageRealTimeMessages.initializeConnection();
     this.listenForMessages();
     this.listenForTypingStatus();
   }
 
-
+  /**
+   * Se llama cuando se envia un nuevo mensaje de texto.
+   * Crea un objeto MessageEntity con el texto del mensaje y lo envia
+   * a traves del SignalR y la base de datos. Luego se suscribe a la respuesta para
+   * manejar el resultado de la operacion.
+   * @param newMessage El texto del nuevo mensaje.
+   */
   onSendMessage(newMessage: string): void {
-    if (!newMessage.trim() || !this.contactSelected) {
-      return;
+    // se crea la mensaje
+    const message = this.createMessage(newMessage);
+    this.manageRealTimeMessages.sendMessage(message)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: this.handleNewConversation.bind(this),
+        error: this.handleMessageError.bind(this)
+      });
+  }
+
+  /**
+   * Se llama cuando se recibe una conversación nueva desde el SignalR.
+   * Verifica si la conversación ya existe en la lista de conversaciones locales.
+   * Si no existe, se agrega a la lista de conversaciones. De lo contrario, no se hace nada.
+   * @param incomingConversation La conversación recibida desde el SignalR.
+   */
+  private handleNewConversation(incomingConversation: ConversationEntity): void {
+    const conversationExists = this.conversations.some(conv =>
+      conv?.id?.toString() === incomingConversation?.id?.toString()
+    );
+    if (!conversationExists) {
+      this.conversations.push(incomingConversation);
     }
+  }
 
-    // usuario que envía el mensaje
-    const sender = new ConversationParticipant({
-      userId: 2,
-      userName: 'Solano flores',
-      avatar: 'https://example.com/avatar2.jpg'
-    });
+  /**
+   * Maneja el error cuando se produce un error al enviar un mensaje.
+   * Limpia el estado de escritura y muestra el error en la consola.
+   * @param error El error producido al enviar el mensaje.
+   */
+  private handleMessageError(error: any): void {
+    console.error('Error enviando mensaje:', error);
+    this.manageTypingStatus.notifyTyping(2, false);
+  }
 
-    // usuario destinatario
-    const destin = new ConversationParticipant({
-      userId: 1,
-      userName: 'Freddy flores',
-      avatar: 'https://example.com/avatar2.jpg'
-    });
+  /**
+   * Crea un nuevo objeto MessageEntity con el contenido proporcionado.
+   * Asigna un remitente utilizando el método createParticipant.
+   * El tipo de mensaje es TEXT y se inicializa con un estado de enviado.
+   * 
+   * @param content El contenido del mensaje a enviar.
+   * @returns Un objeto MessageEntity representando el mensaje creado.
+   */
+  private createMessage(content: string): MessageEntity {
+    const sender = this.createParticipant(2, 'Solano flores');
 
-    // creacion del mensaje
-    const message = new MessageEntity({
+    return new MessageEntity({
       id: 2,
       sender: sender,
-      content: newMessage,
+      content: content,
       type: MessageType.TEXT,
       status: [new MessageStatus(2, Status.SENT, new Date())],
       createdAt: new Date(),
       isDeleted: false
     });
-
-    const idTest = '1';
-    const existingConversation = this.conversation.find(c => {
-      if (!c.id || !idTest) return false;
-      return c.id?.toString().trim() === idTest?.toString().trim();
-    });
-
-    existingConversation?.messages?.push(message);
-
-    // Enviar mensaje en tiempo real
-    /*   this.manageRealTimeMessages.sendMessage(message)
-         .pipe(takeUntil(this.unsubscribe$))
-         .subscribe({
-           next: (conversation: ConversationEntity) => {
-             // verificamos que la conversacion no exista antes de añadir
-             const existingConversation = this.conversation.find(conv => conv.id === conversation.id);
-             if (!existingConversation) {
-               this.conversation.push(conversation);
-             }
-             // Notificar que el usuario dejó de escribir
-             this.manageTypingStatus.notifyTyping(2, false);
-           },
-           error: error => {
-             console.error('Error enviando mensaje:', error);
-             this.manageTypingStatus.notifyTyping(2, false);
-           }
-         });
-         */
-
   }
 
-
   /**
-   * crea o actualiza una conversación 
-   * este metodo se encarga de buscar una conversación existente
-   * si la encuentra, crea un nuevo mensaje y actualiza la conversación
-   * si no la encuentra, crea una nueva conversación con el destinatario y el mensaje  
+   * Crea un nuevo objeto ConversationParticipant con el ID de usuario y nombre proporcionados.
+   * Asigna un avatar basado en el ID de usuario.
+   * 
+   * @param userId El ID del usuario.
+   * @param userName El nombre del usuario.
+   * @returns Un objeto ConversationParticipant que representa al participante creado.
    */
-  private MessageConversation(
-    conversationId: string | number | null,
-    destin: ConversationParticipant,
-    message: MessageEntity
-  ): ConversationEntity {
-
-    // Buscar la conversación existente
-    const existingConversation = this.conversation.find(conv => conv.id === conversationId);
-
-
-    if (existingConversation) {
-      const newConversationMessage = new ConversationEntity({
-        ...existingConversation,
-        messages: [message],
-        participants: [...existingConversation.participants],
-        updatedAt: new Date()
-      })
-
-      return newConversationMessage;
-    }
-    else {
-
-      const conversation = new ConversationEntity({
-        id: '',
-        title: `Conversación con ${destin.userName}`,
-        type: ConversationType.INDIVIDUAL,
-        participants: [destin,],
-        messages: [message],
-        createdAt: new Date(),
-        isActive: true
-      });
-      return conversation;
-    }
+  private createParticipant(userId: number, userName: string): ConversationParticipant {
+    return new ConversationParticipant({
+      userId: userId,
+      userName: userName,
+      avatar: `https://example.com/avatar${userId}.jpg`
+    });
   }
 
   /**
@@ -262,39 +260,81 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage: MessageEntity) => {
-          const index = this.conversation.findIndex(conv => conv.id === incomingMessage.conversationId);
-          if (index !== -1) {
-            this.conversation[index].messages.push(incomingMessage);
-          }
+          this.handleIncomingMessage(incomingMessage);
         },
         error: error => console.error('Error al recibir mensajes:', error)
       });
   }
+  /**
+ * Procesa un mensaje entrante y lo agrega a la conversaci n correspondiente.
+ *
+ * @param incomingMessage El mensaje entrante que se va a procesar.
+ */
+  private handleIncomingMessage(incomingMessage: MessageEntity): void {
+    const conversation = this.findConversationById(incomingMessage.conversationId);
+    if (conversation) {
+      conversation.messages.push(incomingMessage);
+    }
+  }
+  /**
+   * Encuentra una conversaci n por su ID.
+   * 
+   * @param conversationId El ID de la conversaci n a buscar.
+   * @returns La conversaci n con el ID proporcionado, o undefined si no se encuentra.
+   */
+  private findConversationById(conversationId: string | number | undefined): ConversationEntity | undefined {
+    return this.conversations.find(conv =>
+      conv?.id?.toString() === conversationId?.toString()
+    );
+  }
 
-
+  /**
+   * Escucha el estado de escritura en tiempo real y actualiza el estado de escritura
+   * de cada usuario en la lista de conversaciones.
+   */
   private listenForTypingStatus(): void {
     this.manageTypingStatus.listenTypingStatus()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: ({ userId, isTyping }) => {
-          const contact = this.contacts.find((c) => {
-            if (!c.userId || !userId) return false;
-            return c.userId?.toString().trim() === userId?.toString().trim();
-          });
-          // 
-          if (contact) { }
-          // Actualizar el estado de escritura
-          this.isTyping = isTyping;
+          this.updateTypingStatus(userId, isTyping);
         },
         error: (error) => console.error('Error al recibir el estado de escritura:', error),
       });
   }
+  /**
+   * Actualiza el estado de escritura de un usuario en la lista de conversaciones.
+   * 
+   * @param userId El ID del usuario a actualizar.
+   * @param isTyping El estado de escritura a asignar.
+   */
+  private updateTypingStatus(userId: number | string, isTyping: boolean): void {
+    const contact = this.findContactById(userId);
+    if (contact) {
+      this.isTyping = isTyping;
+    }
+  }
+  /**
+   * Busca un contacto en la lista de contactos por su ID.
+   * 
+   * @param userId El ID del contacto a buscar.
+   * @returns El contacto con el ID proporcionado, o undefined si no se encuentra.
+   */
+  private findContactById(userId: number | string): ConversationParticipant | undefined {
+    return this.contacts.find(contact =>
+      contact.userId?.toString().trim() === userId?.toString().trim()
+    );
+  }
 
-  // obtener los mensajes de una conversación
+  /**
+   * Obtiene los mensajes asociados al contacto seleccionado. 
+   * @returns El array de mensajes asociados al contacto seleccionado.
+   */
   getMessages(): MessageEntity[] {
-    const conversation = this.conversation.find(
+    const conversation = this.conversations.find(
       conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
     );
     return conversation?.messages || [];
   }
+
 }

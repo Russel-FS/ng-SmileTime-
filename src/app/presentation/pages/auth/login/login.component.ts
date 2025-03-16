@@ -34,6 +34,10 @@ import { AuthResponse } from '../../../../core/domain/model/auth/auth';
         style({ opacity: 0, transform: 'translateY(20px)' }),
         animate('500ms ease-in-out', style({ opacity: 1, transform: 'translateY(0)' })),
       ]),
+      transition(':leave', [
+        style({ opacity: 1, transform: 'translateY(0)' }),
+        animate('500ms ease-in-out', style({ opacity: 0, transform: 'translateY(20px)' })),
+      ])
     ]),
   ],
 })

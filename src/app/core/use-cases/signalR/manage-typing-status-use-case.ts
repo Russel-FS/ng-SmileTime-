@@ -47,7 +47,7 @@ export class ManageTypingStatusUseCase {
         }),
       )
       .subscribe(({ userId, isTyping }) => {
-        console.log(isTyping ? 'El usuario está escribiendo...' : 'El usuario dejó de escribir.'); // 🖨️ Mostrar en consola
+        // console.log(isTyping ? 'El usuario está escribiendo...' : 'El usuario dejó de escribir.'); // 🖨️ Mostrar en consola
         this.realTimeCommunication.setTypingStatus(userId, isTyping);
       });
   }
@@ -68,7 +68,7 @@ export class ManageTypingStatusUseCase {
    * con el userId correspondiente y una propiedad "isTyping" que indica
    * si el usuario est  escribiendo o no.
    */
-  listenTypingStatus(): Observable<{ userId: string; isTyping: boolean }> {
+  listenTypingStatus(): Observable<{ userId: string | number; isTyping: boolean }> {
     return this.realTimeCommunication.onTypingStatus();
   }
 }

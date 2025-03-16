@@ -15,13 +15,12 @@
       <h2 class="mt-8 text-3xl font-extrabold text-gray-900 tracking-tight">
         Bienvenido a Smile Time
       </h2>
-      <p class="mt-3 text-base text-gray-500">Te esperamos aqui</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-10 space-y-8">
       <div class="space-y-5">
         <!-- Email -->
-        <div class="">
+        <div>
           <div class="relative group">
             <img
               src="icons/email.svg"
@@ -39,6 +38,7 @@
           </div>
           <!-- Error mensaje -->
           <div
+            @fadeAnimation
             *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.errors"
             class="text-red-500 text-sm mt-1"
           >
@@ -67,6 +67,7 @@
           </div>
           <!-- Error mensaje -->
           <div
+            @fadeAnimation
             *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.errors"
             class="text-red-500 text-sm mt-1"
           >
