@@ -25,4 +25,10 @@ export class ConversationService implements IConversationDatasource {
       observer.complete();
     });
   }
+  getConversationById(id: number | string): Observable<ConversationEntityDTO> {
+    return new Observable<ConversationEntityDTO>(observer => {
+      observer.next(mockConversation);
+      observer.complete();
+    });
+  }
 }

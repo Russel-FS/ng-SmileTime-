@@ -42,5 +42,12 @@ export class ConversationRepository implements IConversationRepository {
                     (dto) => this.conversationMapper.toDomain(dto)
                 ));
     }
+    getConversationById(id: number | string): Observable<ConversationEntity> {
+        return this.conversationDatasource.getConversationById(id)
+            .pipe(
+                map(
+                    (dto) => this.conversationMapper.toDomain(dto)
+                ));
+    }
 
 }

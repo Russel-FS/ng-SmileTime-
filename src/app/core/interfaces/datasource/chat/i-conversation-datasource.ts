@@ -7,6 +7,8 @@ export interface IConversationDatasource {
     create(conversation: ConversationEntityDTO): Observable<ConversationEntityDTO>;
     update(id: string | number, conversation: Partial<ConversationEntityDTO>): Observable<ConversationEntityDTO>;
     getConversationByParticipants(userId: number | string, contactId: number | string): Observable<ConversationEntityDTO>;
+    getConversationById(id: number | string): Observable<ConversationEntityDTO>;
+
 }
 
 export const IConversationDatasource = new InjectionToken<IConversationDatasource>('IConversationDatasource');

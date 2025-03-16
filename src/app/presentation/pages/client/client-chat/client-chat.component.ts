@@ -32,6 +32,7 @@ import { ConversationRepository } from '../../../../data/repositories/conversati
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage.service';
 import { MessageDataSource } from '../../../../infrastructure/datasources/message.service';
+import { ConversationCacheService } from '../../../../core/services/conversation-cache.service';
 
 
 @Component({
@@ -88,7 +89,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
     private conversationUseCase: ConversationUseCase,
-    private storage: StorageService
+    private conversationCache: ConversationCacheService,
   ) { }
   /** Contacto actualmente seleccionado en la conversación */
   contactSelected!: ConversationParticipant;
@@ -123,10 +124,23 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Cambia el estado de un contacto y actualiza la conversacion activa.
    * @param contact El contacto seleccionado.
    */
-  onContactClick(contact: ConversationParticipant): void {
+  async onContactClick(contact: ConversationParticipant): Promise<void> {
     this.contacts.forEach((c) => (c.selected = false));
     contact.selected = true;
     this.contactSelected = contact;
+
+    // Cargar conversación si existe
+    try {
+      const conversation = await this.conversationUseCase
+        .getConversationByParticipants(contact.userId, this.getCurrentUserId())
+        .toPromise();
+
+      if (conversation) {
+        this.conversationCache.addConversation(conversation);
+      }
+    } catch (error) {
+      console.error('Error cargando conversación del contacto:', error);
+    }
   }
   /**
    * Notifica al servidor que el usuario esta escribiendo actualmente.
@@ -138,6 +152,9 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getCurrentUserId(): number {
+    return 2;
+  }
   /**
    * Inicializa los datos de la pantalla, obteniendo la lista de contactos y una conversacion de ejemplo.
    * Selecciona el primer contacto activo o el primero de la lista si no hay ninguno activo.
@@ -157,14 +174,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
 
     // Obtener una conversacion
-    this.conversationUseCase.getConversationByParticipants(2, 1)
+    this.conversationCache.getConversations()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (conversation) => {
-          this.conversations.push(conversation);
-          console.log('Conversaciones obtenidas:', conversation);
-        },
-        error: err => console.error('Error obteniendo conversaciones:', err)
+      .subscribe(conversations => {
+        this.conversations = conversations;
       });
   }
 
@@ -207,10 +220,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {
-          const conv = this.findConversationById(conversation.id);
-          if (conv) {
-            conv.messages.push(message);
-          }
+          this.handleNewConversation(conversation);
           this.manageRealTimeMessages.broadcastMessage(message);
         },
         error: this.handleMessageError.bind(this)
@@ -225,7 +235,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {
-          this.conversations.push(conversation);
+          this.handleNewConversation(conversation);
           this.manageRealTimeMessages.broadcastMessage(message);
         },
         error: this.handleMessageError.bind(this)
@@ -284,10 +294,26 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
   }
 
-  private handleIncomingMessage(incomingMessage: MessageEntity): void {
-    const conversation = this.findConversationById(incomingMessage.conversationId);
+  private async handleIncomingMessage(incomingMessage: MessageEntity): Promise<void> {
+    let conversation = this.findConversationById(incomingMessage.conversationId);
+
+    if (!conversation) {
+      // Si no existe la conversación, la cargamos desde el servidor
+      try {
+        conversation = await this.conversationUseCase.getConversationById(incomingMessage?.conversationId || 0)
+          .toPromise();
+
+        if (conversation) {
+          this.conversationCache.addConversation(conversation);
+        }
+      } catch (error) {
+        console.error('Error cargando conversación:', error);
+      }
+    }
+
     if (conversation) {
       conversation.messages.push(incomingMessage);
+      this.conversationCache.updateConversation(conversation);
     }
   }
 
@@ -307,6 +333,22 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+  * Maneja la actualización del cache para una nueva conversación.
+  * Si la conversación no existe, la agrega al cache.
+  * Si ya existe, actualiza la conversación existente.
+  * 
+  * @param incomingConversation La conversación nueva o actualizada
+  */
+  private handleNewConversation(incomingConversation: ConversationEntity): void {
+    const existingConversation = this.findConversationById(incomingConversation.id);
+
+    if (!existingConversation) {
+      this.conversationCache.addConversation(incomingConversation);
+    } else {
+      this.conversationCache.updateConversation(incomingConversation);
+    }
+  }
   /**
    * Escucha el estado de escritura en tiempo real y actualiza el estado de escritura
    * de cada usuario en la lista de conversaciones.
