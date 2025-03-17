@@ -30,7 +30,7 @@ import { IConversationRepository } from '../../../../core/interfaces/repositorys
 import { ConversationService } from '../../../../infrastructure/datasources/chat/conversation.service';
 import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
-import { StorageService } from '../../../../core/services/storage.service';
+import { StorageService } from '../../../../core/services/storage/storage.service';
 import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
 
 

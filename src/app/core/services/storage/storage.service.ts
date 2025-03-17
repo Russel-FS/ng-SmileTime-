@@ -1,5 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { AuthResponse } from '../domain/model/auth/auth';
+import { AuthResponse } from '../../domain/model/auth/auth';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({

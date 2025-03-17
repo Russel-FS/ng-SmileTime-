@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { ApiConfig } from '../../../infrastructure/config/app.config';
-import { StorageService } from '../storage.service';
+import { StorageService } from '../storage/storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 import { MessageEntity } from '../../domain/model/chat/message-entity';
