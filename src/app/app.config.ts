@@ -4,7 +4,6 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { StorageInitializerService } from './core/services/storage-initializer.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,6 +11,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(),
-    provideAnimations(), 
+    provideAnimations(),
   ],
 };
