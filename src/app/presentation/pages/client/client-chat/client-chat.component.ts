@@ -186,57 +186,75 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @param newMessage El texto del nuevo mensaje.
    */
   onSendMessage(newMessage: string): void {
-    // se crea un nuevo mensaje
-    const conversation = this.getCurrentConversation();
-    const message = this.createMessage(newMessage);
     const selectedContact = this.contactSelected;
 
+    // Verificar si hay un contacto seleccionado
+    if (!selectedContact) {
+      console.error('No hay contacto seleccionado');
+      return;
+    }
 
-    if (!conversation) {
-      // Si no existe una conversación, se crea una nueva
+    // Verificar si existe una conversación
+    if (!selectedContact.conversationId) {
+      // Crear nueva conversación
       const newConversation = new ConversationEntity({
         type: ConversationType.INDIVIDUAL,
         participants: [this.currenUserSesion(), selectedContact],
-        messages: [message]
+        messages: []
       });
-      // Se crea la conversacion en la base de datos
+
       this.conversationUseCase.createConversation(newConversation)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
-          next: (incomingConversation) => {
-            selectedContact.conversationId = incomingConversation?.id;
-            this.handleNewConversation.bind(this)
-          },
-          error: this.handleMessageError.bind(this)
-        });
+          next: (conversation) => {
+            if (conversation && conversation.id) {
+              // Actualizar ID de conversación
+              selectedContact.conversationId = conversation.id;
+              this.conversations.push(conversation);
 
-    } else {
-      this.manageRealTimeMessages.sendMessage(message)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-          next: this.handleNewConversation.bind(this),
-          complete: () => {
-            this.handleCompleteSendMessage(message);
+              // Crear y enviar mensaje
+              const message = this.createMessage(newMessage);
+              message.conversationId = conversation.id;
+              this.sendMessage(message);
+            }
           },
           error: this.handleMessageError.bind(this)
         });
+    } else {
+      // Ya existe conversación, enviar mensaje directamente
+      const message = this.createMessage(newMessage);
+      message.conversationId = selectedContact.conversationId;
+      this.sendMessage(message);
     }
   }
 
+  // Nuevo método auxiliar para enviar mensajes
+  private sendMessage(message: MessageEntity): void {
+    if (!message.conversationId) {
+      console.error('El mensaje debe tener un ID de conversación');
+      return;
+    }
+
+    this.manageRealTimeMessages.sendMessage(message)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (conversation) => {
+          if (conversation) {
+            this.handleNewConversation(conversation);
+          }
+        },
+        complete: () => {
+          this.handleCompleteSendMessage(message);
+        },
+        error: this.handleMessageError.bind(this)
+      });
+  }
   private currenUserSesion(): ConversationParticipant {
     return new ConversationParticipant({
       userId: 2,
       userName: 'Solano Flores',
       avatar: 'https://example.com/avatar2.jpg'
     });
-  }
-
-  /**
-   * Obtiene la conversación actual seleccionada.
-   * @returns La conversación actual o undefined si no existe.
-   */
-  private getCurrentConversation(): ConversationEntity | undefined {
-    return this.conversations.find(conv => conv?.id?.toString() === this.contactSelected?.conversationId?.toString());
   }
 
   /**
@@ -332,8 +350,28 @@ export class ClientChatComponent implements OnInit, OnDestroy {
  * @param incomingMessage El mensaje entrante que se va a procesar.
  */
   private handleIncomingMessage(incomingMessage: MessageEntity): void {
+    // Verificar que el mensaje tenga ID de conversación
+    if (!incomingMessage.conversationId) {
+      console.error('Mensaje recibido sin ID de conversación');
+      return;
+    }
+
     const conversation = this.findConversationById(incomingMessage.conversationId);
-    if (conversation) {
+
+    if (!conversation) {
+      // Si no existe la conversación, obtenerla del servidor
+      this.conversationUseCase.getConversationById(incomingMessage.conversationId)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (newConversation) => {
+            if (newConversation) {
+              this.conversations.push(newConversation);
+              newConversation.messages.push(incomingMessage);
+            }
+          },
+          error: (error) => console.error('Error al obtener conversación:', error)
+        });
+    } else {
       conversation.messages.push(incomingMessage);
     }
   }

@@ -25,4 +25,7 @@ export class ConversationService implements IConversationDatasource {
       observer.complete();
     });
   }
+  getConversationById(id: string | number): Observable<ConversationEntityDTO> {
+    throw new Error('Method not implemented.');
+  }
 }
