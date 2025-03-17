@@ -7,7 +7,7 @@ import { AuthRepository } from '../../../../data/repositories/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
 import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../../core/services/notification.service';
+import { NotificationService } from '../../../../core/services/notifications/notification.service';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 import { SignalRService } from '../../../../core/services/signalr/signal-r.service';
 import { AuthResponse } from '../../../../core/domain/model/auth/auth';
