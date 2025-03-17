@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
 import { AuthRepository } from '../../../../data/repositories/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
-import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { StorageService } from '../../../../core/services/storage.service';
