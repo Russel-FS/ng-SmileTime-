@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IUserDatasource } from '../../core/interfaces/datasource/chat/I-user-datasource';
-import { ConversationParticipantDTO } from '../../data/dto/conversation-participant-DTO';
+import { IUserDatasource } from '../../../core/interfaces/datasource/chat/I-user-datasource';
+import { ConversationParticipantDTO } from '../../../data/dto/conversation-participant-DTO';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +16,8 @@ export class ContactDataSource implements IUserDatasource {
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
       lastActive: new Date(),
       selected: true,
-      conversationId:'1',
-      isOnline :true,
+      conversationId: '1',
+      isOnline: true,
     },
     {
       userId: 2,
@@ -25,7 +25,7 @@ export class ContactDataSource implements IUserDatasource {
       avatar: 'https://randomuser.me/api/portraits/men/6.jpg',
       lastActive: new Date(),
       selected: false,
-      conversationId:1,
+      conversationId: 1,
     },
     {
       userId: 3,
@@ -33,7 +33,7 @@ export class ContactDataSource implements IUserDatasource {
       avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
       lastActive: new Date(),
       selected: false,
-      conversationId:2,
+      conversationId: 2,
     },
   ];
 

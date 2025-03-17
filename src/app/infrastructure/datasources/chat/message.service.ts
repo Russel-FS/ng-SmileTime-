@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MessageEntityDTO } from '../../data/dto/message-DTO';
-import { mockMessage } from '../../core/domain/model/chat/__mocks__/message.mock';
-import { IMessageDatasource } from '../../core/interfaces/datasource/auth/i-message-datasource';
-import { ConversationEntityDTO } from '../../data/dto/conversation-entity-DTO';
+import { MessageEntityDTO } from '../../../data/dto/message-DTO';
+import { mockMessage } from '../../../core/domain/model/chat/__mocks__/message.mock';
+import { IMessageDatasource } from '../../../core/interfaces/datasource/auth/i-message-datasource';
+import { ConversationEntityDTO } from '../../../data/dto/conversation-entity-DTO';
 import { Mapper } from '@automapper/core';
-import { ConversationType } from '../../core/domain/model/chat/conversation-entity';
+import { ConversationType } from '../../../core/domain/model/chat/conversation-entity';
 
 
 @Injectable({

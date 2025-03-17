@@ -6,7 +6,7 @@ import { ChatMessagesComponent } from '../../../components/chat/chat-messages/ch
 import { IMessageRepository } from '../../../../core/interfaces/repositorys/chat/i-message.repository';
 import { MessageRepository } from '../../../../data/repositories/message.repository';
 import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
-import { ContactDataSource } from '../../../../infrastructure/datasources/contact.service';
+import { ContactDataSource } from '../../../../infrastructure/datasources/chat/contact.service';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
 import { SignalRService } from '../../../../core/services/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
@@ -27,11 +27,11 @@ import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-h
 import { ChatInputComponent } from "../../../components/chat/chat-input/chat-input.component";
 import { ConversationUseCase } from '../../../../core/use-cases/chat/conversation-use-case';
 import { IConversationRepository } from '../../../../core/interfaces/repositorys/chat/i-conversation-repository';
-import { ConversationService } from '../../../../infrastructure/datasources/conversation.service';
+import { ConversationService } from '../../../../infrastructure/datasources/chat/conversation.service';
 import { ConversationRepository } from '../../../../data/repositories/conversation.repository';
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage.service';
-import { MessageDataSource } from '../../../../infrastructure/datasources/message.service';
+import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
 
 
 @Component({

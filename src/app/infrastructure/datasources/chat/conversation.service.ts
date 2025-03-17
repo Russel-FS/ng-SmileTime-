@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IConversationDatasource } from '../../core/interfaces/datasource/chat/i-conversation-datasource';
+import { IConversationDatasource } from '../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { Observable } from 'rxjs';
-import { ConversationEntityDTO } from '../../data/dto/conversation-entity-DTO';
-import { mockConversation } from '../../core/domain/model/chat/__mocks__/conversation.mock';
+import { ConversationEntityDTO } from '../../../data/dto/conversation-entity-DTO';
+import { mockConversation } from '../../../core/domain/model/chat/__mocks__/conversation.mock';
 
 @Injectable({
   providedIn: 'root'
