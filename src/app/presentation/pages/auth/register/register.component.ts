@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
 import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
-import { AuthRepository } from '../../../../data/repositories/auth.repository';
+import { AuthRepository } from '../../../../data/repositories/auth/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
 import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
