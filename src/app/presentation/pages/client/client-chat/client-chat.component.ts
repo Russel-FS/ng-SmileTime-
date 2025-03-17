@@ -157,7 +157,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
 
     // Obtener una conversacion
-    this.conversationUseCase.getConversationByParticipants(2, 1)
+    this.conversationUseCase.getConversationByParticipants(2, this.contactSelected.userId)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {
@@ -186,14 +186,67 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @param newMessage El texto del nuevo mensaje.
    */
   onSendMessage(newMessage: string): void {
-    // se crea la mensaje
+    // se crea un nuevo mensaje
+    const conversation = this.getCurrentConversation();
     const message = this.createMessage(newMessage);
-    this.manageRealTimeMessages.sendMessage(message)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: this.handleNewConversation.bind(this),
-        error: this.handleMessageError.bind(this)
+    const selectedContact = this.contactSelected;
+
+
+    if (!conversation) {
+      // Si no existe una conversación, se crea una nueva
+      const newConversation = new ConversationEntity({
+        type: ConversationType.INDIVIDUAL,
+        participants: [this.currenUserSesion(), selectedContact],
+        messages: [message]
       });
+      // Se crea la conversacion en la base de datos
+      this.conversationUseCase.createConversation(newConversation)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (incomingConversation) => {
+            selectedContact.conversationId = incomingConversation?.id;
+            this.handleNewConversation.bind(this)
+          },
+          error: this.handleMessageError.bind(this)
+        });
+
+    } else {
+      this.manageRealTimeMessages.sendMessage(message)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: this.handleNewConversation.bind(this),
+          complete: () => {
+            this.handleCompleteSendMessage(message);
+          },
+          error: this.handleMessageError.bind(this)
+        });
+    }
+  }
+
+  private currenUserSesion(): ConversationParticipant {
+    return new ConversationParticipant({
+      userId: 2,
+      userName: 'Solano Flores',
+      avatar: 'https://example.com/avatar2.jpg'
+    });
+  }
+
+  /**
+   * Obtiene la conversación actual seleccionada.
+   * @returns La conversación actual o undefined si no existe.
+   */
+  private getCurrentConversation(): ConversationEntity | undefined {
+    return this.conversations.find(conv => conv?.id?.toString() === this.contactSelected?.conversationId?.toString());
+  }
+
+  /**
+   * Se llama cuando se completa el envio del mensaje.
+   * Notifica el estado de escritura y transmite el mensaje enviado.
+   * @param message El mensaje enviado.
+   */
+  private handleCompleteSendMessage(message: MessageEntity): void {
+    this.manageTypingStatus.notifyTyping(2, false);
+    this.manageRealTimeMessages.broadcastMessage(message);
   }
 
   /**
@@ -230,7 +283,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @returns Un objeto MessageEntity representando el mensaje creado.
    */
   private createMessage(content: string): MessageEntity {
-    const sender = this.createParticipant(2, 'Solano flores');
+    const sender = this.currenUserSesion();
 
     return new MessageEntity({
       id: 2,
@@ -267,6 +320,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage: MessageEntity) => {
+          console.log('Mensaje recibido:', incomingMessage);
           this.handleIncomingMessage(incomingMessage);
         },
         error: error => console.error('Error al recibir mensajes:', error)
