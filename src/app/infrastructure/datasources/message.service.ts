@@ -21,14 +21,14 @@ export class MessageDataSource implements IMessageDatasource {
   //test datos de prueba
   getMessages(): Observable<MessageEntityDTO[]> {
     return new Observable<MessageEntityDTO[]>((observer) => {
-      observer.next([mockMessage]);
+      observer.next([mockMessage as MessageEntityDTO]);
       observer.complete();
     });
   }
 
   getMessage(id: string): Observable<MessageEntityDTO> {
     return new Observable<MessageEntityDTO>((observer) => {
-      observer.next(mockMessage);
+      observer.next(mockMessage as MessageEntityDTO);
       observer.complete();
     });
   }

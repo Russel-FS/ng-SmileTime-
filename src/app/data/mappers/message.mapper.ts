@@ -32,7 +32,7 @@ export class MessageMapper {
 
   toDTO(entity: MessageEntity): MessageEntityDTO {
     return {
-      id: entity.id,
+      id: entity.id || '',
       sender: this.participantMapper.toDTO(entity.sender),
       content: entity.content,
       type: entity.type,

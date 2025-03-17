@@ -10,7 +10,7 @@ export enum MessageType {
 }
 
 export class MessageEntity {
-  id: string | number;
+  id?: string | number;
   sender: ConversationParticipant;
   content: string;
   type: MessageType;
@@ -22,7 +22,7 @@ export class MessageEntity {
   conversationId?: string | number;
 
   constructor(params: {
-    id: string | number;
+    id?: string | number;
     sender: ConversationParticipant;
     content: string;
     type?: MessageType;

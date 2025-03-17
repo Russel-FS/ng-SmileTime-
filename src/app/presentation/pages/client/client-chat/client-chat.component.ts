@@ -228,7 +228,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Nuevo método auxiliar para enviar mensajes
+  /**
+   * Envía un mensaje a través de SignalR y actualiza la conversación local.
+   * @param message El mensaje a enviar.
+   */
   private sendMessage(message: MessageEntity): void {
     if (!message.conversationId) {
       console.error('El mensaje debe tener un ID de conversación');
@@ -304,7 +307,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     const sender = this.currenUserSesion();
 
     return new MessageEntity({
-      id: 2,
       sender: sender,
       content: content,
       type: MessageType.TEXT,
@@ -314,21 +316,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Crea un nuevo objeto ConversationParticipant con el ID de usuario y nombre proporcionados.
-   * Asigna un avatar basado en el ID de usuario.
-   * 
-   * @param userId El ID del usuario.
-   * @param userName El nombre del usuario.
-   * @returns Un objeto ConversationParticipant que representa al participante creado.
-   */
-  private createParticipant(userId: number, userName: string): ConversationParticipant {
-    return new ConversationParticipant({
-      userId: userId,
-      userName: userName,
-      avatar: `https://example.com/avatar${userId}.jpg`
-    });
-  }
 
   /**
    * Escucha mensajes en tiempo real y actualiza la conversación local.
@@ -353,14 +340,14 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     // Verificar que el mensaje tenga ID de conversación
     if (!incomingMessage.conversationId) {
       console.error('Mensaje recibido sin ID de conversación');
-      return;
+
     }
 
     const conversation = this.findConversationById(incomingMessage.conversationId);
 
     if (!conversation) {
       // Si no existe la conversación, obtenerla del servidor
-      this.conversationUseCase.getConversationById(incomingMessage.conversationId)
+      this.conversationUseCase.getConversationById(incomingMessage.conversationId as string | number)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe({
           next: (newConversation) => {

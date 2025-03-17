@@ -40,7 +40,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-   // this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   private checkScrollPosition(): void {
@@ -59,6 +59,6 @@ export class ChatMessagesComponent implements AfterViewChecked {
     return message.status.some((element) => element.status === Status.SENT);
   }
   trackByMessageId(message: MessageEntity): string {
-    return message?.id.toString() || message.createdAt.getTime().toString();
+    return message?.id?.toString() || message.createdAt.getTime().toString();
   }
 }

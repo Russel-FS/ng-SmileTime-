@@ -21,7 +21,7 @@ export class ConversationService implements IConversationDatasource {
   }
   getConversationByParticipants(userId: number | string, contactId: number | string): Observable<ConversationEntityDTO> {
     return new Observable<ConversationEntityDTO>(observer => {
-      observer.next(mockConversation);
+      observer.next(mockConversation as ConversationEntityDTO);
       observer.complete();
     });
   }
