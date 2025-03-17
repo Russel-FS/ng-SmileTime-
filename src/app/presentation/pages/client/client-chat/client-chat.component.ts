@@ -8,7 +8,7 @@ import { MessageRepository } from '../../../../data/repositories/message.reposit
 import { ContactRepository } from '../../../../data/repositories/user-contact.repository';
 import { ContactDataSource } from '../../../../infrastructure/datasources/chat/contact.service';
 import { IMessageDatasource } from '../../../../core/interfaces/datasource/auth/i-message-datasource';
-import { SignalRService } from '../../../../core/services/signal-r.service';
+import { SignalRService } from '../../../../core/services/signalr/signal-r.service';
 import { IRealTimeComunication } from '../../../../core/interfaces/signalR/i-real-time-comunication';
 import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR/manage-realtime-message-use-case';
 import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
