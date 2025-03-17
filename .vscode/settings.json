@@ -5,7 +5,7 @@
   "prettier.printWidth": 100,
   "prettier.tabWidth": 2,
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode" // or "prettier.prettier"
+    "editor.defaultFormatter": "vscode.typescript-language-features" // or "prettier.prettier"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -25,5 +25,5 @@
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "liveServer.settings.port": 5501
+  "remote.autoForwardPortsFallback": 0
 }

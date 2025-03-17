@@ -34,7 +34,7 @@ export const routes: Routes = [
     children: dentistRoutes,
   },
   {
-    path: 'search', component: SearchComponent
-  }
-   
+    path: 'search',
+    component: SearchComponent,
+  },
 ];

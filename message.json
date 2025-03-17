@@ -1,0 +1,45 @@
+{
+  "conversationId": 1,
+  "title": "Chat entre Juan y Pedro",
+  "type": "individual",
+  "createdAt": "2024-03-10T14:30:00Z",
+  "updatedAt": "2024-03-10T15:00:00Z",
+  "isActive": true,
+  "participants": [
+    {
+      "userId": 1,
+      "userName": "Juan",
+      "avatar": "https://example.com/avatars/juan.png",
+      "lastActive": "2024-03-10T14:59:00Z"
+    },
+    {
+      "userId": 2,
+      "userName": "Pedro",
+      "avatar": "https://example.com/avatars/pedro.png",
+      "lastActive": "2024-03-10T14:58:00Z"
+    }
+  ],
+  "messages": [
+    {
+      "messageId": 101,
+      "sender": {
+        "userId": 1,
+        "userName": "Juan",
+        "avatar": "https://example.com/avatars/juan.png"
+      },
+      "content": "Hola Pedro, ¿cómo estás?",
+      "messageType": "text",
+      "createdAt": "2024-03-10T14:31:00Z",
+      "modifiedAt": null,
+      "isDeleted": false,
+      "status": [
+        {
+          "userId": 2,
+          "status": "read",
+          "statusTimestamp": "2024-03-10T14:32:00Z"
+        }
+      ],
+      "attachments": []
+    }
+  ]
+}

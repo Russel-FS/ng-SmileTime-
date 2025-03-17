@@ -2,13 +2,15 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
-import { IAuthRepository } from '../../../../core/interfaces/i-auth-repository';
-import { AuthRepository } from '../../../../data/repositories/auth.repository';
-import { IAuthService } from '../../../../core/interfaces/i-auth-service';
-import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
+import { AuthRepository } from '../../../../data/repositories/auth/auth.repository';
+import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
+import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../../core/services/notification.service';
-import { StorageService } from '../../../../core/services/storage.service';
+import { NotificationService } from '../../../../core/services/notifications/notification.service';
+import { StorageService } from '../../../../core/services/storage/storage.service';
+import { SignalRService } from '../../../../core/services/signalr/signal-r.service';
+import { AuthResponse } from '../../../../core/domain/model/auth/auth';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,10 @@ import { StorageService } from '../../../../core/services/storage.service';
         style({ opacity: 0, transform: 'translateY(20px)' }),
         animate('500ms ease-in-out', style({ opacity: 1, transform: 'translateY(0)' })),
       ]),
+      transition(':leave', [
+        style({ opacity: 1, transform: 'translateY(0)' }),
+        animate('500ms ease-in-out', style({ opacity: 0, transform: 'translateY(20px)' })),
+      ])
     ]),
   ],
 })
@@ -43,7 +49,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private notificationService: NotificationService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private signalR: SignalRService,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -66,17 +73,14 @@ export class LoginComponent {
 
     this.loading = true;
     this.AuthService.login(this.loginForm.value).subscribe({
-      next: (response) => {  
-        this.storageService.setAuthData(response);
-        this.notificationService.success('Inicio de sesión exitoso, bienvenido');
-        this.router.navigate(['/home']);
+      next: (response) => {
+        this.success(response);
       },
       error: (error) => {
-        this.loading = false; // carga 
-        this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+        this.error(error);
       },
       complete: () => {
-        this.loading = false;
+        this.complete();
       },
     });
   }
@@ -90,6 +94,20 @@ export class LoginComponent {
     });
   }
 
+  success(response: AuthResponse) {
+    console.log(response);
+    this.storageService.setAuthData(response);
+    this.notificationService.success('Inicio de sesión exitoso, bienvenido');
+    this.router.navigate(['/home']);
+  }
+  error(eror: any) {
+    this.loading = false; // carga
+    this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+  }
+
+  complete() {
+    this.loading = false;
+  }
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control?.hasError('required')) {
