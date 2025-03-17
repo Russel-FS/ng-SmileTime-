@@ -178,12 +178,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.listenForTypingStatus();
   }
 
+
   /**
-   * Se llama cuando se envia un nuevo mensaje de texto.
-   * Crea un objeto MessageEntity con el texto del mensaje y lo envia
-   * a traves del SignalR y la base de datos. Luego se suscribe a la respuesta para
-   * manejar el resultado de la operacion.
-   * @param newMessage El texto del nuevo mensaje.
+   * Envia un mensaje a través de SignalR y actualiza la conversación local.
+   * Si no existe una conversación, crea una nueva y envía el mensaje.
+   * @param newMessage El contenido del mensaje a enviar.
    */
   onSendMessage(newMessage: string): void {
     const selectedContact = this.contactSelected;
@@ -318,7 +317,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
 
   /**
-   * Escucha mensajes en tiempo real y actualiza la conversación local.
+   * Escucha los mensajes en tiempo real y actualiza la conversación local.
+   * Se cancela la subscripción cuando el componente se destruye.
    */
   private listenForMessages(): void {
     this.manageRealTimeMessages.listenForMessages()
@@ -332,7 +332,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
   }
   /**
- * Procesa un mensaje entrante y lo agrega a la conversaci n correspondiente.
+ * Procesa un mensaje entrante y lo agrega a la conversacion correspondiente.
  *
  * @param incomingMessage El mensaje entrante que se va a procesar.
  */
