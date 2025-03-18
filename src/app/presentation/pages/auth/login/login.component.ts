@@ -100,9 +100,10 @@ export class LoginComponent {
     this.notificationService.success('Inicio de sesión exitoso, bienvenido');
     this.router.navigate(['/home']);
   }
-  error(eror: any) {
-    this.loading = false; // carga
-    this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+  error(error: any) {
+    const errorMessage = error.error.messageResponse || 'Error desconocido';
+    this.loading = false; // carga 
+    this.notificationService.error(errorMessage); // mensaje de notificacion
   }
 
   complete() {
