@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CiteEntity } from '../../core/domain/model/dashboard/cite-entity';
 import { DataEntity } from '../../core/domain/model/dashboard/data-entity';
 import { PacientEntity } from '../../core/domain/model/dashboard/pacient-entity';
