@@ -3,17 +3,17 @@ export class DataEntity {
     newPatients: number;
     pendingAppointments: number;
     completedTreatments: number;
-    monthlyAppointments: Map<string, number>;
-    treatments: {
+    monthlyAppointments?: Map<string, number>;
+    treatments?: {
         cleanings: number;
         extractions: number;
         fillings: number;
     };
-    metrics: {
-        totalPatientsChange: number;
-        newPatientsChange: number;
-        pendingAppointmentsChange: number;
-        completedTreatmentsChange: number;
+    metrics?: {
+        totalPatientsChange?: number;
+        newPatientsChange?: number;
+        pendingAppointmentsChange?: number;
+        completedTreatmentsChange?: number;
     };
 
     constructor(params: {
@@ -21,8 +21,8 @@ export class DataEntity {
         newPatients: number;
         pendingAppointments: number;
         completedTreatments: number;
-        monthlyAppointments: Map<string, number>;
-        treatments: {
+        monthlyAppointments?: Map<string, number>;
+        treatments?: {
             cleanings: number;
             extractions: number;
             fillings: number;
@@ -38,8 +38,8 @@ export class DataEntity {
         this.newPatients = params.newPatients;
         this.pendingAppointments = params.pendingAppointments;
         this.completedTreatments = params.completedTreatments;
-        this.monthlyAppointments = params.monthlyAppointments;
-        this.treatments = params.treatments;
+        this.monthlyAppointments = params.monthlyAppointments || new Map<string, number>();
+        this.treatments = params.treatments || { cleanings: 0, extractions: 0, fillings: 0 };
         this.metrics = {
             totalPatientsChange: params.metrics?.totalPatientsChange || 0,
             newPatientsChange: params.metrics?.newPatientsChange || 0,
@@ -48,12 +48,5 @@ export class DataEntity {
         };
     }
 
-    getTreatmentDistribution(): { cleanings: number; extractions: number; fillings: number } {
-        const total = this.treatments.cleanings + this.treatments.extractions + this.treatments.fillings;
-        return {
-            cleanings: (this.treatments.cleanings / total) * 100,
-            extractions: (this.treatments.extractions / total) * 100,
-            fillings: (this.treatments.fillings / total) * 100
-        };
-    }
+
 }
