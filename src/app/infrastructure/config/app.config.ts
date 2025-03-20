@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://supreme-goldfish-69574rjxgpr524jp4-5011.app.github.dev';
+  private apiUrlBase = 'http://localhost:5011';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
