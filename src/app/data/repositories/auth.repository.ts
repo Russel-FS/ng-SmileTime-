@@ -22,7 +22,7 @@ export class AuthRepository implements IAuthRepository {
     return this.dataSource.isAuthenticated();
   }
 
-  register(credentials: AuthCredentials): Observable<void> {
+  register(credentials: AuthCredentials): Observable<AuthResponse> {
     return this.dataSource.register(credentials);
   }
 }

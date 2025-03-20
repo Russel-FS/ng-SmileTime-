@@ -103,7 +103,7 @@ export class RegisterComponent implements OnInit {
     this.AuthService.register(this.registerForm.value).subscribe({
       next: () => {
         this.notificationService.success('Registro exitoso, ahora puedes iniciar sesión');
-        this.router.navigate(['/login']);
+        this.router.navigate(['']);
       },
       error: () => {
         this.loading = false;

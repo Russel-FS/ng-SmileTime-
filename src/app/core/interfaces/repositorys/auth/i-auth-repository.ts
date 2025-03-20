@@ -6,7 +6,7 @@ export interface IAuthRepository {
   login(credentials: AuthCredentials): Observable<AuthResponse>;
   logout(): Observable<void>;
   isAuthenticated(): Observable<boolean>;
-  register(credentials: AuthCredentials): Observable<void>;
+  register(credentials: AuthCredentials): Observable<AuthResponse>;
 }
 
 export const IAuthRepository = new InjectionToken<IAuthRepository>('AuthRepository');
