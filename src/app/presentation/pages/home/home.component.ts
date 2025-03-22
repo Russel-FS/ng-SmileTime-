@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { SearchComponent } from '../../components/search/search.component';
 import { Router } from '@angular/router';
+import { Carrusel } from '../../../core/domain/model/heropagedata/carrusel';
+import { CarouselService } from '../../../infrastructure/datasources/carousel.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,29 +13,11 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('carouselInner') carouselInner!: ElementRef;
 
-  carouselItems = [
-    {
-      imageUrl: 'assets/images/service1.jpg',
-      title: 'Limpieza Dental',
-      description: 'Servicio profesional de limpieza dental',
-      alt: 'Limpieza Dental',
-    },
-    {
-      imageUrl: 'assets/images/service2.jpg',
-      title: 'Ortodoncia',
-      description: 'Tratamientos de ortodoncia personalizados',
-      alt: 'Ortodoncia',
-    },
-    {
-      imageUrl: 'assets/images/service3.jpg',
-      title: 'Blanqueamiento',
-      description: 'Blanqueamiento dental profesional',
-      alt: 'Blanqueamiento',
-    },
-  ];
+  carouselItems: Carrusel[] = [];
+  private subscription?: Subscription;
 
   currentIndex = 0;
   autoPlayInterval: any;
@@ -41,10 +26,26 @@ export class HomeComponent implements OnInit {
   constructor(
     private router: Router,
     private ngZone: NgZone,
-  ) {}
+    private carouselService: CarouselService
+  ) { }
 
   ngOnInit() {
+    this.loadCarouselItems();
     this.startAutoPlay();
+  }
+
+  ngOnDestroy() {
+    this.stopAutoPlay();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private loadCarouselItems() {
+    this.subscription = this.carouselService.getCarouselItems()
+      .subscribe(items => {
+        this.carouselItems = items;
+      });
   }
 
   startAutoPlay() {
