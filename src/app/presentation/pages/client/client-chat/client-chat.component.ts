@@ -127,7 +127,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.contacts.forEach((c) => (c.selected = false));
     contact.selected = true;
     this.contactSelected = contact;
+    this.conversations = [];
+    this.conversationUseCase.getConversationByParticipants(2, contact.userId)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (conversation) => {
+          this.conversations.push(conversation);
+          console.log('Conversación cargada:', conversation);
+        },
+        error: err => console.error('Error obteniendo conversación:', err)
+      });
   }
+  
   /**
    * Notifica al servidor que el usuario esta escribiendo actualmente.
    * @param text El texto ingresado por el usuario.
