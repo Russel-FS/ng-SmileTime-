@@ -138,7 +138,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: err => console.error('Error obteniendo conversación:', err)
       });
   }
-  
+
   /**
    * Notifica al servidor que el usuario esta escribiendo actualmente.
    * @param text El texto ingresado por el usuario.
@@ -165,17 +165,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
-      });
-
-    // Obtener una conversacion
-    this.conversationUseCase.getConversationByParticipants(2, this.contactSelected.userId)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (conversation) => {
-          this.conversations.push(conversation);
-          console.log('Conversaciones obtenidas:', conversation);
-        },
-        error: err => console.error('Error obteniendo conversaciones:', err)
       });
   }
 
