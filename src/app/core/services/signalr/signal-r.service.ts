@@ -30,7 +30,7 @@ export class SignalRService implements IRealTimeComunication {
 
       // crea una nueva conexión con el hub de SignalR
       this.hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl(this.apiUrl.getEndpoint('chatHub'), {
+        .withUrl(this.apiUrl.getEndpoint('signalR', 'chatHub'), {
           accessTokenFactory: () => this.storageService.getToken(),
           transport: signalR.HttpTransportType.WebSockets,
         })

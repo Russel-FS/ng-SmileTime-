@@ -17,7 +17,7 @@ export class AuthService implements IAuthService {
   ) { }
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('login')}`, credentials);
+    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('auth', 'login')}`, credentials);
   }
 
   logout(): Observable<void> {
@@ -29,6 +29,6 @@ export class AuthService implements IAuthService {
   }
 
   register(credentials: AuthCredentials): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl.getEndpoint('register')}`, credentials);
+    return this.http.post<void>(`${this.apiUrl.getEndpoint('auth', 'register')}`, credentials);
   }
 }

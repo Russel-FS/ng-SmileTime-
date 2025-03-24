@@ -11,16 +11,29 @@ export class ApiConfig {
     cacheTime: 3600,
     maxRetries: 3,
     endpoints: {
-      login: `${this.apiUrlBase}/api/Auth/login`,
-      register: `${this.apiUrlBase}/api/Auth/register`,
-      chatHub: `${this.apiUrlBase}/chathub`,
+      signalR: {
+        chatHub: `${this.apiUrlBase}/chathub`,
+      },
+      auth: {
+        login: `${this.apiUrlBase}/api/Auth/login`,
+        register: `${this.apiUrlBase}/api/Auth/register`,
+      },
+      chat: {
+        messages: `${this.apiUrlBase}/api/messages`,
+        contacts: `${this.apiUrlBase}/api/contacts`,
+        user: `${this.apiUrlBase}/api/user`,
+      }
     },
   };
 
   get<T extends keyof typeof this.config>(key: T): (typeof this.config)[T] {
     return this.config[key];
   }
-  getEndpoint(endpoint: keyof typeof this.config.endpoints): string {
-    return this.config.endpoints[endpoint];
+  getEndpoint<T extends keyof typeof this.config.endpoints>(endpoint: T, type: keyof typeof this.config.endpoints[T]): string {
+    const endpointConfig = this.config.endpoints[endpoint];
+    if (endpointConfig && type in endpointConfig) {
+      return endpointConfig[type] as string;
+    }
+    return "";
   }
 }
