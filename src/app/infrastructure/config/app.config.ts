@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://didactic-lamp-v6r7qgxjvr66hp7g4-5011.app.github.dev';
+  private apiUrlBase = 'http://localhost:5011';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
@@ -14,6 +14,7 @@ export class ApiConfig {
       login: `${this.apiUrlBase}/api/Auth/login`,
       register: `${this.apiUrlBase}/api/Auth/register`,
       chatHub: `${this.apiUrlBase}/chathub`,
+      contact : `${this.apiUrlBase}/api/Contact`, 
     },
   };
 
