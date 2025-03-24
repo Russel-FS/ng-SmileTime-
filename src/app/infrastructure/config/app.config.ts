@@ -19,8 +19,8 @@ export class ApiConfig {
         register: `${this.apiUrlBase}/api/Auth/register`,
       },
       chat: {
-        messages: `${this.apiUrlBase}/api/messages`,
-        contacts: `${this.apiUrlBase}/api/contacts`,
+        messages: `${this.apiUrlBase}/api/conversation/messages`,
+        contacts: `${this.apiUrlBase}/api/conversation/contacts`,
         user: `${this.apiUrlBase}/api/user`,
       }
     },
