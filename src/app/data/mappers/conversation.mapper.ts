@@ -15,10 +15,10 @@ export class ConversationMapper {
 
   toDomain(dto: ConversationEntityDTO): ConversationEntity {
     return new ConversationEntity({
-      id: dto.id,
+      id: dto.ConversationId,
       title: dto.title,
       type: dto.type,
-      participants: dto.participants?.map((p) => this.participantMapper.toDomain(p)) || [],
+      participants: dto.Participants?.map((p) => this.participantMapper.toDomain(p)) || [],
       messages: dto.messages?.map((m) => this.messageMapper.toDomain(m)) || [],
       createdAt: dto.createdAt,
       updatedAt: dto.updatedAt,
@@ -28,10 +28,10 @@ export class ConversationMapper {
 
   toDTO(entity: ConversationEntity | Partial<ConversationEntity>): ConversationEntityDTO {
     return {
-      id: entity.id || '',
+      ConversationId: entity.id || '',
       title: entity.title || '',
       type: entity.type || ConversationType.INDIVIDUAL,
-      participants: entity.participants?.map((p) => this.participantMapper.toDTO(p)) || [],
+      Participants: entity.participants?.map((p) => this.participantMapper.toDTO(p)) || [],
       messages: entity.messages?.map((m) => this.messageMapper.toDTO(m)) || [],
       createdAt: entity.createdAt || new Date(),
       updatedAt: entity.updatedAt || new Date(),

@@ -3,12 +3,13 @@ import { ConversationParticipantDTO } from './conversation-participant-DTO';
 import { MessageEntityDTO } from './message-DTO';
 
 export interface ConversationEntityDTO {
-  id?: string | number;
+  ConversationId?: string | number;
   title: string;
   type: ConversationType;
-  participants: ConversationParticipantDTO[];
+  Participants?: ConversationParticipantDTO[];
   messages?: MessageEntityDTO[];
   createdAt: Date;
   updatedAt?: Date;
   isActive: boolean;
 }
+

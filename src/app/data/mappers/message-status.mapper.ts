@@ -7,7 +7,7 @@ import { MessageStatusDTO } from '../dto/message-status-DTO';
 })
 export class MessageStatusMapper {
   toDomain(dto: MessageStatusDTO): MessageStatus {
-    return new MessageStatus(dto.userId, dto.status, dto.statusTimestamp);
+    return new MessageStatus(dto.userId as any, dto.status, dto.statusTimestamp);
   }
 
   toDTO(entity: MessageStatus): MessageStatusDTO {

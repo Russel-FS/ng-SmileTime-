@@ -128,7 +128,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     contact.selected = true;
     this.contactSelected = contact;
     this.conversations = [];
-    this.conversationUseCase.getConversationByParticipants(2, contact.userId)
+
+    this.conversationUseCase.getConversationById(this.contactSelected.conversationId as number)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {

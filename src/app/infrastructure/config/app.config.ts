@@ -21,6 +21,7 @@ export class ApiConfig {
       chat: {
         messages: `${this.apiUrlBase}/api/conversation/messages`,
         contacts: `${this.apiUrlBase}/api/conversation/contacts`,
+        conversation: `${this.apiUrlBase}/api/conversation/ByConversationId`,
         user: `${this.apiUrlBase}/api/user`,
       }
     },
