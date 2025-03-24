@@ -30,7 +30,7 @@ export class MessageDataSource implements IMessageDatasource {
   sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO> {
     return new Observable<ConversationEntityDTO>((observer) => {
       const mockConversation: ConversationEntityDTO = {
-        ConversationId: '2',
+        conversationId: '2',
         Participants: [],
         messages: [],
         createdAt: new Date(),

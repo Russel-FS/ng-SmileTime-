@@ -43,7 +43,7 @@ export class ConversationRepository implements IConversationRepository {
                 ));
     }
     getConversationById(id: string | number): Observable<ConversationEntity> {
-        
+
         return this.conversationDatasource.getConversationById(id)
             .pipe(
                 map(

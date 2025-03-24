@@ -159,7 +159,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   initData() {
     // Obtener contactos
     this.ContactsUseCase.execute()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$),)
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
@@ -419,7 +419,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   getMessages(): MessageEntity[] {
     const conversation = this.conversations.find(
-      conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
+      conv => conv.id === this.contactSelected?.conversationId
     );
     return conversation?.messages || [];
   }

@@ -3,7 +3,7 @@ import { ConversationParticipantDTO } from './conversation-participant-DTO';
 import { MessageEntityDTO } from './message-DTO';
 
 export interface ConversationEntityDTO {
-  ConversationId?: string | number;
+  conversationId?: string | number;
   title: string;
   type: ConversationType;
   Participants?: ConversationParticipantDTO[];

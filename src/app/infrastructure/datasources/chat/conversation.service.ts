@@ -33,6 +33,12 @@ export class ConversationService implements IConversationDatasource {
   getConversationById(id: string | number): Observable<ConversationEntityDTO> {
     const headers = this.storage.getAuthHeaders();
     const url = `${this.apiUrl.getEndpoint('chat', 'conversation')}/${id}`;
-    return this.http.get<ConversationEntityDTO>(url, { headers });
+    return this.http.get<ConversationEntityDTO>(url, { headers }).pipe(
+      tap((conversation) => {
+        console.log('conversation', conversation);
+      })
+    )
+
+
   }
 }

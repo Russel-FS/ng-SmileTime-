@@ -15,7 +15,7 @@ export class ConversationMapper {
 
   toDomain(dto: ConversationEntityDTO): ConversationEntity {
     return new ConversationEntity({
-      id: dto.ConversationId,
+      id: dto.conversationId,
       title: dto.title,
       type: dto.type,
       participants: dto.Participants?.map((p) => this.participantMapper.toDomain(p)) || [],
@@ -28,7 +28,7 @@ export class ConversationMapper {
 
   toDTO(entity: ConversationEntity | Partial<ConversationEntity>): ConversationEntityDTO {
     return {
-      ConversationId: entity.id || '',
+      conversationId: entity.id || '',
       title: entity.title || '',
       type: entity.type || ConversationType.INDIVIDUAL,
       Participants: entity.participants?.map((p) => this.participantMapper.toDTO(p)) || [],
