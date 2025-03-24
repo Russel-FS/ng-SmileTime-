@@ -11,6 +11,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
 import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
 import { Status } from '../../../../core/domain/model/chat/message-status';
+import { StorageService } from '../../../../core/services/storage/storage.service';
 
 @Component({
   selector: 'app-chat-messages',
@@ -34,6 +35,12 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @Input() messages!: MessageEntity[];
   @Input() isTyping: boolean = false;
+  private currentUserId: string | null = null;
+
+  constructor(private storageService: StorageService) {
+    this.currentUserId = this.storageService.getItem('userId');
+  }
+
 
   onScroll(): void {
     this.checkScrollPosition();
@@ -55,10 +62,25 @@ export class ChatMessagesComponent implements AfterViewChecked {
         this.messageContainer.nativeElement.scrollHeight;
     } catch (err) { }
   }
-  isUserMessage(message: MessageEntity): boolean {
-    return message.status.some((element) => element.status === Status.SENT);
-  }
+
   trackByMessageId(message: MessageEntity): string {
     return message?.id?.toString() || message.createdAt.getTime().toString();
+  }
+
+  isUserMessage(message: MessageEntity): boolean {
+    if (!message || !message.sender.userId || !this.currentUserId) {
+      return false;
+    }
+    return message.sender.userId?.toString() === this.currentUserId.toString();
+  }
+
+  getInitialsAvatar(userName: string): string {
+    if (!userName) return '?';
+
+    const names = userName.trim().split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return names[0][0].toUpperCase();
   }
 }
