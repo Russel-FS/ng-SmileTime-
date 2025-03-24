@@ -3,11 +3,22 @@
     <div class="chat-header">
       <div class="relative">
         <!--avatar-->
-        <img
-          [src]="userHeader.avatar"
-          alt="avatar"
-          class="w-10 h-10 rounded-full object-cover ring-2 ring-white"
-        />
+        <div class="w-12 h-12 rounded-full ring-2 ring-gray-200/30">
+          <img
+            *ngIf="userHeader.avatar"
+            [src]="userHeader.avatar"
+            alt="avatar"
+            class="w-full h-full rounded-full object-cover"
+          />
+          <div
+            *ngIf="!userHeader.avatar"
+            class="w-full h-full rounded-full bg-blue-100 flex items-center justify-center"
+          >
+            <span class="text-blue-600 font-semibold text-sm">{{
+              getInitials(userHeader.userName)
+            }}</span>
+          </div>
+        </div>
         <!--señal de estado-->
         <div
           [ngClass]="
