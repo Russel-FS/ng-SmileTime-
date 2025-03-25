@@ -97,7 +97,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   /** Almacena todas las conversaciones activas */
   conversations: ConversationEntity[] = [];
   /** Indica si el contacto está escribiendo actualmente */
-  isTyping: boolean = false;
+  isTyping: boolean = true;
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
@@ -121,6 +121,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia el estado de un contacto y actualiza la conversacion activa.
+   * y obtiene la conversación asociada al contacto seleccionado.
    * @param contact El contacto seleccionado.
    */
   onContactClick(contact: ConversationParticipant): void {
@@ -151,10 +152,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa los datos de la pantalla, obteniendo la lista de contactos y una conversacion de ejemplo.
-   * Selecciona el primer contacto activo o el primero de la lista si no hay ninguno activo.
-   * Se suscribe a los eventos de ContactUseCase y ConversationUseCase para obtener los datos.
-   * Se cancelan las subscripciones cuando el componente se destruye.
+   * Inicializa los datos de la pantalla.
+   * Obtiene la lista de contactos y establece el contacto activo.
    */
   initData() {
     // Obtener contactos
@@ -194,7 +193,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Verificar si existe una conversación
+    // Verificar si no existe una conversación
     if (!selectedContact.conversationId) {
       // Crear nueva conversación
       const newConversation = new ConversationEntity({
@@ -253,10 +252,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
   }
   private currenUserSesion(): ConversationParticipant {
+    const userId = this.storage.getItem('userId');
+    const userName = this.storage.getItem('email');
     return new ConversationParticipant({
-      userId: 2,
-      userName: 'Solano Flores',
-      avatar: 'https://example.com/avatar2.jpg'
+      userId: userId || '',
+      userName: userName || '', 
     });
   }
 
