@@ -28,6 +28,7 @@ export class MessageDataSource implements IMessageDatasource {
   }
 
   sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO> {
+    console.log('Mensaje enviada', message);
     return new Observable<ConversationEntityDTO>((observer) => {
       const mockConversation: ConversationEntityDTO = {
         conversationId: '2',

@@ -135,7 +135,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (conversation) => {
           this.conversations.push(conversation);
-          console.log('Conversación cargada:', conversation);
         },
         error: err => console.error('Error obteniendo conversación:', err)
       });
@@ -256,7 +255,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     const userName = this.storage.getItem('email');
     return new ConversationParticipant({
       userId: userId || '',
-      userName: userName || '', 
+      userName: userName || '',
     });
   }
 

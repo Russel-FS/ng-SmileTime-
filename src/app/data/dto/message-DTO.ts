@@ -5,10 +5,10 @@ import { MessageStatusDTO } from './message-status-DTO';
 import { UserEntityDto } from './user-DTO';
 
 export interface MessageEntityDTO {
-  MessageId: string | number;
+  messageId: string | number;
   sender: ConversationParticipantDTO;
   content: string;
-  type: MessageType;
+  messageType: MessageType;
   messageStatuses: MessageStatusDTO[];
   createdAt: Date;
   modifiedAt?: Date | null;
@@ -19,3 +19,4 @@ export interface MessageEntityDTO {
   Sender?: UserEntityDto;
 }
 
+ 
