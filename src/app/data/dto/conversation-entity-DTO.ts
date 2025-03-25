@@ -6,7 +6,7 @@ export interface ConversationEntityDTO {
   conversationId?: string | number;
   title: string;
   type: ConversationType;
-  Participants?: ConversationParticipantDTO[];
+  participants?: ConversationParticipantDTO[];
   messages?: MessageEntityDTO[];
   createdAt: Date;
   updatedAt?: Date;

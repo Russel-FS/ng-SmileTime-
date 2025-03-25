@@ -31,7 +31,7 @@ export class MessageDataSource implements IMessageDatasource {
     return new Observable<ConversationEntityDTO>((observer) => {
       const mockConversation: ConversationEntityDTO = {
         conversationId: '2',
-        Participants: [],
+        participants: [],
         messages: [],
         createdAt: new Date(),
         updatedAt: new Date(),
