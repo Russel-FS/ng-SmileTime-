@@ -9,6 +9,7 @@ import { AuthService } from '../../../../infrastructure/datasources/auth/auth.se
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notifications/notification.service';
 
+
 @Component({
   selector: 'app-register',
   standalone: true,

@@ -1,4 +1,5 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
@@ -8,6 +9,7 @@ import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth
 import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notifications/notification.service';
+
 
 @Component({
   selector: 'app-recovery',

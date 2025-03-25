@@ -49,4 +49,15 @@ export class PasswordRecoveryComponent implements OnInit {
       }
     );
   }
+
+  getErrorMessage(): string {
+    const control = this.recoveryForm.get('email');
+    if (control?.hasError('required')) {
+      return 'El email es requerido';
+    }
+    if (control?.hasError('email')) {
+      return 'Email no válido';
+    }
+    return '';
+  }
 }  
