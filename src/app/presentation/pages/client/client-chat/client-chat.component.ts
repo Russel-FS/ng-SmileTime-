@@ -97,7 +97,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   /** Almacena todas las conversaciones activas */
   conversations: ConversationEntity[] = [];
   /** Indica si el contacto está escribiendo actualmente */
-  isTyping: boolean = true;
+  isTyping: boolean = false;
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
@@ -273,20 +273,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.broadcastMessage(message);
   }
 
-  /**
-   * Se llama cuando se recibe una conversación nueva desde el SignalR.
-   * Verifica si la conversación ya existe en la lista de conversaciones locales.
-   * Si no existe, se agrega a la lista de conversaciones. De lo contrario, no se hace nada.
-   * @param incomingConversation La conversación recibida desde el SignalR.
-   */
-  private handleNewConversation(incomingConversation: ConversationEntity): void {
-    const conversationExists = this.conversations.some(conv =>
-      conv?.id?.toString() === incomingConversation?.id?.toString()
-    );
-    if (!conversationExists) {
-      this.conversations.push(incomingConversation);
-    }
-  }
 
   /**
    * Maneja el error cuando se produce un error al enviar un mensaje.
@@ -403,6 +389,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     if (contact) {
       this.isTyping = isTyping;
     }
+    this.isTyping = isTyping;
   }
   /**
    * Busca un contacto en la lista de contactos por su ID.
