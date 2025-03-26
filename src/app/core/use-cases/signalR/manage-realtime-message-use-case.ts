@@ -39,7 +39,7 @@ export class ManageRealtimeMessageUseCase {
    * la base de datos y luego se envia a traves del SignalR. El mensaje
    * guardado se devuelve como Observable.
    */
-  sendMessage(message: MessageEntity): Observable<ConversationEntity> {
+  sendMessage(message: MessageEntity): Observable<MessageEntity> {
     if (!message) {
       return throwError(() => new Error('El mensaje no puede ser nulo'));
     }

@@ -27,22 +27,8 @@ export class MessageDataSource implements IMessageDatasource {
     throw new Error('Method not implemented.');
   }
 
-  sendMessage(message: MessageEntityDTO): Observable<ConversationEntityDTO> {
+  sendMessage(message: MessageEntityDTO): Observable<MessageEntityDTO> {
     console.log('Mensaje enviada', message);
-    return new Observable<ConversationEntityDTO>((observer) => {
-      const mockConversation: ConversationEntityDTO = {
-        conversationId: '2',
-        participants: [],
-        messages: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isActive: true,
-        type: ConversationType.INDIVIDUAL,
-        title: "mensaje",
-      };
-
-      observer.next(mockConversation);
-      observer.complete();
-    });
+    return this.http.post<MessageEntityDTO>(this.apiUrl, message);
   }
 }

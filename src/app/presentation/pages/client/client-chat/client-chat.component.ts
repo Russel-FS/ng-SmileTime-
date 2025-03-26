@@ -241,7 +241,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (conversation) => {
           if (conversation) {
-            this.handleNewConversation(conversation);
+
           }
         },
         complete: () => {

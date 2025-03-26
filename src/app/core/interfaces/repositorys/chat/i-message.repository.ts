@@ -5,7 +5,7 @@ import { ConversationEntity } from '../../../domain/model/chat/conversation-enti
 export interface IMessageRepository {
   getMessages(): Observable<MessageEntity[]>;
   getMessage(id: string): Observable<MessageEntity>;
-  sendMessage(message: MessageEntity): Observable<ConversationEntity>;
+  sendMessage(message: MessageEntity): Observable<MessageEntity>;
 }
 
 export const IMessageRepository = new InjectionToken<IMessageRepository>('MessageRepository');
