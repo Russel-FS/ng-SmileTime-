@@ -3,13 +3,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
 import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
-import { AuthRepository } from '../../../../data/repositories/auth.repository';
+import { AuthRepository } from '../../../../data/repositories/auth/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
-import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../../core/services/notification.service';
-import { StorageService } from '../../../../core/services/storage.service';
-import { SignalRService } from '../../../../core/services/signal-r.service';
+import { NotificationService } from '../../../../core/services/notifications/notification.service';
+import { StorageService } from '../../../../core/services/storage/storage.service';
+import { SignalRService } from '../../../../core/services/signalr/signal-r.service';
 import { AuthResponse } from '../../../../core/domain/model/auth/auth';
 
 @Component({
@@ -100,9 +100,10 @@ export class LoginComponent {
     this.notificationService.success('Inicio de sesión exitoso, bienvenido');
     this.router.navigate(['/home']);
   }
-  error(eror: any) {
-    this.loading = false; // carga
-    this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+  error(error: any) {
+    const errorMessage = error.error.messageResponse || 'Error desconocido';
+    this.loading = false; // carga 
+    this.notificationService.error(errorMessage); // mensaje de notificacion
   }
 
   complete() {

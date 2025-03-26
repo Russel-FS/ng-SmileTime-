@@ -43,25 +43,20 @@ export class ManageRealtimeMessageUseCase {
     if (!message) {
       return throwError(() => new Error('El mensaje no puede ser nulo'));
     }
-
     return this.messageRepository.sendMessage(message).pipe(
-      map(conversation => {
-        if (!conversation) {
-          throw new Error('La conversación devuelta es nula o indefinida');
-        }
-        return conversation;
-      }),
-      tap(conversation => {
-        // se asigna el id de la conversación antes de enviarlo 
-        message.conversationId = conversation?.id;
-        this.realTimeCommunication.sendMessage(message);
-      }),
       catchError(error => {
         console.error('Error al enviar mensaje:', error);
         return throwError(() => error);
       })
     );
+  }
 
+  /**
+  * Envía un mensaje a través de SignalR.
+  * @param message El mensaje a enviar.
+  */
+  broadcastMessage(message: MessageEntity): void {
+    this.realTimeCommunication.sendMessage(message);
   }
 
 }

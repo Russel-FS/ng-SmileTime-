@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { IConversationRepository } from "../../core/interfaces/repositorys/chat/i-conversation-repository";
+import { IConversationRepository } from "../../../core/interfaces/repositorys/chat/i-conversation-repository";
 import { map, Observable } from "rxjs";
-import { ConversationEntity } from "../../core/domain/model/chat/conversation-entity";
-import { ConversationMapper } from "../mappers/conversation.mapper";
-import { ConversationService } from "../../infrastructure/datasources/conversation.service";
-import { IConversationDatasource } from "../../core/interfaces/datasource/chat/i-conversation-datasource";
+import { ConversationEntity } from "../../../core/domain/model/chat/conversation-entity";
+import { ConversationMapper } from "../../mappers/conversation.mapper";
+import { ConversationService } from "../../../infrastructure/datasources/chat/conversation.service";
+import { IConversationDatasource } from "../../../core/interfaces/datasource/chat/i-conversation-datasource";
 
 @Injectable({
     providedIn: 'root',
@@ -37,6 +37,14 @@ export class ConversationRepository implements IConversationRepository {
     }
     getConversationByParticipants(userId: number | string, contactId: number | string): Observable<ConversationEntity> {
         return this.conversationDatasource.getConversationByParticipants(userId, contactId)
+            .pipe(
+                map(
+                    (dto) => this.conversationMapper.toDomain(dto)
+                ));
+    }
+    getConversationById(id: string | number): Observable<ConversationEntity> {
+
+        return this.conversationDatasource.getConversationById(id)
             .pipe(
                 map(
                     (dto) => this.conversationMapper.toDomain(dto)

@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
 import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
-import { AuthRepository } from '../../../../data/repositories/auth.repository';
+import { AuthRepository } from '../../../../data/repositories/auth/auth.repository';
 import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth-service';
-import { AuthService } from '../../../../infrastructure/datasources/auth.service';
+import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../../core/services/notification.service';
+import { NotificationService } from '../../../../core/services/notifications/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -86,7 +86,7 @@ export class RegisterComponent implements OnInit {
       confirmPassword.setErrors({ mismatch: true });
       return { mismatch: true };
     }
- 
+
     return null;
   }
 
@@ -103,7 +103,7 @@ export class RegisterComponent implements OnInit {
     this.AuthService.register(this.registerForm.value).subscribe({
       next: () => {
         this.notificationService.success('Registro exitoso, ahora puedes iniciar sesión');
-        this.router.navigate(['/login']);
+        this.router.navigate(['/home']);
       },
       error: () => {
         this.loading = false;

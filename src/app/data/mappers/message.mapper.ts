@@ -17,11 +17,11 @@ export class MessageMapper {
 
   toDomain(dto: MessageEntityDTO): MessageEntity {
     return new MessageEntity({
-      id: dto.id,
+      id: dto.MessageId,
       sender: this.participantMapper.toDomain(dto.sender),
       content: dto.content,
       type: dto.type,
-      status: dto.status.map((s) => this.messageStatusMapper.toDomain(s)),
+      status: dto.messageStatuses.map((s) => this.messageStatusMapper.toDomain(s)),
       createdAt: dto.createdAt,
       modifiedAt: dto.modifiedAt,
       attachments: dto.attachments?.map((a) => this.attachmentMapper.toModel(a)),
@@ -32,11 +32,11 @@ export class MessageMapper {
 
   toDTO(entity: MessageEntity): MessageEntityDTO {
     return {
-      id: entity.id,
+      MessageId: entity.id || '',
       sender: this.participantMapper.toDTO(entity.sender),
       content: entity.content,
       type: entity.type,
-      status: entity.status.map((s) => this.messageStatusMapper.toDTO(s)),
+      messageStatuses: entity.status.map((s) => this.messageStatusMapper.toDTO(s)),
       createdAt: entity.createdAt,
       modifiedAt: entity.modifiedAt,
       attachments: entity.attachments?.map((a) => this.attachmentMapper.toDTO(a)),

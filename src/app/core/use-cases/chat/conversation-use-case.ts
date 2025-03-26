@@ -23,4 +23,7 @@ export class ConversationUseCase {
     update(idUser: number | string, conversation: ConversationEntity): Observable<ConversationEntity> {
         return this.conversationRepository.update(idUser, conversation);
     }
+    getConversationById(id: string | number ): Observable<ConversationEntity> {
+        return this.conversationRepository.getConversationById(id);
+    }
 }

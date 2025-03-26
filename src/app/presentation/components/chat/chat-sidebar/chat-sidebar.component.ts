@@ -37,4 +37,14 @@ export class ChatSidebarComponent {
       contact.userName.toLowerCase().includes(this.searchQuery.toLowerCase()),
     );
   }
+
+  getInitials(userName: string): string {
+    if (!userName) return '?';
+
+    const names = userName.trim().split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return names[0][0].toUpperCase();
+  }
 }

@@ -7,7 +7,7 @@ export enum ConversationType {
 }
 
 export class ConversationEntity {
-  id: string | number;
+  id?: string | number;
   title: string;
   type: ConversationType;
   participants: ConversationParticipant[];

@@ -10,4 +10,5 @@ export interface ConversationParticipantDTO {
   isOnline?: boolean;
   isTyping?: boolean;
   conversationId?: string | number;
+  IsAdmin?: boolean;
 }
