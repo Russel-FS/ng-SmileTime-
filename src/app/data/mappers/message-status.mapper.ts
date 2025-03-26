@@ -12,7 +12,7 @@ export class MessageStatusMapper {
 
   toDTO(entity: MessageStatus): MessageStatusDTO {
     return {
-      userId: entity.userId,
+      userId: entity.userId || '',
       status: entity.status,
       statusTimestamp: entity.statusTimestamp,
     };

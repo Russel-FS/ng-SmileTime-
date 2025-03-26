@@ -309,7 +309,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       sender: sender,
       content: content,
       type: MessageType.TEXT,
-      status: [new MessageStatus(2, Status.SENT, new Date())],
+      status: [new MessageStatus(sender.userId, Status.SENT, new Date())],
       createdAt: new Date(),
       isDeleted: false
     });

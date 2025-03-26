@@ -17,7 +17,7 @@ export class MessageMapper {
 
   toDomain(dto: MessageEntityDTO): MessageEntity {
     return new MessageEntity({
-      id: dto.messageId,
+      id: dto.messageId || 0,
       sender: this.participantMapper.toDomain(dto.sender),
       content: dto.content,
       type: dto.messageType,
@@ -32,7 +32,7 @@ export class MessageMapper {
 
   toDTO(entity: MessageEntity): MessageEntityDTO {
     return {
-      messageId: entity.id || '',
+      messageId: entity.id || 0,
       sender: this.participantMapper.toDTO(entity.sender),
       content: entity.content,
       messageType: entity.type,

@@ -8,5 +8,5 @@ export class MessageStatus {
     public userId: string | number,
     public status: Status,
     public statusTimestamp: Date,
-  ) {}
+  ) { }
 }

@@ -19,9 +19,12 @@ export class ApiConfig {
         register: `${this.apiUrlBase}/api/Auth/register`,
       },
       chat: {
+        //conversacion api
         messages: `${this.apiUrlBase}/api/conversation/messages`,
         contacts: `${this.apiUrlBase}/api/conversation/contacts`,
         conversation: `${this.apiUrlBase}/api/conversation/ByConversationId`,
+        //mensaje api
+        createMessage: `${this.apiUrlBase}/api/messages/create`,
         user: `${this.apiUrlBase}/api/user`,
       }
     },
