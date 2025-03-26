@@ -239,9 +239,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (conversation) => {
-          if (conversation) {
-
+        next: (incomingMessage) => {
+          if (incomingMessage) {
+            const conversation = this.findConversationById(incomingMessage.conversationId);
+            if (conversation) {
+              conversation.messages.push(incomingMessage);
+              conversation.updatedAt = new Date();
+            }
           }
         },
         complete: () => {
