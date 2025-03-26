@@ -1,10 +1,10 @@
 export class Carrusel {
   constructor(
     public id: number,
-    public imageUrl: string,
-    public title: string,
-    public description: string,
+    public imagenUrl: string,
+    public titulo: string,
+    public descripcion: string,
     public alt: string,
-    public active: boolean = false
+    public activo: boolean = true
   ) { }
 }

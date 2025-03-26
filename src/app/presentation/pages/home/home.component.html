@@ -49,10 +49,10 @@
     >
       <div class="carousel-inner" #carouselInner>
         <div class="carousel-item" *ngFor="let item of carouselItems; let i = index">
-          <img [src]="item.imageUrl" [alt]="item.alt" />
+          <img [src]="item.imagenUrl" [alt]="item.alt" />
           <div class="carousel-caption">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.description }}</p>
+            <h3>{{ item.titulo }}</h3>
+            <p>{{ item.descripcion }}</p>
           </div>
         </div>
       </div>

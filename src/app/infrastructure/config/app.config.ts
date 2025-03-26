@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://verbose-guacamole-wrxv5x4qwp773546g-5011.app.github.dev';
+  private apiUrlBase = 'https://localhost:7201';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
@@ -23,7 +23,10 @@ export class ApiConfig {
         contacts: `${this.apiUrlBase}/api/conversation/contacts`,
         conversation: `${this.apiUrlBase}/api/conversation/ByConversationId`,
         user: `${this.apiUrlBase}/api/user`,
-      }
+      },
+      carousel: {
+        active: `${this.apiUrlBase}/api/Carousel/active`
+      },
     },
   };
 
