@@ -4,6 +4,7 @@ import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comu
 import { IMessageRepository } from '../../interfaces/repositorys/chat/i-message.repository';
 import { MessageEntity } from '../../domain/entities/chat/message-entity';
 import { ConversationEntity } from '../../domain/entities/chat/conversation-entity';
+import { PrivateMessage } from '../../domain/entities/signalR/PrivateMessage';
 
 @Injectable()
 export class ManageRealtimeMessageUseCase {
@@ -20,7 +21,7 @@ export class ManageRealtimeMessageUseCase {
     this.realTimeCommunication.disconnect();
   }
 
-  listenForMessages(): Observable<MessageEntity> {
+  listenForMessages(): Observable<PrivateMessage> {
     return this.realTimeCommunication.onMessage().pipe(
       map(message => {
         if (!message) {
@@ -55,7 +56,7 @@ export class ManageRealtimeMessageUseCase {
   * Envía un mensaje a través de SignalR.
   * @param message El mensaje a enviar.
   */
-  broadcastMessage(message: MessageEntity): void {
+  broadcastMessage(message: PrivateMessage): void {
     this.realTimeCommunication.sendMessage(message);
   }
 

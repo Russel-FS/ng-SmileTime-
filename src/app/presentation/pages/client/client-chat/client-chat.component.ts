@@ -32,7 +32,8 @@ import { ConversationRepository } from '../../../../data/repositories/chat/conve
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
-import { TypingStatus } from '../../../../core/domain/model/TypingStatus';
+import { TypingStatus } from '../../../../core/domain/entities/signalR/TypingStatus';
+import { PrivateMessage } from '../../../../core/domain/entities/signalR/PrivateMessage';
 
 
 @Component({
@@ -275,13 +276,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @param message El mensaje enviado.
    */
   private handleCompleteSendMessage(message: MessageEntity): void {
+    // Notificar que el usuario ha dejado de escribir
     this.manageTypingStatus.notifyTyping({
       senderId: this.currenUserSesion().userId,
       receiverId: this.contactSelected.userId,
       isTyping: false,
       conversationId: this.contactSelected.conversationId
     });
-    this.manageRealTimeMessages.broadcastMessage(message);
+    //  Transmitir el mensaje enviado en tiempo real
+    this.manageRealTimeMessages.broadcastMessage({
+      ...message,
+      recipientId: this.contactSelected.userId,
+    });
   }
 
 
@@ -330,7 +336,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.listenForMessages()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (incomingMessage: MessageEntity) => {
+        next: (incomingMessage: PrivateMessage) => {
           console.log('Mensaje recibido:', incomingMessage);
           this.handleIncomingMessage(incomingMessage);
         },

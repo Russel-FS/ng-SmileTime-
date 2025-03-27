@@ -5,14 +5,14 @@ import { StorageService } from '../storage/storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 import { MessageEntity } from '../../domain/entities/chat/message-entity';
-import { ConversationParticipant } from '../../domain/entities/chat/conversation-participant';
-import { TypingStatus } from '../../domain/model/TypingStatus';
+import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
+import { PrivateMessage } from '../../domain/entities/signalR/PrivateMessage';
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
-  private messageReceived = new Subject<MessageEntity>();
+  private messageReceived = new Subject<PrivateMessage>();
   private typingStatus = new Subject<TypingStatus>();
 
   constructor(
@@ -77,7 +77,7 @@ export class SignalRService implements IRealTimeComunication {
     }
   }
 
-  onMessage(): Observable<MessageEntity> {
+  onMessage(): Observable<PrivateMessage> {
     return this.messageReceived.asObservable();
   }
 
@@ -86,10 +86,10 @@ export class SignalRService implements IRealTimeComunication {
    * establecido una coneccion con el hub, el mensaje no se envia.
    * @param message El texto del mensaje que se va a enviar.
    */
-  sendMessage(message: MessageEntity) {
+  sendMessage(message: PrivateMessage): void {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('SendMessage', message)
+        .invoke('SendPrivateMessage', message)
         .then(() => console.log('Mensaje enviado'))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
@@ -116,7 +116,7 @@ export class SignalRService implements IRealTimeComunication {
    */
   private setupMessageListener(): void {
     // listener de mensajes
-    this.hubConnection.on('ReceiveMessage', (message: MessageEntity) => {
+    this.hubConnection.on('ReceivePrivateMessage', (message: PrivateMessage) => {
       this.messageReceived.next(message);
     });
 

@@ -11,7 +11,7 @@ import {
   map,
 } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
-import { TypingStatus } from '../../domain/model/TypingStatus';
+import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 
 @Injectable()
 export class ManageTypingStatusUseCase {
