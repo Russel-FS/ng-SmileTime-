@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IUserDatasource } from '../../../core/interfaces/datasource/chat/I-user-datasource';
 import { ConversationParticipantDTO } from '../../../data/dto/conversation-participant-DTO';
+import { ApiConfig } from '../../config/app.config';
+import { HttpClient } from '@angular/common/http';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactDataSource implements IUserDatasource {
-  private apiUrl = 'api/messages';
 
   private mockContacts: ConversationParticipantDTO[] = [
     {
@@ -37,12 +39,17 @@ export class ContactDataSource implements IUserDatasource {
     },
   ];
 
+  constructor(
+    private http: HttpClient,
+    private apiUrl: ApiConfig,
+    private storage: StorageService,
+  ) { }
+
   getContacts(): Observable<ConversationParticipantDTO[]> {
-    return new Observable<ConversationParticipantDTO[]>((observer) => {
-      observer.next(this.mockContacts);
-      observer.complete();
-    });
+    const headers = this.storage.getAuthHeaders();
+    return this.http.get<ConversationParticipantDTO[]>(`${this.apiUrl.getEndpoint('chat', 'contacts')}`, { headers });
   }
+
 
   getContact(id: string): Observable<ConversationParticipantDTO> {
     return new Observable<ConversationParticipantDTO>((observer) => {

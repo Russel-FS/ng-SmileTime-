@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { UserEntity, UserRole } from '../../../../core/domain/model/chat/user-entity';
+import { UserEntity, UserRole } from '../../../../core/domain/entities/chat/user-entity';
 import { CommonModule } from '@angular/common';
-import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
+import { ConversationParticipant } from '../../../../core/domain/entities/chat/conversation-participant';
 
 @Component({
   selector: 'app-chat-sidebar',
@@ -36,5 +36,15 @@ export class ChatSidebarComponent {
     return this.contacts.filter((contact) =>
       contact.userName.toLowerCase().includes(this.searchQuery.toLowerCase()),
     );
+  }
+
+  getInitials(userName: string): string {
+    if (!userName) return '?';
+
+    const names = userName.trim().split(' ');
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return names[0][0].toUpperCase();
   }
 }

@@ -4,24 +4,40 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'http://localhost:5011';
+  private apiUrlBase = 'https://verbose-guacamole-wrxv5x4qwp773546g-5011.app.github.dev';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
     cacheTime: 3600,
     maxRetries: 3,
     endpoints: {
-      login: `${this.apiUrlBase}/api/Auth/login`,
-      register: `${this.apiUrlBase}/api/Auth/register`,
-      chatHub: `${this.apiUrlBase}/chathub`,
-      contact : `${this.apiUrlBase}/api/Contact`, 
+      signalR: {
+        chatHub: `${this.apiUrlBase}/chathub`,
+      },
+      auth: {
+        login: `${this.apiUrlBase}/api/Auth/login`,
+        register: `${this.apiUrlBase}/api/Auth/register`,
+      },
+      chat: {
+        //conversacion api
+        messages: `${this.apiUrlBase}/api/conversation/messages`,
+        contacts: `${this.apiUrlBase}/api/conversation/contacts`,
+        conversation: `${this.apiUrlBase}/api/conversation/ByConversationId`,
+        //mensaje api
+        createMessage: `${this.apiUrlBase}/api/messages/create`,
+        user: `${this.apiUrlBase}/api/user`,
+      }
     },
   };
 
   get<T extends keyof typeof this.config>(key: T): (typeof this.config)[T] {
     return this.config[key];
   }
-  getEndpoint(endpoint: keyof typeof this.config.endpoints): string {
-    return this.config.endpoints[endpoint];
+  getEndpoint<T extends keyof typeof this.config.endpoints>(endpoint: T, type: keyof typeof this.config.endpoints[T]): string {
+    const endpointConfig = this.config.endpoints[endpoint];
+    if (endpointConfig && type in endpointConfig) {
+      return endpointConfig[type] as string;
+    }
+    return "";
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IAuthService } from '../../../core/interfaces/datasource/auth/i-auth-service';
-import { AuthCredentials, AuthResponse } from '../../../core/domain/model/auth/auth';
+import { AuthCredentials, AuthResponse } from '../../../core/domain/entities/auth/auth';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ApiConfig } from '../../config/app.config';
@@ -17,7 +17,7 @@ export class AuthService implements IAuthService {
   ) { }
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('login')}`, credentials);
+    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('auth', 'login')}`, credentials);
   }
 
   logout(): Observable<void> {
@@ -29,6 +29,6 @@ export class AuthService implements IAuthService {
   }
 
   register(credentials: AuthCredentials): Observable<void> {
-    return this.http.post<void>(`api/url/register`, credentials);
+    return this.http.post<void>(`${this.apiUrl.getEndpoint('auth', 'register')}`, credentials);
   }
 }

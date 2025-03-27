@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notifications/notification.service';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 import { SignalRService } from '../../../../core/services/signalr/signal-r.service';
-import { AuthResponse } from '../../../../core/domain/model/auth/auth';
+import { AuthResponse } from '../../../../core/domain/entities/auth/auth';
 
 @Component({
   selector: 'app-login',
@@ -100,9 +100,10 @@ export class LoginComponent {
     this.notificationService.success('Inicio de sesión exitoso, bienvenido');
     this.router.navigate(['/home']);
   }
-  error(eror: any) {
-    this.loading = false; // carga
-    this.notificationService.error('Error al iniciar sesión'); // mensaje de notificacion
+  error(error: any) {
+    const errorMessage = error.error.messageResponse || 'Error desconocido';
+    this.loading = false; // carga 
+    this.notificationService.error(errorMessage); // mensaje de notificacion
   }
 
   complete() {

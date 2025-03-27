@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AttachmentEntity } from '../../core/domain/model/chat/attachment-entity';
+import { AttachmentEntity } from '../../core/domain/entities/chat/attachment-entity';
 import { AttachmentEntityDTO } from '../dto/attachment-entity-DTO';
 
 @Injectable({
@@ -7,13 +7,13 @@ import { AttachmentEntityDTO } from '../dto/attachment-entity-DTO';
 })
 export class AttachmentMapper {
 
-  
+
   toModel(dto: AttachmentEntityDTO): AttachmentEntity {
     return new AttachmentEntity(
-      dto.id,
-      dto.fileUrl,
-      dto.fileName,
-      dto.fileType,
+      dto.attachmentId as any,
+      dto.fileUrl as any,
+      dto.fileName as any,
+      dto.fileType as any,
       dto.fileSize,
       dto.uploadedAt,
     );
@@ -21,7 +21,7 @@ export class AttachmentMapper {
 
   toDTO(model: AttachmentEntity): AttachmentEntityDTO {
     return {
-      id: model.id,
+      attachmentId: model.id,
       fileUrl: model.fileUrl,
       fileName: model.fileName,
       fileType: model.fileType,

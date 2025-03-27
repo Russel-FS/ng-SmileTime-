@@ -3,7 +3,16 @@
   @for (message of messages; track $index) {
     <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
       <div class="message-content">
-        <div class="avatar">RF</div>
+        <div class="avatar">
+          <div>
+            <img [src]="message.sender.avatar" alt="avatar" *ngIf="message.sender.avatar" />
+          </div>
+          <div>
+            <span *ngIf="!message.sender.avatar">{{
+              getInitialsAvatar(message.sender.userName)
+            }}</span>
+          </div>
+        </div>
         <div>
           <div class="content">{{ message.content }}</div>
           <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>

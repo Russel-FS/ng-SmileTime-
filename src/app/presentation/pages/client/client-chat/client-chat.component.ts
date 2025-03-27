@@ -14,13 +14,13 @@ import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR
 import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
-import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity, MessageType } from '../../../../core/domain/entities/chat/message-entity';
 import {
   ConversationEntity,
   ConversationType,
-} from '../../../../core/domain/model/chat/conversation-entity';
-import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
-import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+} from '../../../../core/domain/entities/chat/conversation-entity';
+import { ConversationParticipant } from '../../../../core/domain/entities/chat/conversation-participant';
+import { MessageStatus, Status } from '../../../../core/domain/entities/chat/message-status';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
 import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";
@@ -121,13 +121,25 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia el estado de un contacto y actualiza la conversacion activa.
+   * y obtiene la conversación asociada al contacto seleccionado.
    * @param contact El contacto seleccionado.
    */
   onContactClick(contact: ConversationParticipant): void {
     this.contacts.forEach((c) => (c.selected = false));
     contact.selected = true;
     this.contactSelected = contact;
+    this.conversations = [];
+
+    this.conversationUseCase.getConversationById(this.contactSelected.conversationId as number)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (conversation) => {
+          this.conversations.push(conversation);
+        },
+        error: err => console.error('Error obteniendo conversación:', err)
+      });
   }
+
   /**
    * Notifica al servidor que el usuario esta escribiendo actualmente.
    * @param text El texto ingresado por el usuario.
@@ -139,32 +151,19 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa los datos de la pantalla, obteniendo la lista de contactos y una conversacion de ejemplo.
-   * Selecciona el primer contacto activo o el primero de la lista si no hay ninguno activo.
-   * Se suscribe a los eventos de ContactUseCase y ConversationUseCase para obtener los datos.
-   * Se cancelan las subscripciones cuando el componente se destruye.
+   * Inicializa los datos de la pantalla.
+   * Obtiene la lista de contactos y establece el contacto activo.
    */
   initData() {
     // Obtener contactos
     this.ContactsUseCase.execute()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.unsubscribe$),)
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
           this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
-      });
-
-    // Obtener una conversacion
-    this.conversationUseCase.getConversationByParticipants(2, this.contactSelected.userId)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (conversation) => {
-          this.conversations.push(conversation);
-          console.log('Conversaciones obtenidas:', conversation);
-        },
-        error: err => console.error('Error obteniendo conversaciones:', err)
       });
   }
 
@@ -193,7 +192,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Verificar si existe una conversación
+    // Verificar si no existe una conversación
     if (!selectedContact.conversationId) {
       // Crear nueva conversación
       const newConversation = new ConversationEntity({
@@ -240,9 +239,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (conversation) => {
-          if (conversation) {
-            this.handleNewConversation(conversation);
+        next: (incomingMessage) => {
+          if (incomingMessage) {
+            const conversation = this.findConversationById(incomingMessage.conversationId);
+            if (conversation) {
+              conversation.messages.push(incomingMessage);
+              conversation.updatedAt = new Date();
+            }
           }
         },
         complete: () => {
@@ -252,10 +255,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       });
   }
   private currenUserSesion(): ConversationParticipant {
+    const userId = this.storage.getItem('userId');
+    const userName = this.storage.getItem('email');
     return new ConversationParticipant({
-      userId: 2,
-      userName: 'Solano Flores',
-      avatar: 'https://example.com/avatar2.jpg'
+      userId: userId || '',
+      userName: userName || '',
     });
   }
 
@@ -269,20 +273,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.broadcastMessage(message);
   }
 
-  /**
-   * Se llama cuando se recibe una conversación nueva desde el SignalR.
-   * Verifica si la conversación ya existe en la lista de conversaciones locales.
-   * Si no existe, se agrega a la lista de conversaciones. De lo contrario, no se hace nada.
-   * @param incomingConversation La conversación recibida desde el SignalR.
-   */
-  private handleNewConversation(incomingConversation: ConversationEntity): void {
-    const conversationExists = this.conversations.some(conv =>
-      conv?.id?.toString() === incomingConversation?.id?.toString()
-    );
-    if (!conversationExists) {
-      this.conversations.push(incomingConversation);
-    }
-  }
 
   /**
    * Maneja el error cuando se produce un error al enviar un mensaje.
@@ -309,7 +299,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       sender: sender,
       content: content,
       type: MessageType.TEXT,
-      status: [new MessageStatus(2, Status.SENT, new Date())],
+      status: [new MessageStatus(sender.userId, Status.SENT, new Date())],
       createdAt: new Date(),
       isDeleted: false
     });
@@ -399,6 +389,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     if (contact) {
       this.isTyping = isTyping;
     }
+    this.isTyping = isTyping;
   }
   /**
    * Busca un contacto en la lista de contactos por su ID.
@@ -418,7 +409,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   getMessages(): MessageEntity[] {
     const conversation = this.conversations.find(
-      conv => conv.id?.toString().trim() === this.contactSelected?.conversationId?.toString().trim()
+      conv => conv.id === this.contactSelected?.conversationId
     );
     return conversation?.messages || [];
   }
