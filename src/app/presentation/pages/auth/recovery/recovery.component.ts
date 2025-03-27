@@ -1,6 +1,6 @@
 import { Component, Inject, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Router, RouterModule } from '@angular/router';
 import { IAuthRepository } from '../../../../core/interfaces/repositorys/auth/i-auth-repository';
@@ -14,7 +14,7 @@ import { NotificationService } from '../../../../core/services/notifications/not
 @Component({
   selector: 'app-recovery',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule, CommonModule],
+  imports: [ReactiveFormsModule, RouterModule, CommonModule, FormsModule],
   templateUrl: './recovery.component.html',
   styleUrl: './recovery.component.css',
   providers: [
@@ -43,9 +43,12 @@ import { NotificationService } from '../../../../core/services/notifications/not
 export class RecoveryComponent {
   loading = false;
   recoveryForm: FormGroup;
-  
+  successMessage = '';
+  errorMessage = '';
+
   constructor(
-    @Inject(IAuthRepository) private authService: IAuthRepository,
+    @Inject(IAuthRepository) 
+    private authService: IAuthRepository,
     private fb: FormBuilder,
     private router: Router,
     private notificationService: NotificationService
