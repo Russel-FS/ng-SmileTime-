@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConversationParticipant } from '../../core/domain/model/chat/conversation-participant';
+import { ConversationParticipant } from '../../core/domain/entities/chat/conversation-participant';
 import { ConversationParticipantDTO } from '../dto/conversation-participant-DTO';
 import { createMapper, Mapper } from '@automapper/core';
 import { classes } from '@automapper/classes';

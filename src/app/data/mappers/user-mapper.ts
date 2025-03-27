@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserEntity } from '../../core/domain/model/chat/user-entity';
+import { UserEntity } from '../../core/domain/entities/chat/user-entity';
 import { UserEntityDto } from '../dto/user-DTO';
 @Injectable({
   providedIn: 'root',

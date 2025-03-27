@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Inject, Injectable } from '@angular/core';
-import { MessageEntity } from '../../domain/model/chat/message-entity';
-import { ConversationEntity } from '../../domain/model/chat/conversation-entity';
+import { MessageEntity } from '../../domain/entities/chat/message-entity';
+import { ConversationEntity } from '../../domain/entities/chat/conversation-entity';
 import { IConversationRepository } from '../../interfaces/repositorys/chat/i-conversation-repository';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class ConversationUseCase {
     update(idUser: number | string, conversation: ConversationEntity): Observable<ConversationEntity> {
         return this.conversationRepository.update(idUser, conversation);
     }
-    getConversationById(id: string | number ): Observable<ConversationEntity> {
+    getConversationById(id: string | number): Observable<ConversationEntity> {
         return this.conversationRepository.getConversationById(id);
     }
 }

@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
-import { ConversationParticipant } from '../../../domain/model/chat/conversation-participant';
+import { ConversationParticipant } from '../../../domain/entities/chat/conversation-participant';
 
 export interface IUserRepository {
   getContacts(): Observable<ConversationParticipant[]>;

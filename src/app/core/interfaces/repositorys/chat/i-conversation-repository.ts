@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { ConversationEntity } from '../../../domain/model/chat/conversation-entity';
+import { ConversationEntity } from '../../../domain/entities/chat/conversation-entity';
 import { InjectionToken } from '@angular/core';
 
 export interface IConversationRepository {

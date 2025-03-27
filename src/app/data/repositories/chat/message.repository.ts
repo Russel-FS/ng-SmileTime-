@@ -3,9 +3,9 @@ import { map, Observable } from 'rxjs';
 import { IMessageRepository } from '../../../core/interfaces/repositorys/chat/i-message.repository';
 import { IMessageDatasource } from '../../../core/interfaces/datasource/auth/i-message-datasource';
 import { Inject } from '@angular/core';
-import { ConversationEntity } from '../../../core/domain/model/chat/conversation-entity';
+import { ConversationEntity } from '../../../core/domain/entities/chat/conversation-entity';
 import { ConversationMapper } from '../../mappers/conversation.mapper';
-import { MessageEntity } from '../../../core/domain/model/chat/message-entity';
+import { MessageEntity } from '../../../core/domain/entities/chat/message-entity';
 import { MessageMapper } from '../../mappers/message.mapper';
 
 @Injectable({

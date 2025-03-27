@@ -4,8 +4,8 @@ import { ApiConfig } from '../../../infrastructure/config/app.config';
 import { StorageService } from '../storage/storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
-import { MessageEntity } from '../../domain/model/chat/message-entity';
-import { ConversationParticipant } from '../../domain/model/chat/conversation-participant';
+import { MessageEntity } from '../../domain/entities/chat/message-entity';
+import { ConversationParticipant } from '../../domain/entities/chat/conversation-participant';
 @Injectable({
   providedIn: 'root',
 })

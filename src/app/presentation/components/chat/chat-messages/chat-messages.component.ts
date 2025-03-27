@@ -9,8 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
-import { MessageEntity } from '../../../../core/domain/model/chat/message-entity';
-import { Status } from '../../../../core/domain/model/chat/message-status';
+import { MessageEntity } from '../../../../core/domain/entities/chat/message-entity';
+import { Status } from '../../../../core/domain/entities/chat/message-status';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 
 @Component({

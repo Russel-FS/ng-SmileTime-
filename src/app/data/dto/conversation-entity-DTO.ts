@@ -1,4 +1,4 @@
-import { ConversationType } from '../../core/domain/model/chat/conversation-entity';
+import { ConversationType } from '../../core/domain/entities/chat/conversation-entity';
 import { ConversationParticipantDTO } from './conversation-participant-DTO';
 import { MessageEntityDTO } from './message-DTO';
 

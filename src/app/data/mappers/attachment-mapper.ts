@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AttachmentEntity } from '../../core/domain/model/chat/attachment-entity';
+import { AttachmentEntity } from '../../core/domain/entities/chat/attachment-entity';
 import { AttachmentEntityDTO } from '../dto/attachment-entity-DTO';
 
 @Injectable({

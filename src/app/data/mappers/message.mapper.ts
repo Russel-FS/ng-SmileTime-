@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageEntity } from '../../core/domain/model/chat/message-entity';
+import { MessageEntity } from '../../core/domain/entities/chat/message-entity';
 import { MessageEntityDTO } from '../dto/message-DTO';
 import { AttachmentMapper } from './attachment-mapper';
 import { ParticipantMapper } from './participant.mapper';

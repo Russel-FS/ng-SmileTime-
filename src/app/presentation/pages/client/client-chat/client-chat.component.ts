@@ -14,13 +14,13 @@ import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR
 import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
-import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity, MessageType } from '../../../../core/domain/entities/chat/message-entity';
 import {
   ConversationEntity,
   ConversationType,
-} from '../../../../core/domain/model/chat/conversation-entity';
-import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
-import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+} from '../../../../core/domain/entities/chat/conversation-entity';
+import { ConversationParticipant } from '../../../../core/domain/entities/chat/conversation-participant';
+import { MessageStatus, Status } from '../../../../core/domain/entities/chat/message-status';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
 import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";

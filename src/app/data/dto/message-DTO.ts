@@ -1,4 +1,4 @@
-import { MessageType } from '../../core/domain/model/chat/message-entity';
+import { MessageType } from '../../core/domain/entities/chat/message-entity';
 import { AttachmentEntityDTO } from './attachment-entity-DTO';
 import { ConversationParticipantDTO } from './conversation-participant-DTO';
 import { MessageStatusDTO } from './message-status-DTO';
@@ -19,4 +19,3 @@ export interface MessageEntityDTO {
   Sender?: UserEntityDto;
 }
 
- 
