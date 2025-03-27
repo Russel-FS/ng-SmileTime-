@@ -90,7 +90,7 @@ export class SignalRService implements IRealTimeComunication {
     if (this.hubConnection) {
       this.hubConnection
         .invoke('SendPrivateMessage', message)
-        .then(() => console.log('Mensaje enviado'))
+        .then(() => console.log('Mensaje enviado' + message))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
   }
@@ -117,6 +117,7 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceivePrivateMessage', (message: PrivateMessage) => {
+      console.log('Mensaje recibido:', message);
       this.messageReceived.next(message);
     });
 
