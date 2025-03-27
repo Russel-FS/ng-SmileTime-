@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-contact',
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
@@ -21,7 +25,7 @@ export class ContactComponent {
 
   showModal = false;
 
-  constructor(private contactService: ContactService) {}
+  constructor(private contactService: ContactService) { }
 
   submitForm() {
     this.contactService.submitForm(this.formData).subscribe(
