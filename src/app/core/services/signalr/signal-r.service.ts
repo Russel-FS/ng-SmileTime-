@@ -6,13 +6,14 @@ import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 import { MessageEntity } from '../../domain/entities/chat/message-entity';
 import { ConversationParticipant } from '../../domain/entities/chat/conversation-participant';
+import { TypingStatus } from '../../domain/model/TypingStatus';
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
   private messageReceived = new Subject<MessageEntity>();
-  private typingStatus = new Subject<{ userId: string; isTyping: boolean }>();
+  private typingStatus = new Subject<TypingStatus>();
 
   constructor(
     private apiUrl: ApiConfig,
@@ -94,15 +95,15 @@ export class SignalRService implements IRealTimeComunication {
     }
   }
   // listener para el estado de typing
-  onTypingStatus(): Observable<{ userId: string; isTyping: boolean }> {
+  onTypingStatus(): Observable<TypingStatus> {
     return this.typingStatus.asObservable();
   }
 
   // envia un estado de typing
-  setTypingStatus(userId: string, isTyping: boolean): void {
+  setTypingStatus(typingStatus: TypingStatus): void {
     if (this.hubConnection) {
       this.hubConnection
-        .invoke('UserTyping', userId, isTyping)
+        .invoke('UserTyping', typingStatus)
         .then(() => console.log('Estado de typing actualizado'))
         .catch((err) => console.log('Error al actualizar el estado de typing: ' + err));
     }
@@ -120,8 +121,8 @@ export class SignalRService implements IRealTimeComunication {
     });
 
     // listener de estado de typing
-    this.hubConnection.on('UserTypingStatus', (userId: string, isTyping: boolean) => {
-      this.typingStatus.next({ userId, isTyping });
+    this.hubConnection.on('UserTypingStatus', (typingStatus: TypingStatus) => {
+      this.typingStatus.next(typingStatus);
     });
   }
 }
