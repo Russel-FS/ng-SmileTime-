@@ -24,6 +24,7 @@ export class ContactComponent {
   };
 
   showModal = false;
+  
 
   constructor(private contactService: ContactService) { }
 
