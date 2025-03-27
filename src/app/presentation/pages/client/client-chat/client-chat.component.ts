@@ -32,6 +32,7 @@ import { ConversationRepository } from '../../../../data/repositories/chat/conve
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
+import { TypingStatus } from '../../../../core/domain/model/TypingStatus';
 
 
 @Component({
@@ -146,7 +147,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   onTyping(text: string): void {
     if (this.contactSelected && text?.length > 0) {
-      this.manageTypingStatus.notifyTyping(2, true);
+      this.manageTypingStatus.notifyTyping({
+        senderId: this.currenUserSesion().userId,
+        receiverId: this.contactSelected.userId,
+        isTyping: true,
+        conversationId: this.contactSelected.conversationId
+      });
     }
   }
 
@@ -269,7 +275,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @param message El mensaje enviado.
    */
   private handleCompleteSendMessage(message: MessageEntity): void {
-    this.manageTypingStatus.notifyTyping(2, false);
+    this.manageTypingStatus.notifyTyping({
+      senderId: this.currenUserSesion().userId,
+      receiverId: this.contactSelected.userId,
+      isTyping: false,
+      conversationId: this.contactSelected.conversationId
+    });
     this.manageRealTimeMessages.broadcastMessage(message);
   }
 
@@ -281,7 +292,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   private handleMessageError(error: any): void {
     console.error('Error enviando mensaje:', error);
-    this.manageTypingStatus.notifyTyping(2, false);
+    this.manageTypingStatus.notifyTyping({
+      senderId: this.currenUserSesion().userId,
+      receiverId: this.contactSelected.userId,
+      isTyping: false,
+      conversationId: this.contactSelected.conversationId
+    });
   }
 
   /**
@@ -372,8 +388,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageTypingStatus.listenTypingStatus()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: ({ userId, isTyping }) => {
-          this.updateTypingStatus(userId, isTyping);
+        next: (typingStatus) => {
+          this.updateTypingStatus(typingStatus);
         },
         error: (error) => console.error('Error al recibir el estado de escritura:', error),
       });
@@ -384,12 +400,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @param userId El ID del usuario a actualizar.
    * @param isTyping El estado de escritura a asignar.
    */
-  private updateTypingStatus(userId: number | string, isTyping: boolean): void {
-    const contact = this.findContactById(userId);
+  private updateTypingStatus(typingStatus: TypingStatus): void {
+    const contact = this.findContactById(typingStatus.senderId);
     if (contact) {
-      this.isTyping = isTyping;
+      this.isTyping = typingStatus.isTyping;
     }
-    this.isTyping = isTyping;
+    this.isTyping = typingStatus.isTyping;
   }
   /**
    * Busca un contacto en la lista de contactos por su ID.
