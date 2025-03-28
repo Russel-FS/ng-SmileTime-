@@ -479,7 +479,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     if (contact) {
       this.isTyping = typingStatus.isTyping;
     }
-    this.isTyping = typingStatus.isTyping;
   }
   /**
    * Busca un contacto en la lista de contactos por su ID.
