@@ -138,7 +138,7 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceivePrivateMessage', (message: PrivateMessage) => {
-      console.log('Mensaje recibido:', JSON.stringify(message, null, 2));
+      //console.log('Mensaje recibido:', JSON.stringify(message, null, 2));
       this.messageReceived.next(message);
     });
 
@@ -154,13 +154,13 @@ export class SignalRService implements IRealTimeComunication {
 
     // listener de conexión de usuario
     this.hubConnection.on('UserConnected', (user: OnlineUser) => {
-      console.log('Usuario conectado:', user);
+      // console.log('Usuario conectado:', user);
       this.userConnected.next(user);
     });
 
     // listener de desconexión de usuario
     this.hubConnection.on('UserDisconnected', (user: OnlineUser) => {
-      console.log('Usuario desconectado:', user);
+      //console.log('Usuario desconectado:', user);
       this.userDisconnected.next(user);
     });
   }
