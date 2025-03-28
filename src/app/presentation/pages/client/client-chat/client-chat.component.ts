@@ -85,7 +85,7 @@ import { PrivateMessage } from '../../../../core/domain/entities/signalR/Private
   styleUrls: ['./client-chat.component.css'],
 })
 export class ClientChatComponent implements OnInit, OnDestroy {
-  isMobile: boolean = window.innerWidth <= 768;
+  isMobile: boolean = window.innerWidth <= 768; // Inicializa la vista móvil
 
   constructor(
     private ContactsUseCase: ContactsUseCase,
@@ -94,6 +94,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
   ) {
+    // Detectar cambios en el tamaño de la ventana para ajustar la vista
     window.addEventListener('resize', () => {
       this.isMobile = window.innerWidth <= 768;
       if (!this.isMobile) {
