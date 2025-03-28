@@ -17,27 +17,45 @@
 
   <!-- Contacts List -->
   <div class="contacts-list">
-    @for (contact of filteredContacts; track contact.userId) {
-      <div
-        class="contact-item"
-        [class.selected]="contact.isSelected()"
-        (click)="onContactClick(contact)"
-        @fadeSlide
-      >
-        <div class="avatar-container">
-          @if (contact.avatar) {
-            <img [src]="contact.avatar" [alt]="contact.userName" class="avatar" />
-          } @else {
-            <div class="avatar-initials">{{ getInitials(contact.userName) }}</div>
-          }
-          <div class="status-indicator" [class.active]="contact.isActive()"></div>
-        </div>
+    @if (isLoading) {
+      <div @loadingState>
+        @for (item of [1, 2, 3, 4, 5]; track item) {
+          <div class="contact-item skeleton">
+            <div class="avatar-container">
+              <div class="avatar-skeleton"></div>
+            </div>
+            <div class="contact-info">
+              <div class="name-skeleton"></div>
+              <div class="role-skeleton"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div @loadingState>
+        @for (contact of filteredContacts; track contact.userId) {
+          <div
+            class="contact-item"
+            [class.selected]="contact.isSelected()"
+            (click)="onContactClick(contact)"
+            @fadeSlide
+          >
+            <div class="avatar-container">
+              @if (contact.avatar) {
+                <img [src]="contact.avatar" [alt]="contact.userName" class="avatar" />
+              } @else {
+                <div class="avatar-initials">{{ getInitials(contact.userName) }}</div>
+              }
+              <div class="status-indicator" [class.active]="contact.isActive()"></div>
+            </div>
 
-        <div class="contact-info">
-          <h3 class="contact-name">{{ contact.userName }}</h3>
-          <p class="contact-role">{{ contact.role }}</p>
-          <p class="last-active">Último acceso: {{ contact?.lastActive | date: 'shortTime' }}</p>
-        </div>
+            <div class="contact-info">
+              <h3 class="contact-name">{{ contact.userName }}</h3>
+              <p class="contact-role">{{ contact.role }}</p>
+              <p class="last-active">Último acceso: {{ contact?.lastActive | date: 'shortTime' }}</p>
+            </div>
+          </div>
+        }
       </div>
     }
   </div>

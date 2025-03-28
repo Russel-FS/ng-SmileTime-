@@ -3,6 +3,7 @@
   <app-chat-sidebar
     class="overflow-hidden"
     [contacts]="contacts"
+    [isLoading]="isLoadingContacts"
     (contactClick)="onContactClick($event)"
     [class.hidden]="isChatView"
   ></app-chat-sidebar>

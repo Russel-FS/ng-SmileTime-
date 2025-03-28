@@ -86,6 +86,7 @@ import { PrivateMessage } from '../../../../core/domain/entities/signalR/Private
 })
 export class ClientChatComponent implements OnInit, OnDestroy {
   isMobile: boolean = window.innerWidth <= 768; // Inicializa la vista móvil
+  isLoadingContacts: boolean = true; // Indica si los contactos están siendo cargados
 
   constructor(
     private ContactsUseCase: ContactsUseCase,
@@ -185,14 +186,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Obtiene la lista de contactos y establece el contacto activo.
    */
   initData() {
-    // Obtener contactos
+    this.isLoadingContacts = true;
     this.ContactsUseCase.execute()
       .pipe(takeUntil(this.unsubscribe$),)
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
+          this.isLoadingContacts = false;
         },
-        error: err => console.error('Error obteniendo contactos:', err)
+        error: err => {
+          console.error('Error obteniendo contactos:', err);
+          this.isLoadingContacts = false;
+        }
       });
   }
 

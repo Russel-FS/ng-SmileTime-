@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { animate, style, transition, trigger } from '@angular/animations';
+import { animate, style, transition, trigger, query, stagger } from '@angular/animations';
 import { UserEntity, UserRole } from '../../../../core/domain/entities/chat/user-entity';
 import { CommonModule } from '@angular/common';
 import { ConversationParticipant } from '../../../../core/domain/entities/chat/conversation-participant';
@@ -21,11 +21,29 @@ import { ConversationParticipant } from '../../../../core/domain/entities/chat/c
         animate('300ms ease-out', style({ opacity: 0, transform: 'translateY(10px)' })),
       ]),
     ]),
+    trigger('loadingState', [
+      transition(':leave', [
+        query('.skeleton', [
+          stagger(50, [
+            animate('300ms ease-out', style({ opacity: 0, transform: 'translateX(-20px)' }))
+          ])
+        ])
+      ]),
+      transition(':enter', [
+        query('.skeleton', [
+          style({ opacity: 0, transform: 'translateX(-20px)' }),
+          stagger(50, [
+            animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+          ])
+        ])
+      ])
+    ])
   ],
 })
 export class ChatSidebarComponent {
   searchQuery: string = '';
   @Input() contacts: ConversationParticipant[] = [];
+  @Input() isLoading: boolean = true; // nueva propiedad
   @Output() contactClick = new EventEmitter<ConversationParticipant>();
 
   onContactClick(contact: ConversationParticipant): void {
