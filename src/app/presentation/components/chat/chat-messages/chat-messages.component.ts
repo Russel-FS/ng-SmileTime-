@@ -35,6 +35,7 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @Input() messages!: MessageEntity[];
   @Input() isTyping: boolean = false;
   @Input() hasSelectedContact: boolean = false;
+  @Input() isLoading: boolean = false; // Nueva propiedad
   private currentUserId: string | null = null;
 
   constructor(private storageService: StorageService) {

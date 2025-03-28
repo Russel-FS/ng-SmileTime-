@@ -6,6 +6,11 @@
       <p>No hay conversación seleccionada</p>
       <small>Selecciona un contacto para comenzar a chatear</small>
     </div>
+  } @else if (isLoading) {
+    <div class="loading-messages">
+      <div class="spinner"></div>
+      <p>Cargando mensajes...</p>
+    </div>
   } @else if (messages.length === 0) {
     <div class="no-messages">
       <i class="fas fa-comments"></i>

@@ -100,6 +100,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   conversations: ConversationEntity[] = [];
   /** Indica si el contacto está escribiendo actualmente */
   isTyping: boolean = false;
+  /** Indica si los mensajes están siendo cargados */
+  isLoadingMessages: boolean = false;
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
@@ -131,14 +133,19 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     contact.selected = true;
     this.contactSelected = contact;
     this.conversations = [];
+    this.isLoadingMessages = true;
 
     this.conversationUseCase.getConversationById(this.contactSelected.conversationId as number)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {
           this.conversations.push(conversation);
+          this.isLoadingMessages = false;
         },
-        error: err => console.error('Error obteniendo conversación:', err)
+        error: err => {
+          console.error('Error obteniendo conversación:', err);
+          this.isLoadingMessages = false;
+        }
       });
   }
 
