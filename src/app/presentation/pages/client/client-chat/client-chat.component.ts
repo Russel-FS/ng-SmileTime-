@@ -85,13 +85,22 @@ import { PrivateMessage } from '../../../../core/domain/entities/signalR/Private
   styleUrls: ['./client-chat.component.css'],
 })
 export class ClientChatComponent implements OnInit, OnDestroy {
+  isMobile: boolean = window.innerWidth <= 768;
+
   constructor(
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
-  ) { }
+  ) {
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 768;
+      if (!this.isMobile) {
+        this.isChatView = false;
+      }
+    });
+  }
   /** Contacto actualmente seleccionado en la conversación */
   contactSelected!: ConversationParticipant;
   /** Lista de todos los contactos disponibles */
@@ -102,6 +111,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   isTyping: boolean = false;
   /** Indica si los mensajes están siendo cargados */
   isLoadingMessages: boolean = false;
+  /** Indica si se muestra la vista de chat en móvil */
+  isChatView: boolean = false;
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
@@ -147,6 +158,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           this.isLoadingMessages = false;
         }
       });
+
+    if (this.isMobile) {
+      this.isChatView = true;
+    }
   }
 
   /**
@@ -488,4 +503,10 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     return conversation?.messages || [];
   }
 
+  /**
+   * Alterna entre la vista de chat y la vista de contactos.
+   */
+  toggleView(): void {
+    this.isChatView = !this.isChatView;
+  }
 }

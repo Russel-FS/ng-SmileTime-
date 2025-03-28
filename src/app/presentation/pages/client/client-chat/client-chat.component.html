@@ -1,13 +1,25 @@
-<div class="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-  <!-- Sidebar -->
+<div class="flex">
   <app-chat-sidebar
     class="overflow-hidden"
     [contacts]="contacts"
     (contactClick)="onContactClick($event)"
+    [class.hidden]="isChatView"
   ></app-chat-sidebar>
-  <!-- Chat -->
-  <div class="chat-container">
-    <app-chat-header [userHeader]="contactSelected"> </app-chat-header>
+
+  <div class="chat-container" [class.active]="isChatView">
+    @if (isChatView) {
+      <button class="show-sidebar-button" (click)="toggleView()">
+        <svg width="20" height="20" fill="none" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+    }
+    <app-chat-header [userHeader]="contactSelected"></app-chat-header>
     <app-chat-messages
       class="flex-1"
       [messages]="getMessages()"

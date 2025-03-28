@@ -202,3 +202,22 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .message {
+    max-width: 90%;
+  }
+
+  .message .content {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+
+  .no-messages {
+    padding: 20px;
+  }
+
+  .no-messages p {
+    font-size: 16px;
+  }
+}
