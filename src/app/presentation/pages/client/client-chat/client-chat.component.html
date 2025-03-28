@@ -1,4 +1,5 @@
 <div class="flex">
+  <!-- Sidebar de contactos -->
   <app-chat-sidebar
     class="overflow-hidden"
     [contacts]="contacts"
@@ -7,6 +8,7 @@
   ></app-chat-sidebar>
 
   <div class="chat-container" [class.active]="isChatView">
+    <!-- Button to toggle side bar visibilidad -->
     @if (isChatView) {
       <button class="show-sidebar-button" (click)="toggleView()">
         <svg width="20" height="20" fill="none" stroke="currentColor">
@@ -19,7 +21,9 @@
         </svg>
       </button>
     }
-    <app-chat-header [userHeader]="contactSelected"></app-chat-header>
+    <!-- Header -->
+    <app-chat-header [userHeader]="contactSelected"> </app-chat-header>
+    <!-- Chat Messages-->
     <app-chat-messages
       class="flex-1"
       [messages]="getMessages()"
@@ -27,6 +31,7 @@
       [hasSelectedContact]="!!contactSelected"
       [isLoading]="isLoadingMessages"
     ></app-chat-messages>
+    <!-- Input de mensaje -->
     <app-chat-input
       [hasSelectedContact]="!!contactSelected"
       (EventTyping)="onTyping($event)"
