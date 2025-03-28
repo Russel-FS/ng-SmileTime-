@@ -6,6 +6,8 @@ import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
 import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 import { PrivateMessage } from '../../domain/entities/signalR/PrivateMessage';
+import { OnlineUser } from '../../domain/entities/signalR/OnlineUser';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +15,7 @@ export class SignalRService implements IRealTimeComunication {
   private hubConnection!: signalR.HubConnection;
   private messageReceived = new Subject<PrivateMessage>();
   private typingStatus = new Subject<TypingStatus>();
+  private onlineUsers = new Subject<OnlineUser[]>();
 
   constructor(
     private apiUrl: ApiConfig,
@@ -93,6 +96,7 @@ export class SignalRService implements IRealTimeComunication {
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
   }
+
   // listener para el estado de typing
   onTypingStatus(): Observable<TypingStatus> {
     return this.typingStatus.asObservable();
@@ -106,6 +110,21 @@ export class SignalRService implements IRealTimeComunication {
         .then(() => console.log('Estado de typing actualizado'))
         .catch((err) => console.log('Error al actualizar el estado de typing: ' + err));
     }
+  }
+
+  // Obtener usuarios en línea
+  getOnlineUsers(): void {
+    if (this.hubConnection) {
+      this.hubConnection
+        .invoke('GetOnlineUsers')
+        .then(() => console.log('Solicitud de usuarios en línea enviada'))
+        .catch((err) => console.log('Error al solicitar usuarios en línea: ' + err));
+    }
+  }
+
+  // Observable para los usuarios en línea
+  onOnlineUsers(): Observable<OnlineUser[]> {
+    return this.onlineUsers.asObservable();
   }
 
   /**
@@ -123,6 +142,12 @@ export class SignalRService implements IRealTimeComunication {
     // listener de estado de typing
     this.hubConnection.on('UserTypingStatus', (typingStatus: TypingStatus) => {
       this.typingStatus.next(typingStatus);
+    });
+
+    // listener de usuarios en línea
+    this.hubConnection.on('OnlineUsers', (users: OnlineUser[]) => {
+      console.log('Usuarios en línea recibidos:', users);
+      this.onlineUsers.next(users);
     });
   }
 }
