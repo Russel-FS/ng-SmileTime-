@@ -154,7 +154,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.contactSelected = contact;
     this.conversations = [];
     this.isLoadingMessages = true;
-
     this.conversationUseCase.getConversationById(this.contactSelected.conversationId as number)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
@@ -200,6 +199,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         next: contacts => {
           this.contacts = contacts;
           this.isLoadingContacts = false;
+          // Solicitar el estado de usuarios en línea después de cargar los contactos
+          this.manageOnlineUsers.getOnlineUsers();
         },
         error: err => {
           console.error('Error obteniendo contactos:', err);
@@ -218,8 +219,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       this.listenForMessages();
       this.listenForTypingStatus();
       this.listenForOnlineUsers();
-      // Una vez establecida la conexión, solicitamos los usuarios en línea
-      this.manageOnlineUsers.getOnlineUsers();
     } catch (error) {
       console.error('Error en la comunicación en tiempo real:', error);
       throw error;
@@ -501,19 +500,16 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Actualiza el estado en línea de los contactos
    */
   private updateOnlineUsersStatus(onlineUsers: OnlineUser[]): void {
-    console.log('Usuarios en línea:', JSON.stringify(onlineUsers, null, 2));
-    if (!onlineUsers || onlineUsers.length === 0) {
+    if (onlineUsers && onlineUsers.length > 0) {
       this.contacts.forEach(contact => {
-        const onlineUser = onlineUsers.find(user => user.userId === contact.userId);
-        if (onlineUser) {
-          contact.isOnline = true;
-          contact.lastActive = new Date();
-        } else {
-          contact.isOnline = false;
-        }
-      }
-      );
+        // Buscar si el contacto está en la lista de usuarios en línea
+        const isOnline = onlineUsers.some(user =>
+          user.userId === contact.userId
+        );
+        contact.isOnline = isOnline;
+      });
     }
+
   }
 
   /**
