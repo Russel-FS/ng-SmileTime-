@@ -34,7 +34,8 @@ import { StorageService } from '../../../../core/services/storage/storage.servic
 import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
 import { TypingStatus } from '../../../../core/domain/entities/signalR/TypingStatus';
 import { PrivateMessage } from '../../../../core/domain/entities/signalR/PrivateMessage';
-
+import { ManageOnlineUserUseCase } from '../../../../core/use-cases/signalR/manage-online-user-use-case';
+import { OnlineUser } from '../../../../core/domain/entities/signalR/OnlineUser';
 
 @Component({
   selector: 'app-client-chat',
@@ -50,6 +51,7 @@ import { PrivateMessage } from '../../../../core/domain/entities/signalR/Private
   providers: [
     ManageRealtimeMessageUseCase,
     ManageTypingStatusUseCase,
+    ManageOnlineUserUseCase,
     {
       provide: IRealTimeComunication,
       useClass: SignalRService,
@@ -92,6 +94,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
+    private manageOnlineUsers: ManageOnlineUserUseCase, // Añadir esta línea
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
   ) {
@@ -209,8 +212,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.initializeConnection();
     this.listenForMessages();
     this.listenForTypingStatus();
+    this.listenForOnlineUsers();
   }
-
 
   /**
    * Envia un mensaje a través de SignalR y actualiza la conversación local.
@@ -468,6 +471,40 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: (error) => console.error('Error al recibir el estado de escritura:', error),
       });
   }
+
+  /**
+   * Escucha los cambios en el estado en línea de los usuarios
+   */
+  private listenForOnlineUsers(): void {
+    this.manageOnlineUsers.listenForOnlineUsers()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (onlineUsers) => {
+          this.updateOnlineUsersStatus(onlineUsers);
+        },
+        error: (error) => console.error('Error al recibir usuarios en línea:', error)
+      });
+  }
+
+  /**
+   * Actualiza el estado en línea de los contactos
+   */
+  private updateOnlineUsersStatus(onlineUsers: OnlineUser[]): void {
+    console.log('Usuarios en línea:', JSON.stringify(onlineUsers, null, 2));
+    if (!onlineUsers || onlineUsers.length === 0) {
+      this.contacts.forEach(contact => {
+        const onlineUser = onlineUsers.find(user => user.userId === contact.userId);
+        if (onlineUser) {
+          contact.isOnline = true;
+          contact.lastActive = new Date();
+        } else {
+          contact.isOnline = false;
+        }
+      }
+      );
+    }
+  }
+
   /**
    * Actualiza el estado de escritura de un usuario en la lista de conversaciones.
    * 
@@ -480,6 +517,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       this.isTyping = typingStatus.isTyping;
     }
   }
+
   /**
    * Busca un contacto en la lista de contactos por su ID.
    * 
