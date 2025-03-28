@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
-import { MessageEntity } from '../../domain/entities/chat/message-entity';
-import { ConversationEntity } from '../../domain/entities/chat/conversation-entity';
 import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 import { PrivateMessage } from '../../domain/entities/signalR/PrivateMessage';
+import { OnlineUser } from '../../domain/entities/signalR/OnlineUser';
 
 export interface IRealTimeComunication {
   connect(): void;
@@ -15,6 +14,10 @@ export interface IRealTimeComunication {
   //estado de typing
   onTypingStatus(): Observable<TypingStatus>;
   setTypingStatus(typingStatus: TypingStatus): void;
+
+  // usuarios en linea
+  getOnlineUsers(): void;
+  onOnlineUsers(): Observable<OnlineUser[]>;
 }
 export const IRealTimeComunication = new InjectionToken<IRealTimeComunication>(
   'RealTimeComunication',
