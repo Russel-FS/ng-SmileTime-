@@ -4,7 +4,6 @@ import { ApiConfig } from '../../../infrastructure/config/app.config';
 import { StorageService } from '../storage/storage.service';
 import { Observable, Subject } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
-import { MessageEntity } from '../../domain/entities/chat/message-entity';
 import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 import { PrivateMessage } from '../../domain/entities/signalR/PrivateMessage';
 @Injectable({
@@ -90,7 +89,7 @@ export class SignalRService implements IRealTimeComunication {
     if (this.hubConnection) {
       this.hubConnection
         .invoke('SendPrivateMessage', message)
-        .then(() => console.log('Mensaje enviado' + message))
+        .then(() => console.log('Mensaje enviado' + JSON.stringify(message, null, 2)))
         .catch((err) => console.log('Error al enviar el mensaje: ' + err));
     }
   }
@@ -117,7 +116,7 @@ export class SignalRService implements IRealTimeComunication {
   private setupMessageListener(): void {
     // listener de mensajes
     this.hubConnection.on('ReceivePrivateMessage', (message: PrivateMessage) => {
-      console.log('Mensaje recibido:', message);
+      console.log('Mensaje recibido:', JSON.stringify(message, null, 2));
       this.messageReceived.next(message);
     });
 

@@ -242,17 +242,19 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       console.error('El mensaje debe tener un ID de conversación');
       return;
     }
+    let updatedMessage: MessageEntity;
 
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage) => {
           if (incomingMessage) {
-            message = incomingMessage;
+            // Actualizar el mensaje con el ID de conversación y el estado
+            updatedMessage = incomingMessage;
           }
         },
         complete: () => {
-          this.handleCompleteSendMessage(message);
+          this.handleCompleteSendMessage(updatedMessage);
         },
         error: this.handleMessageError.bind(this)
       });
@@ -333,7 +335,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage: PrivateMessage) => {
-          console.log('Mensaje recibido:', incomingMessage);
           this.handleIncomingMessage(incomingMessage);
         },
         error: error => console.error('Error al recibir mensajes:', error)
