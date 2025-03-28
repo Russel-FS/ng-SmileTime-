@@ -1,24 +1,38 @@
 <!--cuerpo de mensajes-->
 <div #messageContainer class="chat-messages">
-  @for (message of messages; track $index) {
-    <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
-      <div class="message-content">
-        <div class="avatar">
-          <div>
-            <img [src]="message.sender.avatar" alt="avatar" *ngIf="message.sender.avatar" />
+  @if (!hasSelectedContact) {
+    <div class="no-messages">
+      <i class="fas fa-user-plus"></i>
+      <p>No hay conversación seleccionada</p>
+      <small>Selecciona un contacto para comenzar a chatear</small>
+    </div>
+  } @else if (messages.length === 0) {
+    <div class="no-messages">
+      <i class="fas fa-comments"></i>
+      <p>No hay mensajes aún</p>
+      <small>Sé el primero en enviar un mensaje</small>
+    </div>
+  } @else {
+    @for (message of messages; track $index) {
+      <div [class]="isUserMessage(message) ? 'message sent' : 'message received'" [@fadeSlide]>
+        <div class="message-content">
+          <div class="avatar">
+            <div>
+              <img [src]="message.sender.avatar" alt="avatar" *ngIf="message.sender.avatar" />
+            </div>
+            <div>
+              <span *ngIf="!message.sender.avatar">{{
+                getInitialsAvatar(message.sender.userName)
+              }}</span>
+            </div>
           </div>
           <div>
-            <span *ngIf="!message.sender.avatar">{{
-              getInitialsAvatar(message.sender.userName)
-            }}</span>
+            <div class="content">{{ message.content }}</div>
+            <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>
           </div>
-        </div>
-        <div>
-          <div class="content">{{ message.content }}</div>
-          <div class="time">{{ message.createdAt | date: 'shortTime' }}</div>
         </div>
       </div>
-    </div>
+    }
   }
   <!--typing de escritura-->
   <app-typing *ngIf="isTyping" [@fadeSlide]></app-typing>

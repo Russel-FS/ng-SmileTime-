@@ -168,7 +168,6 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
-          this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
         },
         error: err => console.error('Error obteniendo contactos:', err)
       });
@@ -471,9 +470,14 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @returns El array de mensajes asociados al contacto seleccionado.
    */
   getMessages(): MessageEntity[] {
+    if (!this.contactSelected?.conversationId) {
+      return [];
+    }
+
     const conversation = this.conversations.find(
-      conv => conv.id === this.contactSelected?.conversationId
+      conv => conv?.id === this.contactSelected?.conversationId
     );
+
     return conversation?.messages || [];
   }
 

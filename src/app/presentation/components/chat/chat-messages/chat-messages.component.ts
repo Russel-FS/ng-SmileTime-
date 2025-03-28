@@ -34,12 +34,12 @@ export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @Input() messages!: MessageEntity[];
   @Input() isTyping: boolean = false;
+  @Input() hasSelectedContact: boolean = false;
   private currentUserId: string | null = null;
 
   constructor(private storageService: StorageService) {
     this.currentUserId = this.storageService.getItem('userId');
   }
-
 
   onScroll(): void {
     this.checkScrollPosition();

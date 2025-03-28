@@ -12,6 +12,7 @@
       class="flex-1"
       [messages]="getMessages()"
       [isTyping]="isTyping"
+      [hasSelectedContact]="!!contactSelected"
     ></app-chat-messages>
     <app-chat-input
       (EventTyping)="onTyping($event)"
