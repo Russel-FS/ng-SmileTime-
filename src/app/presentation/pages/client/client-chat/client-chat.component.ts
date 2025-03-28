@@ -242,23 +242,48 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       console.error('El mensaje debe tener un ID de conversación');
       return;
     }
-    let updatedMessage: MessageEntity;
 
+    // Agregar mensaje localmente primero (optimistic update)
+    const conversation = this.findConversationById(message.conversationId);
+    if (conversation) {
+      message.status = [new MessageStatus(this.currenUserSesion().userId, Status.PENDING, new Date())];
+      conversation.messages.push(message);
+    }
+
+    // Enviar mensaje al servidor
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (incomingMessage) => {
-          if (incomingMessage) {
-            // Actualizar el mensaje con el ID de conversación y el estado
-            updatedMessage = incomingMessage;
+          if (incomingMessage && conversation) {
+            // Actualizar el mensaje local con la información del servidor
+            const index = conversation.messages.findIndex(m =>
+              m.content === message.content &&
+              m.sender.userId === message.sender.userId
+            );
+            if (index !== -1) {
+              conversation.messages[index] = incomingMessage;
+            }
           }
         },
-        complete: () => {
-          this.handleCompleteSendMessage(updatedMessage);
+        error: (error) => {
+          // En caso de error, marcar el mensaje como fallido
+          if (conversation) {
+            const index = conversation.messages.findIndex(m => m === message);
+            if (index !== -1) {
+              conversation.messages[index].status = [
+                new MessageStatus(this.currenUserSesion().userId, Status.FAILED, new Date())
+              ];
+            }
+          }
+          this.handleMessageError(error);
         },
-        error: this.handleMessageError.bind(this)
+        complete: () => {
+          this.handleCompleteSendMessage(message);
+        }
       });
   }
+
   private currenUserSesion(): ConversationParticipant {
     const userId = this.storage.getItem('userId');
     const userName = this.storage.getItem('email');
@@ -340,19 +365,33 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: error => console.error('Error al recibir mensajes:', error)
       });
   }
+
   /**
- * Procesa un mensaje entrante y lo agrega a la conversacion correspondiente.
- *
- * @param incomingMessage El mensaje entrante que se va a procesar.
- */
+   * Procesa un mensaje entrante y lo agrega a la conversacion correspondiente.
+   *
+   * @param incomingMessage El mensaje entrante que se va a procesar.
+   */
   private handleIncomingMessage(incomingMessage: MessageEntity): void {
-    // Verificar que el mensaje tenga ID de conversación
     if (!incomingMessage.conversationId) {
       console.error('Mensaje recibido sin ID de conversación');
-
+      return;
     }
 
     const conversation = this.findConversationById(incomingMessage.conversationId);
+    const isCurrentUserMessage = incomingMessage.sender.userId === this.currenUserSesion().userId;
+
+    // Si es un mensaje del usuario actual y ya existe en la conversación, no lo agregamos
+    if (isCurrentUserMessage && conversation) {
+      const messageExists = conversation.messages.some(m =>
+        m.content === incomingMessage.content &&
+        m.sender.userId === incomingMessage.sender.userId &&
+        Math.abs(new Date(m.createdAt).getTime() - new Date(incomingMessage.createdAt).getTime()) < 1000
+      );
+
+      if (messageExists) {
+        return; // Evitamos agregar el mensaje duplicado
+      }
+    }
 
     if (!conversation) {
       // Si no existe la conversación, obtenerla del servidor
@@ -362,15 +401,20 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           next: (newConversation) => {
             if (newConversation) {
               this.conversations.push(newConversation);
-              newConversation.messages.push(incomingMessage);
+              if (!isCurrentUserMessage) { // Solo agregamos si no es un mensaje propio
+                newConversation.messages.push(incomingMessage);
+              }
             }
           },
           error: (error) => console.error('Error al obtener conversación:', error)
         });
     } else {
-      conversation.messages.push(incomingMessage);
+      if (!isCurrentUserMessage) { // Solo agregamos si no es un mensaje propio
+        conversation.messages.push(incomingMessage);
+      }
     }
   }
+
   /**
    * Encuentra una conversaci n por su ID.
    * 
