@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,6 +11,8 @@ import { FormsModule } from '@angular/forms';
 export class ChatInputComponent {
   @Output() EventTyping = new EventEmitter<string>();
   @Output() EventSendMessage = new EventEmitter<string>();
+  @Input() hasSelectedContact: boolean = false;
+
   newMessage: string = '';
   sendMessage() {
     if (this.newMessage.trim()) {

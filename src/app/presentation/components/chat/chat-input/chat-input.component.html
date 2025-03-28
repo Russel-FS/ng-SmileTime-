@@ -1,22 +1,24 @@
 <div>
-  <div class="chat-input">
-    <form class="w-full flex" (ngSubmit)="sendMessage()">
-      <input
-        type="text"
-        [(ngModel)]="newMessage"
-        (keyup)="onTyping()"
-        name="message"
-        class="text"
-        placeholder="Escribe un mensaje..."
-      />
+  @if (hasSelectedContact) {
+    <div class="chat-input">
+      <form class="w-full flex" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          (keyup)="onTyping()"
+          name="message"
+          class="text"
+          placeholder="Escribe un mensaje..."
+        />
 
-      <button
-        type="submit"
-        [disabled]="!newMessage.trim()"
-        [ngClass]="newMessage.trim() ? 'button' : 'button-disable '"
-      >
-        ➤
-      </button>
-    </form>
-  </div>
+        <button
+          type="submit"
+          [disabled]="!newMessage.trim()"
+          [ngClass]="newMessage.trim() ? 'button' : 'button-disable '"
+        >
+          ➤
+        </button>
+      </form>
+    </div>
+  }
 </div>

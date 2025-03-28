@@ -15,6 +15,7 @@
       [hasSelectedContact]="!!contactSelected"
     ></app-chat-messages>
     <app-chat-input
+      [hasSelectedContact]="!!contactSelected"
       (EventTyping)="onTyping($event)"
       (EventSendMessage)="onSendMessage($event)"
     ></app-chat-input>
