@@ -16,6 +16,8 @@ export class SignalRService implements IRealTimeComunication {
   private messageReceived = new Subject<PrivateMessage>();
   private typingStatus = new Subject<TypingStatus>();
   private onlineUsers = new Subject<OnlineUser[]>();
+  private userConnected = new Subject<OnlineUser>();
+  private userDisconnected = new Subject<OnlineUser>();
 
   constructor(
     private apiUrl: ApiConfig,
@@ -120,6 +122,14 @@ export class SignalRService implements IRealTimeComunication {
     return this.onlineUsers.asObservable();
   }
 
+  onUserConnected(): Observable<OnlineUser> {
+    return this.userConnected.asObservable();
+  }
+
+  onUserDisconnected(): Observable<OnlineUser> {
+    return this.userDisconnected.asObservable();
+  }
+
   /**
    * Establece un listener para recibir mensajes de SignalR. Cuando se recibe
    * un mensaje, se notifica a los subscriptores de `messageReceived` con un
@@ -140,6 +150,18 @@ export class SignalRService implements IRealTimeComunication {
     // listener de usuarios en línea
     this.hubConnection.on('OnlineUsers', (users: OnlineUser[]) => {
       this.onlineUsers.next(users);
+    });
+
+    // listener de conexión de usuario
+    this.hubConnection.on('UserConnected', (user: OnlineUser) => {
+      console.log('Usuario conectado:', user);
+      this.userConnected.next(user);
+    });
+
+    // listener de desconexión de usuario
+    this.hubConnection.on('UserDisconnected', (user: OnlineUser) => {
+      console.log('Usuario desconectado:', user);
+      this.userDisconnected.next(user);
     });
   }
 }

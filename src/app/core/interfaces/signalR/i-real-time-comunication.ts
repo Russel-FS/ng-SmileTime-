@@ -18,6 +18,10 @@ export interface IRealTimeComunication {
   // usuarios en linea
   getOnlineUsers(): void;
   onOnlineUsers(): Observable<OnlineUser[]>;
+  // usuario conectado
+  onUserConnected(): Observable<OnlineUser>;
+  // usuario desconectado
+  onUserDisconnected(): Observable<OnlineUser>;
 }
 export const IRealTimeComunication = new InjectionToken<IRealTimeComunication>(
   'RealTimeComunication',
