@@ -16,7 +16,7 @@ import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 @Injectable()
 export class ManageTypingStatusUseCase {
   private typingSubject = new Subject<TypingStatus>(); // Observable para notificar el estado de escritura
-  private readonly TYPING_DEBOUNCE_TIME = 300; // 300ms de debounce
+  private readonly TYPING_DEBOUNCE_TIME = 350; // 300ms de debounce
 
 
   constructor(private realTimeCommunication: IRealTimeComunication) {
