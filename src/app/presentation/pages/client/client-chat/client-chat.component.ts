@@ -219,6 +219,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       this.listenForMessages();
       this.listenForTypingStatus();
       this.listenForOnlineUsers();
+      this.listenForUserConnected();
+      this.listenForUserDisconnected();
     } catch (error) {
       console.error('Error en la comunicación en tiempo real:', error);
       throw error;
@@ -490,16 +492,47 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (onlineUsers) => {
-          this.updateOnlineUsersStatus(onlineUsers);
+          this.updateOnlineUsersStatus(...onlineUsers);
         },
         error: (error) => console.error('Error al recibir usuarios en línea:', error)
       });
   }
 
   /**
-   * Actualiza el estado en línea de los contactos
+   * Escucha cuando un usuario se conecta
    */
-  private updateOnlineUsersStatus(onlineUsers: OnlineUser[]): void {
+  private listenForUserConnected(): void {
+    this.manageOnlineUsers.listenForUserConnected()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (user) => {
+          this.updateOnlineUsersStatus(user);
+        },
+        error: (error) => console.error('Error al recibir usuario conectado:', error)
+      });
+  }
+
+  /**
+   * Escucha cuando un usuario se desconecta
+   */
+  private listenForUserDisconnected(): void {
+    this.manageOnlineUsers.listenForUserDisconnected()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (user) => {
+          this.updateOnlineUsersStatus(user);
+        },
+        error: (error) => console.error('Error al recibir usuario desconectado:', error)
+      });
+  }
+  
+  /**
+   * Actualiza el estado en línea de los contactos en función de la lista de usuarios en línea.
+   * 
+   * @param onlineUsers Lista de usuarios en línea.
+   * @returns void
+   */
+  private updateOnlineUsersStatus(...onlineUsers: OnlineUser[]): void {
     if (onlineUsers && onlineUsers.length > 0) {
       this.contacts.forEach(contact => {
         // Buscar si el contacto está en la lista de usuarios en línea
