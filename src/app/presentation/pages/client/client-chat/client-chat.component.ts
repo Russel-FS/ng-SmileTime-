@@ -248,11 +248,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (incomingMessage) => {
           if (incomingMessage) {
-            const conversation = this.findConversationById(incomingMessage.conversationId);
-            if (conversation) {
-              conversation.messages.push(incomingMessage);
-              conversation.updatedAt = new Date();
-            }
+            message = incomingMessage;
           }
         },
         complete: () => {
@@ -271,8 +267,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Se llama cuando se completa el envio del mensaje.
-   * Notifica el estado de escritura y transmite el mensaje enviado.
+   * Maneja la finalización del envío de un mensaje.
+   * Notifica que el usuario ha dejado de escribir y transmite el mensaje enviado en tiempo real.
    * @param message El mensaje enviado.
    */
   private handleCompleteSendMessage(message: MessageEntity): void {
