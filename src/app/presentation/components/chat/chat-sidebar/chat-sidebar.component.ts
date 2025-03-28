@@ -27,7 +27,7 @@ import { ConversationParticipant } from '../../../../core/domain/entities/chat/c
           stagger(50, [
             animate('300ms ease-out', style({ opacity: 0, transform: 'translateX(-20px)' }))
           ])
-        ])
+        ], { optional: true })
       ]),
       transition(':enter', [
         query('.skeleton', [
@@ -35,7 +35,7 @@ import { ConversationParticipant } from '../../../../core/domain/entities/chat/c
           stagger(50, [
             animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
           ])
-        ])
+        ], { optional: true })
       ])
     ])
   ],

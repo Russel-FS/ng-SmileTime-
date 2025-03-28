@@ -17,8 +17,9 @@
 
   <!-- Contacts List -->
   <div class="contacts-list">
-    @if (isLoading) {
-      <div @loadingState>
+    <div [@loadingState]="isLoading">
+      <!--un solo contenedor con la animación -->
+      @if (isLoading) {
         @for (item of [1, 2, 3, 4, 5]; track item) {
           <div class="contact-item skeleton">
             <div class="avatar-container">
@@ -30,9 +31,7 @@
             </div>
           </div>
         }
-      </div>
-    } @else {
-      <div @loadingState>
+      } @else {
         @for (contact of filteredContacts; track contact.userId) {
           <div
             class="contact-item"
@@ -52,11 +51,13 @@
             <div class="contact-info">
               <h3 class="contact-name">{{ contact.userName }}</h3>
               <p class="contact-role">{{ contact.role }}</p>
-              <p class="last-active">Último acceso: {{ contact?.lastActive | date: 'shortTime' }}</p>
+              <p class="last-active">
+                Último acceso: {{ contact?.lastActive | date: 'shortTime' }}
+              </p>
             </div>
           </div>
         }
-      </div>
-    }
+      }
+    </div>
   </div>
 </aside>
