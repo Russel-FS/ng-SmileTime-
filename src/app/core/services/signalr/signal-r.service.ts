@@ -22,16 +22,13 @@ export class SignalRService implements IRealTimeComunication {
     private storageService: StorageService,
   ) { }
 
-  async connect() {
+  async connect(): Promise<void> {
     try {
-
-      // si ya existe una conexión activa, no se intenta crear una nueva
       if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
         console.log('Ya existe una conexión SignalR activa');
         return;
       }
 
-      // crea una nueva conexión con el hub de SignalR
       this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(this.apiUrl.getEndpoint('signalR', 'chatHub'), {
           accessTokenFactory: () => this.storageService.getToken(),
@@ -41,18 +38,14 @@ export class SignalRService implements IRealTimeComunication {
         .configureLogging(signalR.LogLevel.Debug)
         .build();
 
-      // eventos de reconexión
       this.setupConnectionEvents();
-
-      //  iniciar la conexión
-      await this.hubConnection.start().then(() => {
-        console.log('Conexión SignalR iniciada');
-      });
-
-      // listener de mensajes
       this.setupMessageListener();
+
+      await this.hubConnection.start();
+      console.log('Conexión SignalR iniciada');
     } catch (err) {
-      console.error('Error al iniciar la conexión:');
+      console.error('Error al iniciar la conexión:', err);
+      throw err;
     }
   }
 
@@ -146,7 +139,6 @@ export class SignalRService implements IRealTimeComunication {
 
     // listener de usuarios en línea
     this.hubConnection.on('OnlineUsers', (users: OnlineUser[]) => {
-      console.log('Usuarios en línea recibidos:', users);
       this.onlineUsers.next(users);
     });
   }

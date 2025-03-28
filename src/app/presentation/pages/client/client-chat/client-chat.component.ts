@@ -125,9 +125,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Inicializa los datos de la pantalla y la comunicación en tiempo real.
    * Se llama cuando el componente se inicializa.
    */
-  ngOnInit(): void {
-    this.initData();
-    this.initRealTimeCommunication();
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.initRealTimeCommunication();
+      this.initData();
+    } catch (error) {
+      console.error('Error initializing chat:', error);
+    }
   }
 
   /**
@@ -188,7 +192,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Inicializa los datos de la pantalla.
    * Obtiene la lista de contactos y establece el contacto activo.
    */
-  initData() {
+  private initData() {
     this.isLoadingContacts = true;
     this.ContactsUseCase.execute()
       .pipe(takeUntil(this.unsubscribe$),)
@@ -208,11 +212,18 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Incializa la comunicación en tiempo real, 
    * escucha los mensajes y actualiza la conversación local.
    */
-  private initRealTimeCommunication(): void {
-    this.manageRealTimeMessages.initializeConnection();
-    this.listenForMessages();
-    this.listenForTypingStatus();
-    this.listenForOnlineUsers();
+  private async initRealTimeCommunication(): Promise<void> {
+    try {
+      await this.manageRealTimeMessages.initializeConnection();
+      this.listenForMessages();
+      this.listenForTypingStatus();
+      this.listenForOnlineUsers();
+      // Una vez establecida la conexión, solicitamos los usuarios en línea
+      this.manageOnlineUsers.getOnlineUsers();
+    } catch (error) {
+      console.error('Error en la comunicación en tiempo real:', error);
+      throw error;
+    }
   }
 
   /**

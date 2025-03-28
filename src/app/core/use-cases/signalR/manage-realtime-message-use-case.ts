@@ -13,8 +13,13 @@ export class ManageRealtimeMessageUseCase {
     private messageRepository: IMessageRepository,
   ) { }
 
-  initializeConnection(): void {
-    this.realTimeCommunication.connect();
+  async initializeConnection(): Promise<void> {
+    try {
+      await this.realTimeCommunication.connect();
+    } catch (error) {
+      console.error('Error initializing connection:', error);
+      throw error;
+    }
   }
 
   closeConnection(): void {

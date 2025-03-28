@@ -14,4 +14,11 @@ export class ManageOnlineUserUseCase {
     listenForOnlineUsers() {
         return this.realTimeCommunication.onOnlineUsers();
     }
+
+    /**
+     * Solicita la lista de usuarios en línea.
+     */
+    getOnlineUsers(): void {
+        this.realTimeCommunication.getOnlineUsers();
+    }
 }
