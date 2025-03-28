@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://verbose-guacamole-wrxv5x4qwp773546g-5011.app.github.dev';
+  private apiUrlBase = 'https://verbose-halibut-5g5x755pg776hpx6p-5011.app.github.dev';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
