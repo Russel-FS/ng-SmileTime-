@@ -106,6 +106,68 @@
   }
 }
 
+/* Skeleton de mensajes */
+.message-skeleton {
+  display: flex;
+  margin: 16px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+  max-width: 70%;
+}
+
+.message-skeleton.left {
+  justify-content: flex-start;
+  margin-right: auto;
+}
+
+.message-skeleton.right {
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.skeleton-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f5f5f7;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+.skeleton-content {
+  background: #f5f5f7;
+  border-radius: 16px;
+  height: 36px;
+  max-width: 100%;
+  min-width: 160px;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.message-skeleton:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.message-skeleton:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.message-skeleton:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.message-skeleton:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
 .no-messages {
   display: flex;
   flex-direction: column;
@@ -136,73 +198,8 @@
   color: #86868b;
 }
 
-.loading-messages {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: transparent;
-}
-
-.loading-dots {
-  display: flex;
-  gap: 8px;
-}
-
-.loading-dots span {
-  width: 3px;
-  height: 3px;
-  background: #147ce5;
-  opacity: 0.6;
-  animation: loadingDots 1.4s infinite;
-  box-shadow: 0 2px 6px rgba(0, 113, 227, 0.2);
-}
-
-.loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes loadingDots {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-.loading-messages p {
-  margin-top: 20px;
-  font-size: 17px;
-  color: #1d1d1f;
-  font-weight: 500;
-}
-
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #f5f5f7;
-  border-top: 2px solid #0071e3;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
+/* Responsive styles */
+/* Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
   .message {
     max-width: 90%;

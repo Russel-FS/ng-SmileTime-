@@ -7,13 +7,13 @@
       <small>Selecciona un contacto de tu lista para iniciar un chat</small>
     </div>
   } @else if (isLoading) {
-    <div class="loading-messages">
-      <div class="loading-dots">
-        <span></span>
-        <span></span>
-        <span></span>
+    <!-- Skeleton loading -->
+    @for (item of [1, 2, 3, 4]; track item) {
+      <div class="message-skeleton" [class.right]="item % 2 === 0" [class.left]="item % 2 !== 0">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-content" [style.width.px]="200 + item * 30"></div>
       </div>
-    </div>
+    }
   } @else if (messages.length === 0) {
     <div class="no-messages">
       <i class="fas fa-paper-plane"></i>
