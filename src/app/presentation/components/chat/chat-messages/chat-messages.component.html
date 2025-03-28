@@ -2,20 +2,23 @@
 <div #messageContainer class="chat-messages">
   @if (!hasSelectedContact) {
     <div class="no-messages">
-      <i class="fas fa-user-plus"></i>
-      <p>No hay conversación seleccionada</p>
-      <small>Selecciona un contacto para comenzar a chatear</small>
+      <i class="fas fa-comment-dots"></i>
+      <p>Comienza una conversación</p>
+      <small>Selecciona un contacto de tu lista para iniciar un chat</small>
     </div>
   } @else if (isLoading) {
     <div class="loading-messages">
-      <div class="spinner"></div>
-      <p>Cargando mensajes...</p>
+      <div class="loading-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
   } @else if (messages.length === 0) {
     <div class="no-messages">
-      <i class="fas fa-comments"></i>
-      <p>No hay mensajes aún</p>
-      <small>Sé el primero en enviar un mensaje</small>
+      <i class="fas fa-paper-plane"></i>
+      <p>Sin mensajes aún</p>
+      <small>Envía un mensaje para iniciar la conversación</small>
     </div>
   } @else {
     @for (message of messages; track $index) {
