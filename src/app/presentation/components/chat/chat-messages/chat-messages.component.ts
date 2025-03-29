@@ -11,6 +11,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { TypingComponent } from '../typing/typing.component';
 import { MessageEntity } from '../../../../core/domain/entities/chat/message-entity';
 import { StorageService } from '../../../../core/services/storage/storage.service';
+import { TypingStatus } from '../../../../core/domain/entities/signalR/TypingStatus';
 
 @Component({
   selector: 'app-chat-messages',
@@ -33,7 +34,7 @@ import { StorageService } from '../../../../core/services/storage/storage.servic
 export class ChatMessagesComponent implements AfterViewChecked {
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @Input() messages!: MessageEntity[];
-  @Input() isTyping: boolean = false;
+  @Input() typingStatus!: TypingStatus;
   @Input() hasSelectedContact: boolean = false;
   @Input() isLoading: boolean = false;
   private currentUserId: string | null = null;

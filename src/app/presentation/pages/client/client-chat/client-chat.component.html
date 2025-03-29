@@ -28,7 +28,7 @@
     <app-chat-messages
       class="flex-1"
       [messages]="getMessages()"
-      [isTyping]="isTyping"
+      [typingStatus]="typingStatus"
       [hasSelectedContact]="!!contactSelected"
       [isLoading]="isLoadingMessages"
     ></app-chat-messages>

@@ -94,7 +94,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
-    private manageOnlineUsers: ManageOnlineUserUseCase, // Añadir esta línea
+    private manageOnlineUsers: ManageOnlineUserUseCase,
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
   ) {
@@ -113,7 +113,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   /** Almacena todas las conversaciones activas */
   conversations: ConversationEntity[] = [];
   /** Indica si el contacto está escribiendo actualmente */
-  isTyping: boolean = false;
+  typingStatus!: TypingStatus;
   /** Indica si los mensajes están siendo cargados */
   isLoadingMessages: boolean = false;
   /** Indica si se muestra la vista de chat en móvil */
@@ -525,7 +525,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
         error: (error) => console.error('Error al recibir usuario desconectado:', error)
       });
   }
-  
+
   /**
    * Actualiza el estado en línea de los contactos en función de la lista de usuarios en línea.
    * 
@@ -549,12 +549,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Actualiza el estado de escritura de un usuario en la lista de conversaciones.
    * 
    * @param userId El ID del usuario a actualizar.
-   * @param isTyping El estado de escritura a asignar.
+   * @param typingStatus El estado de escritura a asignar.
    */
   private updateTypingStatus(typingStatus: TypingStatus): void {
     const contact = this.findContactById(typingStatus.senderId);
     if (contact) {
-      this.isTyping = typingStatus.isTyping;
+      this.typingStatus = typingStatus;
     }
   }
 
