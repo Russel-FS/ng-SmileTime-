@@ -179,10 +179,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   onTyping(text: string): void {
     if (this.contactSelected && text?.length > 0) {
       this.manageTypingStatus.notifyTyping({
-        senderId: this.currenUserSesion().userId,
-        receiverId: this.contactSelected.userId,
-        isTyping: true,
-        conversationId: this.contactSelected.conversationId
+        senderId: this.currenUserSesion().userId, // ID del usuario actual
+        receiverId: this.contactSelected.userId, // ID del contacto seleccionado
+        isTyping: true, // Indica que el usuario está escribiendo
+        conversationId: this.contactSelected.conversationId, // ID de la conversación actual
+        username: this.currenUserSesion().userName // Nombre del usuario actual
       });
     }
   }

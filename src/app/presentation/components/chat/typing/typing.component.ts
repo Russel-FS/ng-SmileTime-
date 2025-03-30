@@ -13,9 +13,7 @@ export class TypingComponent {
   @Input() typing!: TypingStatus;
 
   getInitialsAvatar(typing: TypingStatus): string {
-    const userName = typing.username || 'Usuario';
-    if (!userName) return '?';
-
+    const userName = typing.username || '?';
     const names = userName.trim().split(' ');
     if (names.length >= 2) {
       return (names[0][0] + names[1][0]).toUpperCase();

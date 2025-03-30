@@ -1,9 +1,9 @@
-@if (typing && typing) {
-  <div class="avatar">
-    <div>
+@if (typing && typing.isTyping) {
+  <div class="content">
+    <div class="avatar">
       <span *ngIf="typing.username">{{ getInitialsAvatar(typing) }}</span>
     </div>
-    <div class="message received">
+    <div class="received">
       <div class="typing-indicator">
         <span></span>
         <span></span>
