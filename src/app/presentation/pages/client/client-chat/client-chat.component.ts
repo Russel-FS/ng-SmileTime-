@@ -537,10 +537,8 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     if (onlineUsers && onlineUsers.length > 0) {
       this.contacts.forEach(contact => {
         // Buscar si el contacto está en la lista de usuarios en línea
-        const isOnline = onlineUsers.some(user =>
-          user.userId === contact.userId
-        );
-        contact.isOnline = isOnline;
+        const onlineUser = onlineUsers.find(user => user.userId === contact.userId);
+        contact.isOnline = !!onlineUser?.isOnline;
       });
     }
 
