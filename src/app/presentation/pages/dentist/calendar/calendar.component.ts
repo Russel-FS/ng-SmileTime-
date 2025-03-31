@@ -72,7 +72,7 @@ export class CalendarComponent implements OnInit {
     eventContent: this.renderEventContent.bind(this),
     views: {
       dayGridMonth: {
-        dayMaxEvents: 2
+        dayMaxEvents: 1
       }
     },
     events: [],
