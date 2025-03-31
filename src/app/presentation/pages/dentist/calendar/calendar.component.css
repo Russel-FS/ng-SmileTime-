@@ -23,6 +23,7 @@
   width: 100vw !important;
   background: white;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  letter-spacing: -0.01em;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
@@ -64,16 +65,17 @@
 }
 
 :host ::ng-deep .fc-daygrid-day-frame {
-  background: white;
-  margin: 2px;
-  border-radius: 12px;
-  height: calc(100% - 4px);
-  transition: all 0.2s ease;
+  background: #ffffff;
+  margin: 4px;
+  border-radius: 16px;
+  height: calc(100% - 8px);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
 :host ::ng-deep .fc-daygrid-day-frame:hover {
+  border-color: #007aff;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 :host ::ng-deep .fc-toolbar-title {
@@ -85,9 +87,10 @@
 }
 
 :host ::ng-deep .fc-button-primary {
-  width: 32px;
-  height: 32px;
-  background-color: #f5f5f7 !important;
+  width: 36px;
+  height: 36px;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: none !important;
   border-radius: 50% !important;
   color: #1d1d1f !important;
@@ -95,12 +98,12 @@
   align-items: center;
   justify-content: center;
   padding: 0 !important;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
 }
 
 :host ::ng-deep .fc-button-primary:hover {
-  background-color: #e5e5e5 !important;
-  transform: scale(1.05);
+  transform: scale(1.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 :host ::ng-deep .fc-day-today {
@@ -126,27 +129,99 @@
 }
 
 :host ::ng-deep .fc-col-header-cell {
-  padding: 16px 0 !important;
-  font-weight: 500 !important;
+  background: transparent;
+  padding: 20px 0 !important;
+  font-weight: 600 !important;
   text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
   color: #86868b;
-  background: white;
 }
 
 :host ::ng-deep .fc-event {
   border: none !important;
-  border-radius: 8px !important;
-  padding: 6px 10px !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  margin: 2px 4px !important;
   font-size: 13px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
 }
 
 :host ::ng-deep .fc-event:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  filter: brightness(1.02);
+}
+
+:host ::ng-deep .event-content {
+  padding: 2px;
+}
+
+:host ::ng-deep .event-content .title {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+:host ::ng-deep .event-content .type {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+:host ::ng-deep .fc-event-title,
+:host ::ng-deep .fc-event-time,
+:host ::ng-deep .event-content {
+  color: #ffffff !important;
+  font-weight: 500;
+}
+
+:host ::ng-deep .event-content .title {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+:host ::ng-deep .event-content .type {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+:host ::ng-deep .event-content .time {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+:host ::ng-deep .fc-daygrid-event-harness {
+  margin-bottom: 2px !important;
+}
+
+:host ::ng-deep .fc-daygrid-day-bottom {
+  padding: 2px 4px !important;
+}
+
+:host ::ng-deep .fc-more-link {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1d1d1f;
+  transition: all 0.2s ease;
+  margin: 0 4px;
+}
+
+:host ::ng-deep .fc-more-link:hover {
+  background: rgba(0, 0, 0, 0.08);
+  text-decoration: none;
 }
 
 .selector-cita {
@@ -220,8 +295,8 @@
   right: -420px;
   width: 420px;
   height: 100vh;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(25px) saturate(1.8);
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
@@ -236,14 +311,21 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 
 .sidebar-header {
-  padding: 24px;
+  padding: 32px 24px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.sidebar-header h3 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .close-button {
@@ -273,10 +355,12 @@
 .tipo-buttons button {
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: 16px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border-radius: 14px;
   background: white;
+  font-size: 15px;
+  letter-spacing: -0.01em;
   transition: all 0.2s;
   --accent-color: #007aff;
 }
@@ -299,11 +383,12 @@
 
 .modern-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-top: 8px;
+  padding: 16px;
+  border-radius: 14px;
   font-size: 15px;
+  background: #f5f5f7;
+  border: none;
+  margin-top: 8px;
   transition: all 0.2s;
 }
 
@@ -319,18 +404,20 @@
 
 .confirm-button {
   width: 100%;
-  padding: 14px;
-  background: #007aff;
+  padding: 16px;
+  background: #000000;
   color: white;
   border: none;
-  border-radius: 10px;
-  font-weight: 500;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   transition: all 0.2s;
 }
 
 .confirm-button:hover:not(:disabled) {
-  background: #0066cc;
-  transform: translateY(-1px);
+  background: #333333;
+  transform: scale(1.02);
 }
 
 .confirm-button:disabled {
@@ -340,24 +427,25 @@
 
 .date-selector {
   position: absolute;
-  top: 1.5rem;
-  right: 7rem;
+  top: 2rem;
+  right: 8rem;
   z-index: 10;
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .month-select,
 .year-select {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 2rem 0.75rem 1rem;
+  background: #ffffff;
   border: none;
-  border-radius: 8px;
-  background: #f5f5f7;
-  color: #1d1d1f;
+  border-radius: 12px;
   font-size: 15px;
   font-weight: 500;
+  color: #1d1d1f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
   -webkit-appearance: none;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");

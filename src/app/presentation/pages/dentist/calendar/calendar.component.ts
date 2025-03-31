@@ -27,11 +27,11 @@ export class CalendarComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
   tiposCita: CitaType[] = [
-    { id: 'limpieza', label: 'Limpieza Dental', color: '#007AFF' },
-    { id: 'revision', label: 'Revisión General', color: '#34C759' },
-    { id: 'emergencia', label: 'Emergencia', color: '#FF3B30' },
-    { id: 'ortodonia', label: 'Ortodoncia', color: '#5856D6' },
-    { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#FF9500' }
+    { id: 'limpieza', label: 'Limpieza Dental', color: '#4477CE' },      // Azul sereno
+    { id: 'revision', label: 'Revisión General', color: '#27374D' },      // Azul oscuro elegante
+    { id: 'emergencia', label: 'Emergencia', color: '#526D82' },         // Gris azulado
+    { id: 'ortodonia', label: 'Ortodoncia', color: '#9DB2BF' },          // Gris suave
+    { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#DDE6ED' }  // Gris muy claro
   ];
   mostrarSelector = false;
   nuevaCita: NuevaCita = { tipo: '', nombre: '' };
@@ -55,11 +55,7 @@ export class CalendarComponent implements OnInit {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     locale: 'es',
-    headerToolbar: {
-      left: 'prev',
-      center: '',
-      right: 'next'
-    },
+    headerToolbar: false,
     height: '100%',
     dayMaxEvents: true,
     weekends: true,
@@ -76,7 +72,7 @@ export class CalendarComponent implements OnInit {
     eventContent: this.renderEventContent.bind(this),
     views: {
       dayGridMonth: {
-        dayMaxEvents: 3
+        dayMaxEvents: 2
       }
     },
     events: [],
