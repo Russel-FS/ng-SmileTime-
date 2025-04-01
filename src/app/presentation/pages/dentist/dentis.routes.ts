@@ -14,8 +14,8 @@ export const dentistRoutes: Routes = [
       { path: 'patients', component: PatientsComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'appointment-scheduling', component: AppointmentSchedulingComponent },
-      { path: 'chat', component: DentistChatComponent },
       { path: 'calendar', component: CalendarComponent },
+      { path: 'chat', component: DentistChatComponent },
     ]
   },
   { path: '**', redirectTo: 'main', pathMatch: 'full' },
