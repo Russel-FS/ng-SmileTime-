@@ -12,11 +12,14 @@
   overflow: hidden;
 }
 
+.main-side-bar {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+}
+
 .main-content {
   flex: 1;
-  margin-left: 280px;
   height: 100vh;
-  overflow: hidden;
-  padding: 5px;
-  width: calc(100% - 280px);
+  overflow: auto;
 }
