@@ -17,6 +17,15 @@ interface NuevaCita {
   nombre: string;
 }
 
+interface CitaSeleccionada {
+  id?: string;
+  nombre: string;
+  tipo: string;
+  fecha: string;
+  hora: string;
+  costo: number;
+}
+
 @Component({
   selector: 'app-calendar',
   imports: [CommonModule, FullCalendarModule, FormsModule],
@@ -44,6 +53,16 @@ export class CalendarComponent implements OnInit {
   years = Array.from(new Array(10), (val, index) => new Date().getFullYear() + index);
   selectedMonth: number;
   selectedYear: number;
+
+  mostrarDetalles = false;
+  citaSeleccionada: CitaSeleccionada = {
+    nombre: '',
+    tipo: '',
+    fecha: '',
+    hora: '',
+    costo: 0
+  };
+  eventoSeleccionado: any = null;
 
   constructor() {
     const today = new Date();
@@ -134,10 +153,47 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  handleEventClick(clickInfo: EventClickArg) {
-    if (confirm('¿Desea eliminar esta cita?')) {
-      clickInfo.event.remove();
+  handleEventClick(clickInfo: any) {
+    this.eventoSeleccionado = clickInfo.event;
+    this.citaSeleccionada = {
+      id: clickInfo.event.id,
+      nombre: clickInfo.event.title,
+      tipo: this.getTipoId(clickInfo.event.extendedProps.tipo),
+      fecha: clickInfo.event.start?.toISOString().split('T')[0] || '',
+      hora: clickInfo.event.start?.toTimeString().split(':').slice(0, 2).join(':') || '',
+      costo: clickInfo.event.extendedProps.costo || 0
+    };
+    this.mostrarDetalles = true;
+  }
+
+  cerrarDetalles() {
+    this.mostrarDetalles = false;
+    this.eventoSeleccionado = null;
+  }
+
+  eliminarCita() {
+    if (confirm('¿Está seguro de eliminar esta cita?')) {
+      this.eventoSeleccionado?.remove();
+      this.cerrarDetalles();
     }
+  }
+
+  guardarCambios() {
+    if (this.eventoSeleccionado) {
+      const tipoInfo = this.tiposCita.find(t => t.id === this.citaSeleccionada.tipo);
+
+      this.eventoSeleccionado.setProp('title', this.citaSeleccionada.nombre);
+      this.eventoSeleccionado.setExtendedProp('tipo', tipoInfo?.label);
+      this.eventoSeleccionado.setExtendedProp('costo', this.citaSeleccionada.costo);
+
+      const nuevaFecha = new Date(`${this.citaSeleccionada.fecha}T${this.citaSeleccionada.hora}`);
+      this.eventoSeleccionado.setStart(nuevaFecha);
+
+      if (tipoInfo) {
+        this.eventoSeleccionado.setProp('backgroundColor', tipoInfo.color);
+      }
+    }
+    this.cerrarDetalles();
   }
 
   createEventId() {
@@ -168,5 +224,10 @@ export class CalendarComponent implements OnInit {
 
   private getCalendarApi() {
     return this.calendarComponent.getApi();
+  }
+
+  private getTipoId(label: string): string {
+    const tipo = this.tiposCita.find(t => t.label === label);
+    return tipo ? tipo.id : '';
   }
 }
