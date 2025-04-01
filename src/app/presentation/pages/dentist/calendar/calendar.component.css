@@ -70,12 +70,11 @@
 
 :host ::ng-deep .fc-theme-standard td,
 :host ::ng-deep .fc-theme-standard th {
-  border: 1px solid #e5e5e5 !important;
+  border: none !important;
 }
 
 :host ::ng-deep .fc-theme-standard .fc-scrollgrid {
-  border: 1px solid #e5e5e5 !important;
-  border-top: none !important;
+  border: none !important;
 }
 
 :host ::ng-deep .fc-scrollgrid {
@@ -93,8 +92,8 @@
 
 :host ::ng-deep .fc-daygrid-day-frame {
   background: #ffffff;
-  margin: 0;
-  border-radius: 0;
+  margin: 4px;
+  border-radius: 8px;
   height: 100%;
   transition: all 0.3s ease;
   border: none;
@@ -136,7 +135,9 @@
 }
 
 :host ::ng-deep .fc-day-today {
-  background: #f8f9fa !important;
+  background: #ffffff !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 :host ::ng-deep .fc-day-today .fc-daygrid-day-number {
@@ -946,18 +947,6 @@
   font-weight: 600;
   color: #1d1d1f;
   letter-spacing: -0.02em;
-}
-
-:host ::ng-deep .fc-day-today {
-  background: rgba(0, 122, 255, 0.05) !important;
-}
-
-:host ::ng-deep .fc-day-today .fc-daygrid-day-number {
-  background: #007aff;
-  color: white;
-  border-radius: 12px;
-  width: 32px;
-  height: 32px;
 }
 
 .fab-button {
