@@ -1,6 +1,6 @@
 <aside class="sidebar">
   <nav>
-    <a class="menu-item" [routerLink]="['/inicio']" routerLinkActive="active">
+    <a class="menu-item" [routerLink]="['/dentist/main']" routerLinkActive="active">
       <i class="fa fa-home"></i>
       <span>Inicio</span>
     </a>
@@ -15,15 +15,15 @@
       <span>Citas</span>
     </a>
 
-    <a class="menu-item" [routerLink]="['/calendario']" routerLinkActive="active">
+    <a class="menu-item" [routerLink]="['/dentist/main/calendar']" routerLinkActive="active">
       <i class="far fa-calendar-alt"></i>
       <span>Calendario</span>
     </a>
   </nav>
 
-  <div class="section-label">Opciones</div>
+  <div class="section-label">Acciones</div>
 
-  <button class="action-button">
+  <button class="action-button" (click)="nuevoPaciente()">
     <i class="far fa-plus-circle"></i>
     <span>Nuevo Paciente</span>
   </button>

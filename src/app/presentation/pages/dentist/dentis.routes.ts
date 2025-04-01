@@ -7,12 +7,16 @@ import { AppointmentSchedulingComponent } from './appointment-scheduling/appoint
 import { CalendarComponent } from './calendar/calendar.component';
 
 export const dentistRoutes: Routes = [
-  { path: 'main', loadComponent: () => import('./main/main.component').then(m => m.MainComponent) },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'patients', component: PatientsComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'appointment-scheduling', component: AppointmentSchedulingComponent },
-  { path: 'chat', component: DentistChatComponent },
-  { path: 'calendar', component: CalendarComponent },
+  {
+    path: 'main', loadComponent: () => import('./main/main.component').then(m => m.MainComponent),
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'patients', component: PatientsComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'appointment-scheduling', component: AppointmentSchedulingComponent },
+      { path: 'chat', component: DentistChatComponent },
+      { path: 'calendar', component: CalendarComponent },
+    ]
+  },
   { path: '**', redirectTo: 'main', pathMatch: 'full' },
 ];
