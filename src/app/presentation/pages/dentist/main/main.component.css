@@ -18,4 +18,5 @@
   height: 100vh;
   overflow: hidden;
   padding: 5px;
+  width: calc(100% - 280px);
 }
