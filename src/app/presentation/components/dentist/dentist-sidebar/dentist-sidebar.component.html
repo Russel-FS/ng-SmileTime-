@@ -1,28 +1,30 @@
-<div class="sidebar">
-  <a class="menu-item" [routerLink]="['/inicio']" routerLinkActive="active">
-    <i class="fas fa-home"></i>
-    <span>Inicio</span>
-  </a>
+<aside class="sidebar">
+  <nav>
+    <a class="menu-item" [routerLink]="['/inicio']" routerLinkActive="active">
+      <i class="fa fa-home"></i>
+      <span>Inicio</span>
+    </a>
 
-  <a class="menu-item" [routerLink]="['/pacientes']" routerLinkActive="active">
-    <i class="fas fa-users"></i>
-    <span>Pacientess</span>
-  </a>
+    <a class="menu-item" [routerLink]="['/pacientes']" routerLinkActive="active">
+      <i class="fa fa-users"></i>
+      <span>Pacientes</span>
+    </a>
 
-  <a class="menu-item" [routerLink]="['/citas']" routerLinkActive="active">
-    <i class="fas fa-calendar-check"></i>
-    <span>Citas</span>
-  </a>
+    <a class="menu-item" [routerLink]="['/citas']" routerLinkActive="active">
+      <i class="far fa-calendar-check"></i>
+      <span>Citas</span>
+    </a>
 
-  <a class="menu-item" [routerLink]="['/calendario']" routerLinkActive="active">
-    <i class="fas fa-calendar-alt"></i>
-    <span>Calendario</span>
-  </a>
+    <a class="menu-item" [routerLink]="['/calendario']" routerLinkActive="active">
+      <i class="far fa-calendar-alt"></i>
+      <span>Calendario</span>
+    </a>
+  </nav>
 
   <div class="section-label">Opciones</div>
 
-  <button class="action-button" (click)="nuevoPaciente()">
-    <i class="fas fa-plus"></i>
+  <button class="action-button">
+    <i class="far fa-plus-circle"></i>
     <span>Nuevo Paciente</span>
   </button>
-</div>
+</aside>
