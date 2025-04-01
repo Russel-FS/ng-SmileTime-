@@ -1,11 +1,14 @@
 <div class="calendar-container">
-  <div class="date-selector">
-    <select class="month-select" [ngModel]="selectedMonth" (change)="changeMonth($event)">
-      <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
-    </select>
-    <select class="year-select" [ngModel]="selectedYear" (change)="changeYear($event)">
-      <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-    </select>
+  <div class="calendar-header">
+    <h1 class="calendar-title">Calendario</h1>
+    <div class="date-selector">
+      <select class="month-select" [ngModel]="selectedMonth" (change)="changeMonth($event)">
+        <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+      </select>
+      <select class="year-select" [ngModel]="selectedYear" (change)="changeYear($event)">
+        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+      </select>
+    </div>
   </div>
 
   <full-calendar #calendar [options]="calendarOptions"></full-calendar>
