@@ -37,7 +37,7 @@ export class CalendarComponent implements OnInit {
 
   tiposCita: CitaType[] = [
     { id: 'limpieza', label: 'Limpieza Dental', color: '#4477CE' },      // Azul sereno
-    { id: 'revision', label: 'Revisión General', color: '#27374D' },      // Azul oscuro elegante
+    { id: 'revision', label: 'Revisión General', color: '#27374D' },      // Azul oscuro 
     { id: 'emergencia', label: 'Emergencia', color: '#526D82' },         // Gris azulado
     { id: 'ortodonia', label: 'Ortodoncia', color: '#9DB2BF' },          // Gris suave
     { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#DDE6ED' }  // Gris muy claro
