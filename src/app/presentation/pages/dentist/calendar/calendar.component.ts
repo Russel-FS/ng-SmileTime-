@@ -119,43 +119,63 @@ export class CalendarComponent implements OnInit {
   }
 
   renderEventContent(eventInfo: any) {
+    const timeStr = eventInfo.timeText ?
+      new Date(eventInfo.event.start).toLocaleTimeString('es', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }).toUpperCase() : '';
+
     return {
       html: `
         <div class="event-content">
-          <div class="time">${eventInfo.timeText}</div>
-          <div class="title">${eventInfo.event.title}</div>
-          <div class="type">${eventInfo.event.extendedProps.tipo}</div>
+          <div class="event-info">
+            <div class="title">${eventInfo.event.title}</div>
+            <div class="event-details">
+              <span class="type">${eventInfo.event.extendedProps.tipo}</span>
+              <span class="time">${timeStr}</span>
+            </div>
+          </div>
         </div>
       `
     };
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    this.seleccionTemporal = selectInfo;
-    this.mostrarSelector = true;
-    this.nuevaCita = { tipo: '', nombre: '' };
+    const selectedDate = selectInfo.start;
+    this.citaSeleccionada = {
+      nombre: '',
+      tipo: '',
+      fecha: selectedDate.toISOString().split('T')[0],
+      hora: selectedDate.toTimeString().split(':').slice(0, 2).join(':'),
+      costo: 0
+    };
+    this.mostrarDetalles = true;
+    this.eventoSeleccionado = null;
   }
 
   confirmarCita() {
-    const { tipo, nombre } = this.nuevaCita;
-    if (tipo && nombre && this.tiposCita.find(t => t.id === tipo)) {
+    const { tipo, nombre } = this.citaSeleccionada;
+    if (tipo && nombre) {
       const tipoInfo = this.tiposCita.find(t => t.id === tipo);
+      const fechaHora = new Date(`${this.citaSeleccionada.fecha}T${this.citaSeleccionada.hora}`);
+
       const newEvent = {
         id: this.createEventId(),
         title: nombre,
-        start: this.seleccionTemporal.startStr,
-        end: this.seleccionTemporal.endStr,
+        start: fechaHora,
         backgroundColor: tipoInfo?.color,
         extendedProps: {
-          tipo: tipoInfo?.label
+          tipo: tipoInfo?.label,
+          costo: this.citaSeleccionada.costo
         }
       };
 
-      const calendarApi = this.seleccionTemporal.view.calendar;
+      const calendarApi = this.getCalendarApi();
       calendarApi.addEvent(newEvent);
       this.events.push(newEvent);
     }
-    this.cerrarSelector();
+    this.cerrarDetalles();
   }
 
   cerrarSelector() {
@@ -206,6 +226,26 @@ export class CalendarComponent implements OnInit {
       }
     }
     this.cerrarDetalles();
+  }
+
+  abrirNuevaCita() {
+    const now = new Date();
+    this.nuevaCita = { tipo: '', nombre: '' };
+    this.seleccionTemporal = {
+      startStr: now.toISOString(),
+      end: now,
+      view: {
+        calendar: this.getCalendarApi()
+      }
+    };
+    this.citaSeleccionada = {
+      nombre: '',
+      tipo: '',
+      fecha: now.toISOString().split('T')[0],
+      hora: now.toTimeString().split(':').slice(0, 2).join(':'),
+      costo: 0
+    };
+    this.mostrarDetalles = true;
   }
 
   createEventId() {

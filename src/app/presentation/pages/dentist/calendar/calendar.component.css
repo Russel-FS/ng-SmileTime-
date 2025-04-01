@@ -199,28 +199,50 @@
 }
 
 :host ::ng-deep .event-content {
-  padding: 2px;
+  padding: 6px 4px;
+}
+
+:host ::ng-deep .event-content .event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 :host ::ng-deep .event-content .title {
   color: #ffffff;
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+:host ::ng-deep .event-content .event-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
 :host ::ng-deep .event-content .type {
   color: rgba(255, 255, 255, 0.85);
   font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.02em;
+  flex-shrink: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-:host ::ng-deep .fc-event-title,
-:host ::ng-deep .fc-event-time,
-:host ::ng-deep .event-content {
-  color: #ffffff !important;
-  font-weight: 500;
+:host ::ng-deep .event-content .time {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
 :host ::ng-deep .event-content .title {
@@ -936,4 +958,51 @@
   border-radius: 12px;
   width: 32px;
   height: 32px;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background: #1a73e8;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 900;
+}
+
+.fab-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  background: #1557b0;
+}
+
+.fab-button svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fab-button:active {
+  animation: pulse 0.3s ease-out;
 }

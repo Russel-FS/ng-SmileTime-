@@ -12,67 +12,27 @@
 
   <full-calendar #calendar [options]="calendarOptions"></full-calendar>
 
-  <div class="sidebar-selector" *ngIf="mostrarSelector" [@slideInOut]>
-    <div class="sidebar-content">
-      <div class="sidebar-header">
-        <h3>Nueva Cita</h3>
-        <button class="close-button" (click)="cerrarSelector()">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <div class="sidebar-body">
-        <div class="form-group">
-          <label>Tipo de Cita</label>
-          <div class="tipo-buttons">
-            <button
-              *ngFor="let tipo of tiposCita"
-              [class.active]="nuevaCita.tipo === tipo.id"
-              (click)="nuevaCita.tipo = tipo.id"
-            >
-              <span class="dot" [style.background-color]="tipo.color"></span>
-              {{ tipo.label }}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="px-6 py-3 space-y-2">
-        <div class="form-group">
-          <label>Nombre del Paciente</label>
-          <input
-            type="text"
-            [(ngModel)]="nuevaCita.nombre"
-            placeholder="Ingrese el nombre del paciente"
-            class="modern-input"
-          />
-        </div>
-
-        <button
-          class="confirm-button"
-          (click)="confirmarCita()"
-          [disabled]="!nuevaCita.tipo || !nuevaCita.nombre"
-        >
-          Agendar Cita
-        </button>
-      </div>
-    </div>
-  </div>
+  <button class="fab-button" (click)="abrirNuevaCita()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
 
   <div class="sidebar-details" *ngIf="mostrarDetalles" [@slideInOut]>
     <div class="sidebar-content">
       <div class="sidebar-header">
-        <h3>Detalles de la Cita</h3>
+        <h3>{{ eventoSeleccionado ? 'Detalles de la Cita' : 'Nueva Cita' }}</h3>
         <button class="close-button" (click)="cerrarDetalles()">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -131,8 +91,15 @@
       </div>
 
       <div class="modal-actions">
-        <button class="delete-button" (click)="eliminarCita()">Eliminar Cita</button>
-        <button class="save-button" (click)="guardarCambios()">Guardar Cambios</button>
+        <button *ngIf="eventoSeleccionado" class="delete-button" (click)="eliminarCita()">
+          Eliminar Cita
+        </button>
+        <button
+          class="save-button"
+          (click)="eventoSeleccionado ? guardarCambios() : confirmarCita()"
+        >
+          {{ eventoSeleccionado ? 'Guardar Cambios' : 'Agendar Cita' }}
+        </button>
       </div>
     </div>
   </div>
