@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-dentist-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterOutlet],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dentist-sidebar.component.html',
   styleUrl: './dentist-sidebar.component.css'
 })

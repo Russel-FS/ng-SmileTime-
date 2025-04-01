@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DentistSidebarComponent } from "../../../components/dentist/dentist-sidebar/dentist-sidebar.component";
 import { RouterOutlet } from '@angular/router';
+import { CalendarComponent } from "../../client/appointments/calendar/calendar.component";
 
 @Component({
   selector: 'app-main',
