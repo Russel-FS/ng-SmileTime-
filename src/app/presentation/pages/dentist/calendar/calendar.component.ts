@@ -36,11 +36,11 @@ export class CalendarComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
   tiposCita: CitaType[] = [
-    { id: 'limpieza', label: 'Limpieza Dental', color: '#4477CE' },      // Azul sereno
-    { id: 'revision', label: 'Revisión General', color: '#27374D' },      // Azul oscuro 
-    { id: 'emergencia', label: 'Emergencia', color: '#526D82' },         // Gris azulado
-    { id: 'ortodonia', label: 'Ortodoncia', color: '#9DB2BF' },          // Gris suave
-    { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#DDE6ED' }  // Gris muy claro
+    { id: 'limpieza', label: 'Limpieza Dental', color: '#007AFF' },    // Azul Apple
+    { id: 'revision', label: 'Revisión General', color: '#5856D6' },    // Púrpura Apple
+    { id: 'emergencia', label: 'Emergencia', color: '#FF2D55' },        // Rosa Apple
+    { id: 'ortodonia', label: 'Ortodoncia', color: '#34C759' },         // Verde Apple
+    { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#FF9500' } // Naranja Apple
   ];
   mostrarSelector = false;
   nuevaCita: NuevaCita = { tipo: '', nombre: '' };

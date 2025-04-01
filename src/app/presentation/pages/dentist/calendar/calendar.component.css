@@ -352,18 +352,20 @@
 
 .sidebar-selector {
   position: fixed;
-  top: 0;
+  top: 20px;
   right: -420px;
-  width: 420px;
-  height: 100vh;
+  width: 380px;
+  height: calc(100vh - 40px);
   background: #ffffff;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
-  border-left: 1px solid #e5e5e5;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
 }
 
 .sidebar-selector.active {
-  transform: translateX(-420px);
+  transform: translateX(-440px);
 }
 
 .sidebar-content {
@@ -605,19 +607,20 @@
 
 .sidebar-details {
   position: fixed;
-  top: 0;
+  top: 20px;
   right: -480px;
-  width: 480px;
-  height: 100vh;
+  width: 440px;
+  height: calc(100vh - 40px);
   background: #ffffff;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   z-index: 1000;
-  border-left: 1px solid #e5e5e5;
+  border-radius: 24px;
+  margin-right: 20px;
 }
 
 .sidebar-details.active {
-  transform: translateX(-480px);
+  transform: translateX(-500px);
 }
 
 .sidebar-details .sidebar-content {
@@ -723,4 +726,143 @@
 .save-button:hover {
   background: #0077ed;
   transform: scale(1.02);
+}
+
+.sidebar-selector,
+.sidebar-details {
+  position: fixed;
+  top: 24px;
+  height: calc(100vh - 48px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 32px;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-selector {
+  right: -420px;
+  width: 380px;
+  margin-right: 24px;
+}
+
+.sidebar-details {
+  right: -480px;
+  width: 440px;
+  margin-right: 24px;
+}
+
+.tipo-buttons button {
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tipo-buttons button:hover {
+  background: rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+.tipo-buttons button.active {
+  background: #9db2bf;
+  color: white;
+}
+
+.modern-input {
+  padding: 18px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(0, 0, 0, 0.02);
+  font-size: 15px;
+  transition: all 0.3s;
+}
+
+.modern-input:focus {
+  background: rgba(0, 0, 0, 0.04);
+  outline: none;
+}
+
+.confirm-button,
+.save-button {
+  padding: 18px;
+  border-radius: 16px;
+  background: #000;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.confirm-button:hover:not(:disabled),
+.save-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #1a1a1a;
+}
+
+.delete-button {
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 45, 85, 0.1);
+  color: #ff2d55;
+  font-weight: 600;
+  border: none;
+}
+
+.delete-button:hover {
+  background: rgba(255, 45, 85, 0.15);
+}
+
+:host ::ng-deep .fc-event {
+  border: none !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.month-select,
+.year-select {
+  padding: 14px 20px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(0, 0, 0, 0.02);
+  font-size: 15px;
+  font-weight: 500;
+  color: #1d1d1f;
+  transition: all 0.3s;
+}
+
+.month-select:hover,
+.year-select:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.calendar-header {
+  padding: 24px 32px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.calendar-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+}
+
+:host ::ng-deep .fc-day-today {
+  background: rgba(0, 122, 255, 0.05) !important;
+}
+
+:host ::ng-deep .fc-day-today .fc-daygrid-day-number {
+  background: #007aff;
+  color: white;
+  border-radius: 12px;
+  width: 32px;
+  height: 32px;
 }
