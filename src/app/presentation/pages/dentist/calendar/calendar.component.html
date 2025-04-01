@@ -1,6 +1,5 @@
-<div class="calendar-container">
+<div class="calendar-container" [class.sidebar-open]="mostrarSelector || mostrarDetalles">
   <div class="calendar-header">
-    <h1 class="calendar-title">Calendario</h1>
     <div class="date-selector">
       <select class="month-select" [ngModel]="selectedMonth" (change)="changeMonth($event)">
         <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
@@ -13,7 +12,7 @@
 
   <full-calendar #calendar [options]="calendarOptions"></full-calendar>
 
-  <div class="sidebar-selector" [class.active]="mostrarSelector">
+  <div class="sidebar-selector" *ngIf="mostrarSelector" [@slideInOut]>
     <div class="sidebar-content">
       <div class="sidebar-header">
         <h3>Nueva Cita</h3>
@@ -69,73 +68,72 @@
       </div>
     </div>
   </div>
-</div>
 
-<!--  sidebar -->
-<div class="sidebar-details" [class.active]="mostrarDetalles">
-  <div class="sidebar-content">
-    <div class="sidebar-header">
-      <h3>Detalles de la Cita</h3>
-      <button class="close-button" (click)="cerrarDetalles()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <div class="sidebar-body">
-      <div class="form-group">
-        <label>Nombre del Paciente</label>
-        <input
-          type="text"
-          [(ngModel)]="citaSeleccionada.nombre"
-          class="modern-input"
-          placeholder="Nombre completo"
-        />
+  <div class="sidebar-details" *ngIf="mostrarDetalles" [@slideInOut]>
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <h3>Detalles de la Cita</h3>
+        <button class="close-button" (click)="cerrarDetalles()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
-      <div class="form-group">
-        <label>Tipo de Cita</label>
-        <select [(ngModel)]="citaSeleccionada.tipo" class="modern-input">
-          <option value="">Selecciona el tipo de cita</option>
-          <option *ngFor="let tipo of tiposCita" [value]="tipo.id">{{ tipo.label }}</option>
-        </select>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group half">
-          <label>Fecha de la Cita</label>
-          <input type="date" [(ngModel)]="citaSeleccionada.fecha" class="modern-input" />
+      <div class="sidebar-body">
+        <div class="form-group">
+          <label>Nombre del Paciente</label>
+          <input
+            type="text"
+            [(ngModel)]="citaSeleccionada.nombre"
+            class="modern-input"
+            placeholder="Nombre completo"
+          />
         </div>
-        <div class="form-group half">
-          <label>Hora</label>
-          <input type="time" [(ngModel)]="citaSeleccionada.hora" class="modern-input" />
+
+        <div class="form-group">
+          <label>Tipo de Cita</label>
+          <select [(ngModel)]="citaSeleccionada.tipo" class="modern-input">
+            <option value="">Selecciona el tipo de cita</option>
+            <option *ngFor="let tipo of tiposCita" [value]="tipo.id">{{ tipo.label }}</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Fecha de la Cita</label>
+            <input type="date" [(ngModel)]="citaSeleccionada.fecha" class="modern-input" />
+          </div>
+          <div class="form-group half">
+            <label>Hora</label>
+            <input type="time" [(ngModel)]="citaSeleccionada.hora" class="modern-input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Costo de la Cita</label>
+          <input
+            type="number"
+            [(ngModel)]="citaSeleccionada.costo"
+            class="modern-input"
+            placeholder="$ 0.00"
+          />
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Costo de la Cita</label>
-        <input
-          type="number"
-          [(ngModel)]="citaSeleccionada.costo"
-          class="modern-input"
-          placeholder="$ 0.00"
-        />
+      <div class="modal-actions">
+        <button class="delete-button" (click)="eliminarCita()">Eliminar Cita</button>
+        <button class="save-button" (click)="guardarCambios()">Guardar Cambios</button>
       </div>
-    </div>
-
-    <div class="modal-actions">
-      <button class="delete-button" (click)="eliminarCita()">Eliminar Cita</button>
-      <button class="save-button" (click)="guardarCambios()">Guardar Cambios</button>
     </div>
   </div>
 </div>

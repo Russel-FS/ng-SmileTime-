@@ -7,6 +7,28 @@
   z-index: 1;
 }
 
+.calendar-container::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+  z-index: 999;
+}
+
+.calendar-container.sidebar-open::after {
+  opacity: 1;
+  visibility: visible;
+}
+
 :host {
   display: block;
   width: 100vw;
@@ -18,8 +40,12 @@
   height: 100vh !important;
   width: 100vw !important;
   background: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  border: 1px solid #e5e5e5;
+  font-family:
+    'Google Sans',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  border: none !important;
   border-top: none !important;
   border-left: none !important;
   border-right: none !important;
@@ -110,15 +136,15 @@
 }
 
 :host ::ng-deep .fc-day-today {
-  background: #f8f8f8 !important;
+  background: #f8f9fa !important;
 }
 
 :host ::ng-deep .fc-day-today .fc-daygrid-day-number {
-  background: #666666;
+  background: #1a73e8;
   color: white;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,20 +183,19 @@
 }
 
 :host ::ng-deep .fc-event {
+  background: #fff;
   border: none !important;
-  border-radius: 16px !important;
-  padding: 6px 16px !important; /* reducido de 12px a 6px el padding vertical */
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
   margin: 2px 4px !important;
   font-size: 13px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(60, 64, 67, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 :host ::ng-deep .fc-event:hover {
+  box-shadow: 0 4px 12px rgba(60, 64, 67, 0.2);
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  filter: brightness(1.02);
 }
 
 :host ::ng-deep .event-content {
@@ -354,27 +379,41 @@
 
 .sidebar-selector {
   position: fixed;
-  top: 20px;
-  right: -420px;
+  top: 24px;
+  right: 24px;
   width: 380px;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 48px);
   background: #ffffff;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 9999;
-  border-radius: 24px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-  margin-right: 20px;
+  border-radius: 28px;
+  box-shadow:
+    0 1px 3px rgba(60, 64, 67, 0.3),
+    0 4px 8px 3px rgba(60, 64, 67, 0.15);
+  z-index: 1000;
+  transform: none;
 }
 
-.sidebar-selector.active {
-  transform: translateX(-440px);
+.sidebar-details {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 440px;
+  height: calc(100vh - 48px);
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow:
+    0 1px 3px rgba(60, 64, 67, 0.3),
+    0 4px 8px 3px rgba(60, 64, 67, 0.15);
+  z-index: 1000;
+  transform: none;
 }
 
 .sidebar-content {
   height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  padding: 0;
 }
 
 .sidebar-header {
@@ -418,19 +457,19 @@
 .tipo-buttons button {
   display: flex;
   align-items: center;
-  padding: 16px;
-  border: 1px solid #e5e5e5;
-  border-radius: 14px;
-  background: #ffffff;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 24px;
+  background: #f8f9fa;
   font-size: 15px;
   transition: all 0.2s;
-  color: #1d1d1f;
+  color: #3c4043;
+  font-family: 'Google Sans', sans-serif;
 }
 
 .tipo-buttons button.active {
-  background: rgba(0, 122, 255, 0.1);
-  border-color: #007aff;
-  color: #007aff;
+  background: #e8f0fe;
+  color: #1a73e8;
 }
 
 .tipo-buttons .dot {
@@ -442,12 +481,20 @@
 
 .modern-input {
   width: 100%;
-  padding: 16px;
-  border-radius: 14px;
+  padding: 12px 16px;
+  border-radius: 24px;
   font-size: 15px;
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
+  background: #f8f9fa;
+  border: none;
+  color: #3c4043;
+  font-family: 'Google Sans', sans-serif;
   margin-top: 8px;
+  transition: background 0.2s;
+}
+
+.modern-input:focus {
+  background: #e8f0fe;
+  outline: none;
 }
 
 .action-buttons {
@@ -456,20 +503,21 @@
 
 .confirm-button {
   width: 100%;
-  padding: 16px;
-  background: #000000;
+  padding: 12px 24px;
+  background: #1a73e8;
   color: white;
   border: none;
-  border-radius: 14px;
+  border-radius: 24px;
+  font-family: 'Google Sans', sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
   transition: all 0.2s;
 }
 
 .confirm-button:hover:not(:disabled) {
-  background: #333333;
-  transform: scale(1.02);
+  background: #1557b0;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
 }
 
 .confirm-button:disabled {
@@ -484,13 +532,13 @@
 
 .month-select,
 .year-select {
-  padding: 0.75rem 2rem 0.75rem 1rem;
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 12px;
-  font-size: 15px;
+  padding: 8px 32px 8px 16px;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: #3c4043;
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -498,16 +546,22 @@
   background-position: right 0.5rem center;
   background-size: 1em;
   padding-right: 2.5rem;
+  transition: background 0.2s;
+}
+
+.month-select:hover,
+.year-select:hover {
+  background: #f1f3f4;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 2rem;
-  background: #ffffff;
+  padding: 24px 32px;
+  background: #fff;
   margin-bottom: 0;
-  border-bottom: none;
+  border-bottom: 1px solid #f1f3f4;
 }
 
 .calendar-title {
@@ -588,23 +642,36 @@
 
 .delete-button {
   padding: 12px 24px;
-  border-radius: 12px;
-  background: #ff3b30;
-  color: white;
+  border-radius: 24px;
+  background: #fce8e6;
+  color: #d93025;
   border: none;
+  font-family: 'Google Sans', sans-serif;
   font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-button:hover {
+  background: #fad2cf;
 }
 
 .save-button {
   padding: 12px 24px;
-  border-radius: 12px;
-  background: #007aff;
+  border-radius: 24px;
+  background: #1a73e8;
   color: white;
   border: none;
+  font-family: 'Google Sans', sans-serif;
   font-weight: 500;
   flex: 1;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #1557b0;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
 }
 
 .sidebar-details {
@@ -614,17 +681,16 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-radius: 40px;
-  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 28px;
+  box-shadow:
+    0 1px 3px rgba(60, 64, 67, 0.3),
+    0 4px 8px 3px rgba(60, 64, 67, 0.15);
   border: none;
-  right: -480px;
+  right: 24px;
   width: 440px;
   margin-right: 24px;
   z-index: 9999;
-}
-
-.sidebar-details.active {
-  transform: translateX(-500px);
+  transform: none;
 }
 
 .sidebar-details .sidebar-content {
@@ -747,13 +813,13 @@
 }
 
 .sidebar-selector {
-  right: -420px;
+  right: 24px;
   width: 380px;
   margin-right: 24px;
 }
 
 .sidebar-details {
-  right: -480px;
+  right: 24px;
   width: 440px;
   margin-right: 24px;
 }
