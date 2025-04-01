@@ -1006,3 +1006,150 @@
 .fab-button:active {
   animation: pulse 0.3s ease-out;
 }
+
+@media (max-width: 768px) {
+  .sidebar-details {
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .calendar-header {
+    padding: 16px;
+  }
+
+  .date-selector {
+    width: 100%;
+  }
+
+  .month-select,
+  .year-select {
+    flex: 1;
+    font-size: 13px;
+    padding: 10px 24px 10px 12px;
+  }
+
+  :host ::ng-deep .fc-daygrid-day-number {
+    font-size: 12px;
+  }
+
+  :host ::ng-deep .fc-col-header-cell {
+    font-size: 10px;
+  }
+
+  :host ::ng-deep .event-content {
+    padding: 3px 2px;
+  }
+
+  :host ::ng-deep .event-content .title {
+    font-size: 11px;
+  }
+
+  :host ::ng-deep .event-content .event-details {
+    gap: 4px;
+  }
+
+  :host ::ng-deep .event-content .type {
+    font-size: 9px;
+  }
+
+  :host ::ng-deep .event-content .time {
+    font-size: 9px;
+    padding: 1px 3px;
+  }
+
+  :host ::ng-deep .fc-event {
+    padding: 2px 8px !important;
+    margin: 1px 2px !important;
+  }
+
+  .fab-button {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .sidebar-details .sidebar-header {
+    padding: 1rem;
+  }
+
+  .sidebar-details .sidebar-body {
+    padding: 1rem;
+  }
+
+  .sidebar-details .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group.half {
+    width: 100%;
+  }
+
+  .modal-actions {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .modern-input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  :host ::ng-deep .fc-more-link {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+
+  :host ::ng-deep .event-content .event-details.mobile {
+    justify-content: flex-end;
+  }
+
+  :host ::ng-deep .event-content .time {
+    font-size: 10px;
+    padding: 1px 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin-left: auto;
+  }
+
+  :host ::ng-deep .fc-event {
+    padding: 4px 8px !important;
+    margin: 1px !important;
+    min-height: 0 !important;
+  }
+
+  :host ::ng-deep .event-content .title {
+    font-size: 11px;
+    line-height: 1.2;
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep .fc-toolbar-title {
+    font-size: 16px !important;
+  }
+
+  :host ::ng-deep .fc-daygrid-day-events {
+    margin: 0;
+  }
+
+  :host ::ng-deep .fc-event {
+    margin: 1px !important;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .date-selector {
+    justify-content: space-between;
+  }
+}

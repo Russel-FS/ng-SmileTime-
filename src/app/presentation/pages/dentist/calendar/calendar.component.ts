@@ -103,7 +103,8 @@ export class CalendarComponent implements OnInit {
     eventContent: this.renderEventContent.bind(this),
     views: {
       dayGridMonth: {
-        dayMaxEvents: 1
+        dayMaxEvents: window.innerWidth < 768 ? 2 : 3,
+        eventMinHeight: window.innerWidth < 768 ? 20 : 24,
       }
     },
     events: [],
@@ -119,20 +120,45 @@ export class CalendarComponent implements OnInit {
   }
 
   renderEventContent(eventInfo: any) {
+    const isMobile = window.innerWidth < 768;
+
+    // Formatear hora para móviles de manera más compacta
     const timeStr = eventInfo.timeText ?
       new Date(eventInfo.event.start).toLocaleTimeString('es', {
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
-      }).toUpperCase() : '';
+        hour12: isMobile
+      }).replace(/\s/g, '').toLowerCase() : '';
 
+    // Acortar el tipo de cita para móviles
+    const typeLabel = isMobile ?
+      eventInfo.event.extendedProps.tipo.split(' ')[0] :
+      eventInfo.event.extendedProps.tipo;
+
+    // Renderizar diferente para móviles
+    if (isMobile) {
+      return {
+        html: `
+          <div class="event-content">
+            <div class="event-info">
+              <div class="title">${eventInfo.event.title}</div>
+              <div class="event-details mobile">
+                <span class="time">${timeStr}</span>
+              </div>
+            </div>
+          </div>
+        `
+      };
+    }
+
+    // Versión desktop
     return {
       html: `
         <div class="event-content">
           <div class="event-info">
             <div class="title">${eventInfo.event.title}</div>
             <div class="event-details">
-              <span class="type">${eventInfo.event.extendedProps.tipo}</span>
+              <span class="type">${typeLabel}</span>
               <span class="time">${timeStr}</span>
             </div>
           </div>
