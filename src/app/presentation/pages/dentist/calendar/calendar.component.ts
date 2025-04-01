@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -7,7 +7,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { isPlatformBrowser } from '@angular/common';
 
 interface CitaType {
   id: string;
@@ -77,9 +76,7 @@ export class CalendarComponent implements OnInit {
   };
   eventoSeleccionado: any = null;
 
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor() {
     const today = new Date();
     this.selectedMonth = today.getMonth();
     this.selectedYear = today.getFullYear();
@@ -119,15 +116,7 @@ export class CalendarComponent implements OnInit {
   events: any[] = [];
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.initializeWindowDependentCode();
-    }
-  }
 
-  private initializeWindowDependentCode() {
-    // Mover aquí el código de la línea 106 que usa window
-    // Por ejemplo:
-    // this.someProperty = window.something;
   }
 
   renderEventContent(eventInfo: any) {

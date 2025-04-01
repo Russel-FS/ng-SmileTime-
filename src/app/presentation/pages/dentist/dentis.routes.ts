@@ -18,5 +18,6 @@ export const dentistRoutes: Routes = [
       { path: 'chat', component: DentistChatComponent },
     ]
   },
+  { path: 'calendar', component: CalendarComponent },
   { path: '**', redirectTo: 'main', pathMatch: 'full' },
 ];
