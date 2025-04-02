@@ -29,7 +29,8 @@ export class DentistRegisterComponent {
         if (this.registrationForm.valid) {
             const newDentist: Dentist = {
                 ...this.registrationForm.value,
-                active: true
+                active: true,
+                role: 'dentist',
             };
             console.log('Nuevo dentista:', newDentist);
             this.registrationForm.reset();

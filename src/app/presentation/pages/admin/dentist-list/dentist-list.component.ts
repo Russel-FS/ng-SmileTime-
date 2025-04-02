@@ -33,7 +33,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'juan.perez@ejemplo.com',
             specialization: 'Ortodoncista',
             licenseNumber: 'LIC-001',
-            active: true
+            active: true,
+            role: 'dentist'
         },
         {
             id: 2,
@@ -41,7 +42,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'maria.gonzalez@ejemplo.com',
             specialization: 'Endodoncista',
             licenseNumber: 'LIC-002',
-            active: true
+            active: true,
+            role: 'dentist'
         },
         {
             id: 3,
@@ -49,7 +51,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'carlos.rodriguez@ejemplo.com',
             specialization: 'Cirujano Maxilofacial',
             licenseNumber: 'LIC-0034',
-            active: false
+            active: false,
+            role: 'dentist'
         },
         {
             id: 4,
@@ -57,7 +60,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'ana.martinez@ejemplo.com',
             specialization: 'Periodoncista',
             licenseNumber: 'LIC-0045',
-            active: true
+            active: true,
+            role: 'dentist'
         },
         {
             id: 6,
@@ -65,7 +69,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'ana.carlos@ejemplo.com',
             specialization: 'Periodoncista',
             licenseNumber: 'LIC-0047',
-            active: true
+            active: true,
+            role: 'dentist'
         },
         {
             id: 7,
@@ -73,7 +78,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'ana.solano@ejemplo.com',
             specialization: 'Periodoncista',
             licenseNumber: 'LIC-0048',
-            active: true
+            active: true,
+            role: 'dentist'
         },
         {
             id: 8,
@@ -81,7 +87,8 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             email: 'russel.flores@ejemplo.com',
             specialization: 'Periodoncista',
             licenseNumber: 'LIC-0049',
-            active: true
+            active: true,
+            role: 'dentist'
         },
     ];
 

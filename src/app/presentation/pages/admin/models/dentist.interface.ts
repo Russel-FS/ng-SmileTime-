@@ -5,4 +5,5 @@ export interface Dentist {
     specialization: string;
     licenseNumber: string;
     active: boolean;
+    role: 'dentist';
 }
