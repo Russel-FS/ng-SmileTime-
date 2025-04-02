@@ -10,6 +10,7 @@ export const dentistRoutes: Routes = [
   {
     path: 'main', loadComponent: () => import('./main/main.component').then(m => m.MainComponent),
     children: [
+      { path: 'home', loadComponent: () => import('./dentist-home/dentist-home.component').then(m => m.DentistHomeComponent), },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'patients', component: PatientsComponent },
       { path: 'profile', component: ProfileComponent },
@@ -19,5 +20,5 @@ export const dentistRoutes: Routes = [
     ]
   },
   { path: 'calendar', component: CalendarComponent },
-  { path: '**', redirectTo: 'main', pathMatch: 'full' },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
