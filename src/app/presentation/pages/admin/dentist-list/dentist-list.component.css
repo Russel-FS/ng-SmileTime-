@@ -1,5 +1,8 @@
 .list-container {
   padding: 20px;
+  background: #fff; /* fondo blanco para minimalismo */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .list-header {
@@ -15,7 +18,9 @@
 }
 
 th.mat-header-cell {
-  background: white;
+  background: #f0f0f0; /* fondo sutil en encabezado */
+  color: #1c1c1e; /* texto moderno */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   position: sticky;
   top: 0;
   z-index: 1;
