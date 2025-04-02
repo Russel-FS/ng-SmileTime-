@@ -1,2 +1,11 @@
-<router-outlet />
- 
+<!-- carga spinner -->
+<div
+  *ngIf="isLoading"
+  class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden flex flex-col items-center justify-center"
+>
+  <div
+    class="w-12 h-12 rounded-full animate-spin border-4 border-solid border-blue-400 border-t-transparent"
+  ></div>
+</div>
+<!-- Main contentenido-->
+<router-outlet></router-outlet>

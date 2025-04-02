@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, PreloadAllModules } from '@angular/router';
 
 export const dentistRoutes: Routes = [
   {
@@ -41,3 +41,7 @@ export const dentistRoutes: Routes = [
   },
   { path: '**', redirectTo: 'main/home', pathMatch: 'full' },
 ];
+
+export const routingConfiguration = {
+  preloadingStrategy: PreloadAllModules
+};
