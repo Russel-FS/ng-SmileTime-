@@ -1,5 +1,5 @@
 export interface Dentist {
-    id?: string;
+    id: number;
     name: string;
     email: string;
     specialization: string;

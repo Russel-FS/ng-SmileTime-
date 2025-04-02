@@ -11,7 +11,6 @@ import { DentistListComponent } from "../dentist-list/dentist-list.component";
     standalone: true,
     imports: [
         CommonModule,
-        MatCardModule,
         DentistRegisterComponent,
         DentistListComponent
     ]

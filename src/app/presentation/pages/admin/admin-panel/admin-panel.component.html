@@ -1,11 +1,16 @@
-<div class="admin-panel">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Panel de Administración de Odontólogos</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+<main class="admin-container">
+  <header class="admin-header">
+    <h1 class="title">Panel Administrativo</h1>
+    <p class="subtitle">Gestión de Odontólogos</p>
+  </header>
+
+  <section class="admin-content">
+    <div class="panel-card register-panel">
       <app-dentist-register></app-dentist-register>
+    </div>
+
+    <div class="panel-card list-panel">
       <app-dentist-list></app-dentist-list>
-    </mat-card-content>
-  </mat-card>
-</div>
+    </div>
+  </section>
+</main>

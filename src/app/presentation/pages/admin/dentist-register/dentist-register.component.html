@@ -1,27 +1,35 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
-  <h2>Registrar Nuevo Odontólogo</h2>
+<div class="register-container">
+  <h2 class="title">Registro de Odontólogo</h2>
+  <p class="subtitle">Completa la información para crear una nueva cuenta</p>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Nombre Completo</mat-label>
-    <input matInput formControlName="name" placeholder="Ingrese el nombre completo" />
-  </mat-form-field>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="register-form">
+    <div class="form-group">
+      <input type="text" formControlName="name" class="input-field" />
+      <label class="floating-label">Nombre Completo</label>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Correo Electrónico</mat-label>
-    <input matInput formControlName="email" placeholder="Ingrese el correo electrónico" />
-  </mat-form-field>
+    <div class="form-group">
+      <input type="email" formControlName="email" class="input-field" />
+      <label class="floating-label">Correo Electrónico</label>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Especialización</mat-label>
-    <input matInput formControlName="specialization" placeholder="Ingrese la especialización" />
-  </mat-form-field>
+    <div class="form-group">
+      <select formControlName="specialization" class="input-field">
+        <option value="" disabled selected>Selecciona una opción</option>
+        <option value="general">Odontología General</option>
+        <option value="ortodoncista">Ortodoncista</option>
+        <option value="endodoncista">Endodoncista</option>
+      </select>
+      <label class="floating-label">Especialización</label>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Número de Licencia</mat-label>
-    <input matInput formControlName="licenseNumber" placeholder="Ingrese el número de licencia" />
-  </mat-form-field>
+    <div class="form-group">
+      <input type="text" formControlName="licenseNumber" class="input-field" />
+      <label class="floating-label">Número de Licencia</label>
+    </div>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="!registrationForm.valid">
-    Registrar Odontólogo
-  </button>
-</form>
+    <button type="submit" class="submit-button" [disabled]="!registrationForm.valid">
+      Continuar
+    </button>
+  </form>
+</div>

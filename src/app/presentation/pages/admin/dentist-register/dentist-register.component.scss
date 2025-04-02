@@ -14,3 +14,142 @@
     align-self: center;
   }
 }
+
+.register-container {
+  max-width: 440px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: var(--surface-color);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    color: var(--secondary-color);
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #86868b;
+  margin-bottom: 3rem;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .form-group {
+    position: relative;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+
+  button {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-color);
+    transition: background-color 0.3s ease;
+
+    &:hover:not([disabled]) {
+      background-color: var(--secondary-color);
+    }
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.input-field,
+.select-field {
+  width: 100%;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  border: none;
+  border-bottom: 1px solid #86868b;
+  background: transparent;
+  transition: all 0.3s;
+  color: var(--text-color);
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+
+  &:focus + .floating-label,
+  &:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-1.5rem) scale(0.85);
+    color: var(--accent-color);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.floating-label {
+  position: absolute;
+  left: 0;
+  top: 1rem;
+  color: #86868b;
+  pointer-events: none;
+  transition: 0.3s all;
+  transform-origin: left top;
+}
+
+select.input-field {
+  cursor: pointer;
+  appearance: none;
+  padding-right: 2rem;
+  background: url('data:image/svg+xml,...') no-repeat right center;
+}
+
+.submit-button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: white;
+  background: var(--accent-color);
+  border: none;
+  border-radius: 980px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background: #0071e3;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 640px) {
+  .register-container {
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+}

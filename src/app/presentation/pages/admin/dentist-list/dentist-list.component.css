@@ -1,0 +1,22 @@
+.list-container {
+  padding: 20px;
+}
+
+.list-header {
+  margin-bottom: 20px;
+}
+
+.table-container {
+  width: 100%;
+}
+
+.dentist-table {
+  width: 100%;
+}
+
+th.mat-header-cell {
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
