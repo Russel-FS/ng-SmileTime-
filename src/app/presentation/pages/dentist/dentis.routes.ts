@@ -1,4 +1,5 @@
 import { Routes, PreloadAllModules } from '@angular/router';
+import { CalendarComponent } from './calendar/calendar.component';
 
 export const dentistRoutes: Routes = [
   {
@@ -36,8 +37,7 @@ export const dentistRoutes: Routes = [
     ]
   },
   {
-    path: 'calendar',
-    loadComponent: () => import('./calendar/calendar.component').then(m => m.CalendarComponent)
+    path: 'calendar', component: CalendarComponent
   },
   { path: '**', redirectTo: 'main/home', pathMatch: 'full' },
 ];
