@@ -1,0 +1,27 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
+  <h2>Registrar Nuevo Odontólogo</h2>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre Completo</mat-label>
+    <input matInput formControlName="name" placeholder="Ingrese el nombre completo" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Correo Electrónico</mat-label>
+    <input matInput formControlName="email" placeholder="Ingrese el correo electrónico" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Especialización</mat-label>
+    <input matInput formControlName="specialization" placeholder="Ingrese la especialización" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Número de Licencia</mat-label>
+    <input matInput formControlName="licenseNumber" placeholder="Ingrese el número de licencia" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!registrationForm.valid">
+    Registrar Odontólogo
+  </button>
+</form>

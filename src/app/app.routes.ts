@@ -7,6 +7,7 @@ import { clientRoutes } from './presentation/pages/client/client.routes';
 import { dentistRoutes } from './presentation/pages/dentist/dentis.routes';
 import { authRoutes } from './presentation/pages/auth/auth.routes';
 import { SearchComponent } from './presentation/components/search/search.component';
+import { adminRoutes } from './presentation/pages/admin/routes';
 
 export const routes: Routes = [
   {
@@ -32,7 +33,7 @@ export const routes: Routes = [
     children: dentistRoutes,
   },
   {
-    path: 'search',
-    component: SearchComponent,
+    path: 'admin',
+    children: adminRoutes,
   },
 ];

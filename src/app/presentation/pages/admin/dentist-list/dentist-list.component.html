@@ -1,0 +1,42 @@
+<div class="dentist-list">
+  <h2>Lista de Odontólogos Registrados</h2>
+
+  <mat-table [dataSource]="dentists" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let dentist"> {{ dentist.name }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+      <mat-cell *matCellDef="let dentist"> {{ dentist.email }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="specialization">
+      <mat-header-cell *matHeaderCellDef> Especialización </mat-header-cell>
+      <mat-cell *matCellDef="let dentist"> {{ dentist.specialization }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="licenseNumber">
+      <mat-header-cell *matHeaderCellDef> Número de Licencia </mat-header-cell>
+      <mat-cell *matCellDef="let dentist"> {{ dentist.licenseNumber }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+      <mat-cell *matCellDef="let dentist"> {{ dentist.active ? 'Activo' : 'Inactivo' }} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+      <mat-cell *matCellDef="let dentist">
+        <button mat-button color="primary" (click)="toggleStatus(dentist)">
+          {{ dentist.active ? 'Desactivar' : 'Activar' }}
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>
