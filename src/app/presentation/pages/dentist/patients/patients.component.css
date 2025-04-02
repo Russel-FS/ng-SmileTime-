@@ -170,6 +170,65 @@
   border-top: 1px solid #eee;
 }
 
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  color: #5e6c84;
+}
+
+.detail-item i {
+  font-size: 20px;
+}
+
+.actions-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.action-button {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  color: #5e6c84;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.action-button i {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button:hover {
+  background: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.action-button.primary {
+  background: var(--md-sys-color-primary);
+  color: white;
+  border: none;
+}
+
+.action-button.primary:hover {
+  background: #005252;
+}
+
 .fab-button {
   position: fixed;
   right: 32px;

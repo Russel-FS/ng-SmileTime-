@@ -75,14 +75,18 @@
             <span>{{ patient.phone }}</span>
           </div>
           <div class="detail-item">
-            <i class="material-icons">event</i>
-            <span>Última visita: {{ patient.lastVisit | date: 'dd MMM, yyyy' }}</span>
+            <i class="material-icons">calendar_today</i>
+            <span>Última visita: {{ patient.lastVisit | date: 'dd MMM yyyy' }}</span>
           </div>
           <div class="actions-row">
             <button class="action-button primary" (click)="viewDetails(patient)">
+              <i class="material-icons">history</i>
               Ver Historial
             </button>
-            <button class="action-button" (click)="editPatient(patient)">Editar</button>
+            <button class="action-button" (click)="editPatient(patient)">
+              <i class="material-icons">edit</i>
+              Editar
+            </button>
           </div>
         </div>
       </div>
