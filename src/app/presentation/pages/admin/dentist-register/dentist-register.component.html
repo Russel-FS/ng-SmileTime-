@@ -4,7 +4,12 @@
 
   <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="apple-form">
     <div class="form-field">
-      <input type="text" formControlName="name" class="apple-input" placeholder="Nombre Completo" />
+      <input
+        type="text"
+        formControlName="fullName"
+        class="apple-input"
+        placeholder="Nombre Completo"
+      />
     </div>
 
     <div class="form-field">
@@ -27,10 +32,10 @@
 
     <div class="form-field">
       <input
-        type="text"
-        formControlName="licenseNumber"
+        type="password"
+        formControlName="password"
         class="apple-input"
-        placeholder="Número de Licencia"
+        placeholder="Contraseña"
       />
     </div>
 

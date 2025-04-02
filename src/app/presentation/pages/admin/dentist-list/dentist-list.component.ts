@@ -32,64 +32,10 @@ export class DentistListComponent implements OnInit, AfterViewInit {
             name: 'Dr. flores Pérez',
             email: 'juan.perez@ejemplo.com',
             specialization: 'Ortodoncista',
-            licenseNumber: 'LIC-001',
             active: true,
             role: 'dentist'
         },
-        {
-            id: 2,
-            name: 'Dra. María González',
-            email: 'maria.gonzalez@ejemplo.com',
-            specialization: 'Endodoncista',
-            licenseNumber: 'LIC-002',
-            active: true,
-            role: 'dentist'
-        },
-        {
-            id: 3,
-            name: 'Dr. Carlos Rodríguez',
-            email: 'carlos.rodriguez@ejemplo.com',
-            specialization: 'Cirujano Maxilofacial',
-            licenseNumber: 'LIC-0034',
-            active: false,
-            role: 'dentist'
-        },
-        {
-            id: 4,
-            name: 'flores. Ana Martínez',
-            email: 'ana.martinez@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0045',
-            active: true,
-            role: 'dentist'
-        },
-        {
-            id: 6,
-            name: 'RR. Ana Martínez',
-            email: 'ana.carlos@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0047',
-            active: true,
-            role: 'dentist'
-        },
-        {
-            id: 7,
-            name: 'RR. Ana Martínez',
-            email: 'ana.solano@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0048',
-            active: true,
-            role: 'dentist'
-        },
-        {
-            id: 8,
-            name: 'RR. Ana Martínez',
-            email: 'russel.flores@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0049',
-            active: true,
-            role: 'dentist'
-        },
+
     ];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
