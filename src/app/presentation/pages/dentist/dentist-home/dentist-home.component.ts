@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
   styleUrl: './dentist-home.component.css'
 })
 export class DentistHomeComponent {
-  dentistName = 'Dr. Smith';
+  dentistName = 'Dr. Russel';
   currentDate = new Date();
 
   upcomingAppointments = [
