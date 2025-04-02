@@ -20,5 +20,5 @@ export const dentistRoutes: Routes = [
     ]
   },
   { path: 'calendar', component: CalendarComponent },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'main/home', pathMatch: 'full' },
 ];
