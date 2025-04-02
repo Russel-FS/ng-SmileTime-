@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './dentist-sidebar.component.html',
-  styleUrl: './dentist-sidebar.component.css'
+  styleUrls: ['./dentist-sidebar.component.css']
 })
 export class DentistSidebarComponent {
   nuevoPaciente() {
