@@ -26,6 +26,7 @@
 }
 
 .date-navigation {
+  margin-top: 16px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -199,34 +200,6 @@
 .add-appointment-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.view-controls {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.view-toggle {
-  display: flex;
-  background: white;
-  padding: 4px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.view-toggle button {
-  padding: 8px 16px;
-  border: none;
-  background: transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.view-toggle button.active {
-  background: var(--appointment-primary);
-  color: white;
 }
 
 .status-filter-wrapper {

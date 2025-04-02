@@ -29,7 +29,6 @@ export class AppointmentSchedulingComponent implements OnInit {
   appointments: Appointment[] = [];
   selectedDate: Date = new Date();
   filterStatus: string = 'all';
-  currentView: 'day' | 'week' = 'day';
   isAddModalOpen = false;
   workingHours = {
     start: 8,
@@ -37,7 +36,7 @@ export class AppointmentSchedulingComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.appointments = this.getMockAppointments();
+    this.loadAppointments();
   }
 
   changeDate(days: number) {
@@ -57,7 +56,7 @@ export class AppointmentSchedulingComponent implements OnInit {
     return [
       {
         id: 1,
-        patientName: 'Juan Pérez',
+        patientName: 'Russel Pérez',
         date: new Date(),
         time: '09:00',
         type: 'consulta',

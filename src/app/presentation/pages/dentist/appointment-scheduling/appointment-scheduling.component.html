@@ -1,23 +1,15 @@
 <div class="appointments-wrapper">
   <header class="page-header">
     <div class="header-content">
-      <h1 class="fade-in">Gestión de Citas</h1>
-      <div class="view-controls">
-        <div class="date-navigation">
-          <button class="nav-button" (click)="changeDate(-1)">
-            <i class="material-icons">chevron_left</i>
-          </button>
-          <span class="current-date">{{ selectedDate | date: 'EEEE, d MMMM' }}</span>
-          <button class="nav-button" (click)="changeDate(1)">
-            <i class="material-icons">chevron_right</i>
-          </button>
-        </div>
-        <div class="view-toggle">
-          <button [class.active]="currentView === 'day'" (click)="currentView = 'day'">Día</button>
-          <button [class.active]="currentView === 'week'" (click)="currentView = 'week'">
-            Semana
-          </button>
-        </div>
+      <h1 class="fade-in">Agenda de Citas</h1>
+      <div class="date-navigation">
+        <button class="nav-button" (click)="changeDate(-1)">
+          <i class="material-icons">chevron_left</i>
+        </button>
+        <span class="current-date">{{ selectedDate | date: 'EEEE, d MMMM' }}</span>
+        <button class="nav-button" (click)="changeDate(1)">
+          <i class="material-icons">chevron_right</i>
+        </button>
       </div>
     </div>
 
@@ -26,9 +18,9 @@
         <i class="material-icons">filter_list</i>
         <select [(ngModel)]="filterStatus" class="status-filter">
           <option value="all">Todas las citas</option>
-          <option value="pending">Pendientes</option>
-          <option value="confirmed">Confirmadas</option>
-          <option value="cancelled">Canceladas</option>
+          <option value="pendiente">Pendientes</option>
+          <option value="confirmada">Confirmadas</option>
+          <option value="cancelada">Canceladas</option>
         </select>
       </div>
       <button class="add-appointment-btn" (click)="addAppointment()">
