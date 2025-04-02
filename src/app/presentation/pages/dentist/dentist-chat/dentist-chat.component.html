@@ -1,1 +1,42 @@
-<p>dentist-chat works!</p>
+<div class="flex">
+  <!-- Sidebar de contactos -->
+  <app-chat-sidebar
+    class="overflow-hidden"
+    [contacts]="contacts"
+    [isLoading]="isLoadingContacts"
+    (contactClick)="onContactClick($event)"
+    [class.hidden]="isChatView"
+  ></app-chat-sidebar>
+
+  <div class="chat-container" [class.active]="isChatView">
+    <!-- Button to toggle side bar visibilidad -->
+    @if (isChatView) {
+      <button class="show-sidebar-button" (click)="toggleView()">
+        <svg width="20" height="20" fill="none" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+    }
+    <!-- Header -->
+    <app-chat-header [userHeader]="contactSelected"> </app-chat-header>
+    <!-- Chat Messages-->
+    <app-chat-messages
+      class="flex-1"
+      [messages]="getMessages()"
+      [typingStatus]="typingStatus"
+      [hasSelectedContact]="!!contactSelected"
+      [isLoading]="isLoadingMessages"
+    ></app-chat-messages>
+    <!-- Input de mensaje -->
+    <app-chat-input
+      [hasSelectedContact]="!!contactSelected"
+      (EventTyping)="onTyping($event)"
+      (EventSendMessage)="onSendMessage($event)"
+    ></app-chat-input>
+  </div>
+</div>
