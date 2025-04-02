@@ -1,0 +1,324 @@
+:host {
+  --appointment-primary: var(--md-sys-color-primary);
+  --appointment-pending: #ff9800;
+  --appointment-confirmed: #4caf50;
+  --appointment-cancelled: #f44336;
+}
+
+.appointments-wrapper {
+  padding: 32px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.header-content h1 {
+  font-size: 32px;
+  font-weight: 300;
+  color: #1a1f36;
+  margin: 0 0 16px 0;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #5e6c84;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+  background: #f5f5f5;
+}
+
+.current-date {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1f36;
+}
+
+.appointments-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.appointment-card {
+  display: flex;
+  gap: 24px;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.time-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+}
+
+.time {
+  font-size: 14px;
+  font-weight: 500;
+  color: #5e6c84;
+}
+
+.time-line {
+  flex: 1;
+  width: 2px;
+  background: #e0e0e0;
+  margin: 8px 0;
+}
+
+.appointment-content {
+  flex: 1;
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  border: 1px solid #e0e0e0;
+  color: #5e6c84;
+}
+
+.action-btn i {
+  font-size: 18px;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn.pendiente {
+  background: white;
+  color: var(--appointment-confirmed);
+  border: 1px solid var(--appointment-confirmed);
+}
+
+.action-btn.pendiente:hover {
+  background: var(--appointment-confirmed);
+  color: white;
+}
+
+.action-btn.confirmada {
+  background: white;
+  color: var(--appointment-cancelled);
+  border: 1px solid var(--appointment-cancelled);
+}
+
+.action-btn.confirmada:hover {
+  background: var(--appointment-cancelled);
+  color: white;
+}
+
+.action-btn.edit {
+  background: white;
+  color: var(--appointment-primary);
+  border: 1px solid var(--appointment-primary);
+}
+
+.action-btn.edit:hover {
+  background: var(--appointment-primary);
+  color: white;
+}
+
+.action-btn.confirm {
+  background: var(--appointment-confirmed);
+  color: white;
+}
+
+.action-btn.cancel {
+  background: var(--appointment-cancelled);
+  color: white;
+}
+
+.action-btn.reschedule {
+  background: var(--appointment-pending);
+  color: white;
+}
+
+.add-appointment-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--appointment-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-appointment-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.view-toggle {
+  display: flex;
+  background: white;
+  padding: 4px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.view-toggle button {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle button.active {
+  background: var(--appointment-primary);
+  color: white;
+}
+
+.status-filter-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 8px;
+  padding: 0 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.status-filter {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #1a1f36;
+  cursor: pointer;
+  outline: none;
+}
+
+.appointment-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #e0e0e0;
+}
+
+.appointment-card.status-pendiente::before {
+  background: var(--appointment-pending);
+}
+
+.appointment-card.status-confirmada::before {
+  background: var(--appointment-confirmed);
+}
+
+.appointment-card.status-cancelada::before {
+  background: var(--appointment-cancelled);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.appointment-details {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #5e6c84;
+  font-size: 13px;
+}
+
+.detail-item i {
+  font-size: 16px;
+}
+
+.no-appointments {
+  text-align: center;
+  padding: 48px;
+  background: white;
+  border-radius: 12px;
+  color: #5e6c84;
+}
+
+.no-appointments i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
