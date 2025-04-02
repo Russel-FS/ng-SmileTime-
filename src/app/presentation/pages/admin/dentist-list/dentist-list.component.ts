@@ -29,7 +29,7 @@ export class DentistListComponent implements OnInit, AfterViewInit {
     dentists: Dentist[] = [
         {
             id: 1,
-            name: 'Dr. Juan Pérez',
+            name: 'Dr. flores Pérez',
             email: 'juan.perez@ejemplo.com',
             specialization: 'Ortodoncista',
             licenseNumber: 'LIC-001',
