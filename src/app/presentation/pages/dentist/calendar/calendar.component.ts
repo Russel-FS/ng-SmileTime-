@@ -7,24 +7,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { DentalManagement, DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
 
-interface CitaType {
-  id: string;
-  label: string;
-  color: string;
-}
 interface NuevaCita {
   tipo: string;
   nombre: string;
-}
-
-interface CitaSeleccionada {
-  id?: string;
-  nombre: string;
-  tipo: string;
-  fecha: string;
-  hora: string;
-  costo: number;
 }
 
 @Component({
@@ -47,12 +34,10 @@ interface CitaSeleccionada {
 export class CalendarComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
-  tiposCita: CitaType[] = [
-    { id: 'limpieza', label: 'Limpieza Dental', color: '#007AFF' },    // Azul Apple
-    { id: 'revision', label: 'Revisión General', color: '#5856D6' },    // Púrpura Apple
-    { id: 'emergencia', label: 'Emergencia', color: '#FF2D55' },        // Rosa Apple
-    { id: 'ortodonia', label: 'Ortodoncia', color: '#34C759' },         // Verde Apple
-    { id: 'blanqueamiento', label: 'Blanqueamiento', color: '#FF9500' } // Naranja Apple
+  tiposCita = [
+    { id: 'limpieza' as AppointmentType, label: 'Limpieza Dental', color: '#007AFF' },
+    { id: 'consulta' as AppointmentType, label: 'Consulta', color: '#5856D6' },
+    { id: 'tratamiento' as AppointmentType, label: 'Tratamiento', color: '#FF2D55' }
   ];
   mostrarSelector = false;
   nuevaCita: NuevaCita = { tipo: '', nombre: '' };
@@ -67,12 +52,13 @@ export class CalendarComponent implements OnInit {
   selectedYear: number;
 
   mostrarDetalles = false;
-  citaSeleccionada: CitaSeleccionada = {
-    nombre: '',
-    tipo: '',
-    fecha: '',
-    hora: '',
-    costo: 0
+  citaSeleccionada: Partial<DentalAppointment> & { patientName?: string } = {
+    id: '',
+    date: new Date(),
+    time: '',
+    type: 'consulta',
+    status: 'pendiente',
+    duration: 30
   };
   eventoSeleccionado: any = null;
 
@@ -130,10 +116,11 @@ export class CalendarComponent implements OnInit {
         hour12: isMobile
       }).replace(/\s/g, '').toLowerCase() : '';
 
-    // Acortar el tipo de cita para móviles
-    const typeLabel = isMobile ?
-      eventInfo.event.extendedProps.tipo.split(' ')[0] :
-      eventInfo.event.extendedProps.tipo;
+    // Obtener el tipo de cita de manera segura
+    const tipo = this.tiposCita.find(t => t.id === eventInfo.event.extendedProps.type);
+    const typeLabel = tipo ?
+      (isMobile ? tipo.label.split(' ')[0] : tipo.label) :
+      'Consulta';
 
     // Renderizar diferente para móviles
     if (isMobile) {
@@ -144,6 +131,7 @@ export class CalendarComponent implements OnInit {
               <div class="title">${eventInfo.event.title}</div>
               <div class="event-details mobile">
                 <span class="time">${timeStr}</span>
+                <span class="type">${typeLabel}</span>
               </div>
             </div>
           </div>
@@ -151,7 +139,6 @@ export class CalendarComponent implements OnInit {
       };
     }
 
-    // Versión desktop
     return {
       html: `
         <div class="event-content">
@@ -169,37 +156,72 @@ export class CalendarComponent implements OnInit {
 
   handleDateSelect(selectInfo: DateSelectArg) {
     const selectedDate = selectInfo.start;
+
+    // Asegurarnos de mantener la hora actual al seleccionar una fecha
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    selectedDate.setHours(currentHour, currentMinutes, 0);
+
     this.citaSeleccionada = {
-      nombre: '',
-      tipo: '',
-      fecha: selectedDate.toISOString().split('T')[0],
-      hora: selectedDate.toTimeString().split(':').slice(0, 2).join(':'),
-      costo: 0
+      id: '',
+      date: selectedDate,
+      time: `${String(currentHour).padStart(2, '0')}:${String(currentMinutes).padStart(2, '0')}`,
+      type: 'consulta',
+      status: 'pendiente',
+      duration: 30,
+      patientName: ''
     };
+
     this.mostrarDetalles = true;
     this.eventoSeleccionado = null;
   }
 
   confirmarCita() {
-    const { tipo, nombre } = this.citaSeleccionada;
-    if (tipo && nombre) {
-      const tipoInfo = this.tiposCita.find(t => t.id === tipo);
-      const fechaHora = new Date(`${this.citaSeleccionada.fecha}T${this.citaSeleccionada.hora}`);
+    const { type, patientName } = this.citaSeleccionada;
+    if (type && patientName) {
+      const tipoInfo = this.tiposCita.find(t => t.id === type);
 
-      const newEvent = {
+      // Asegurarnos de que tenemos una fecha válida
+      const fechaBase = this.citaSeleccionada.date instanceof Date ?
+        this.citaSeleccionada.date :
+        new Date(this.citaSeleccionada.date || new Date());
+
+      // Manejar la hora de forma segura
+      const time = this.citaSeleccionada.time || '00:00';
+      const [hours = '0', minutes = '0'] = time.split(':');
+
+      const fechaHora = new Date(fechaBase);
+      fechaHora.setHours(parseInt(hours), parseInt(minutes), 0);
+
+      const newAppointment: DentalAppointment = {
         id: this.createEventId(),
-        title: nombre,
+        date: fechaHora,
+        time: time,
+        type: type,
+        status: 'pendiente',
+        duration: this.citaSeleccionada.duration || 30,
+        notes: this.citaSeleccionada.notes
+      };
+
+      // Crear el evento para el calendario
+      const eventToAdd = {
+        id: newAppointment.id.toString(),
+        title: patientName,
         start: fechaHora,
+        end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)), // Agregar duración en minutos
         backgroundColor: tipoInfo?.color,
         extendedProps: {
-          tipo: tipoInfo?.label,
-          costo: this.citaSeleccionada.costo
+          type: type,
+          status: newAppointment.status,
+          duration: newAppointment.duration,
+          notes: newAppointment.notes
         }
       };
 
+      // Agregar el evento al calendario y al array de eventos
       const calendarApi = this.getCalendarApi();
-      calendarApi.addEvent(newEvent);
-      this.events.push(newEvent);
+      calendarApi.addEvent(eventToAdd);
+      this.events.push(eventToAdd);
     }
     this.cerrarDetalles();
   }
@@ -215,11 +237,13 @@ export class CalendarComponent implements OnInit {
     this.eventoSeleccionado = clickInfo.event;
     this.citaSeleccionada = {
       id: clickInfo.event.id,
-      nombre: clickInfo.event.title,
-      tipo: this.getTipoId(clickInfo.event.extendedProps.tipo),
-      fecha: clickInfo.event.start?.toISOString().split('T')[0] || '',
-      hora: clickInfo.event.start?.toTimeString().split(':').slice(0, 2).join(':') || '',
-      costo: clickInfo.event.extendedProps.costo || 0
+      date: clickInfo.event.start || new Date(),
+      time: clickInfo.event.start?.toTimeString().split(':').slice(0, 2).join(':') || '',
+      type: clickInfo.event.extendedProps.type,
+      status: clickInfo.event.extendedProps.status,
+      duration: clickInfo.event.extendedProps.duration,
+      notes: clickInfo.event.extendedProps.notes,
+      patientName: clickInfo.event.title
     };
     this.mostrarDetalles = true;
   }
@@ -238,14 +262,32 @@ export class CalendarComponent implements OnInit {
 
   guardarCambios() {
     if (this.eventoSeleccionado) {
-      const tipoInfo = this.tiposCita.find(t => t.id === this.citaSeleccionada.tipo);
+      const tipoInfo = this.tiposCita.find(t => t.id === this.citaSeleccionada.type);
 
-      this.eventoSeleccionado.setProp('title', this.citaSeleccionada.nombre);
-      this.eventoSeleccionado.setExtendedProp('tipo', tipoInfo?.label);
-      this.eventoSeleccionado.setExtendedProp('costo', this.citaSeleccionada.costo);
+      // Manejar la fecha y hora de forma segura
+      const fechaBase = this.citaSeleccionada.date || new Date();
+      const time = this.citaSeleccionada.time || '00:00';
+      const [hours = '0', minutes = '0'] = time.split(':');
 
-      const nuevaFecha = new Date(`${this.citaSeleccionada.fecha}T${this.citaSeleccionada.hora}`);
-      this.eventoSeleccionado.setStart(nuevaFecha);
+      const fechaHora = new Date(fechaBase);
+      fechaHora.setHours(parseInt(hours), parseInt(minutes), 0);
+
+      const appointment: Partial<DentalAppointment> = {
+        id: this.eventoSeleccionado.id,
+        date: fechaHora,
+        time: time,
+        type: this.citaSeleccionada.type,
+        status: this.citaSeleccionada.status,
+        duration: this.citaSeleccionada.duration,
+        notes: this.citaSeleccionada.notes
+      };
+
+      this.eventoSeleccionado.setProp('title', this.citaSeleccionada.patientName);
+      this.eventoSeleccionado.setStart(appointment.date);
+      this.eventoSeleccionado.setExtendedProp('type', appointment.type);
+      this.eventoSeleccionado.setExtendedProp('status', appointment.status);
+      this.eventoSeleccionado.setExtendedProp('duration', appointment.duration);
+      this.eventoSeleccionado.setExtendedProp('notes', appointment.notes);
 
       if (tipoInfo) {
         this.eventoSeleccionado.setProp('backgroundColor', tipoInfo.color);
@@ -265,11 +307,12 @@ export class CalendarComponent implements OnInit {
       }
     };
     this.citaSeleccionada = {
-      nombre: '',
-      tipo: '',
-      fecha: now.toISOString().split('T')[0],
-      hora: now.toTimeString().split(':').slice(0, 2).join(':'),
-      costo: 0
+      id: '',
+      date: now,
+      time: now.toTimeString().split(':').slice(0, 2).join(':'),
+      type: 'consulta',
+      status: 'pendiente',
+      duration: 30
     };
     this.mostrarDetalles = true;
   }
