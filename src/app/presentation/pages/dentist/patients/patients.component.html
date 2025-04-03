@@ -108,4 +108,12 @@
       (save)="onSaveNewPatient($event)"
     ></app-add-patient-modal>
   }
+
+  @if (showEditModal && selectedPatient) {
+    <app-edit-patient-modal
+      [patient]="selectedPatient"
+      (close)="showEditModal = false"
+      (save)="onSaveEditPatient($event)"
+    ></app-edit-patient-modal>
+  }
 </div>

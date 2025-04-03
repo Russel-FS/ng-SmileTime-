@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { DentalManagement } from '../model/dental-management.model';
 import { MockDentalService } from '../../../../infrastructure/datasources/dentist/mock-dental.service';
 import { AddPatientModalComponent } from './add-patient-modal/add-patient-modal.component';
+import { EditPatientModalComponent } from './edit-patient-modal/edit-patient-modal.component';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddPatientModalComponent],
+  imports: [CommonModule, FormsModule, AddPatientModalComponent, EditPatientModalComponent],
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.css'],
 })
@@ -20,6 +21,8 @@ export class PatientsComponent implements OnInit {
   totalPatients = 0;
   todayAppointments = 0;
   showAddModal = false;
+  showEditModal = false;
+  selectedPatient?: DentalManagement;
 
   patients: DentalManagement[] = [];
   filteredPatients: DentalManagement[] = [];
@@ -69,7 +72,7 @@ export class PatientsComponent implements OnInit {
   }
 
   onSaveNewPatient(patient: DentalManagement) {
-    this.dentalService.addPatient(patient).subscribe(newPatient => { 
+    this.dentalService.addPatient(patient).subscribe(newPatient => {
       this.dentalService.getPatients().subscribe(patients => {
         this.patients = patients;
         this.filteredPatients = [...this.patients];
@@ -79,12 +82,24 @@ export class PatientsComponent implements OnInit {
     });
   }
 
-  viewDetails(patient: DentalManagement) {
-    console.log('Ver detalles', patient);
+  editPatient(patient: DentalManagement) {
+    this.selectedPatient = patient;
+    this.showEditModal = true;
   }
 
-  editPatient(patient: DentalManagement) {
-    console.log('Editar paciente', patient);
+  onSaveEditPatient(patient: DentalManagement) {
+    this.dentalService.updatePatient(patient).subscribe(() => {
+      this.dentalService.getPatients().subscribe(patients => {
+        this.patients = patients;
+        this.filteredPatients = [...this.patients];
+        this.showEditModal = false;
+        this.selectedPatient = undefined;
+      });
+    });
+  }
+
+  viewDetails(patient: DentalManagement) {
+    console.log('Ver detalles', patient);
   }
 
   scheduleAppointment(patient: DentalManagement) {
