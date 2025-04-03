@@ -63,7 +63,13 @@
             [class.selected-patient]="!!selectedPatient"
             placeholder="Buscar paciente..."
           />
-          <div class="search-results" *ngIf="searchResults.length > 0 && !selectedPatient">
+          <div class="loading-indicator" *ngIf="isLoading">
+            <div class="spinner"></div>
+          </div>
+          <div
+            class="search-results"
+            *ngIf="searchResults.length > 0 && !selectedPatient && !isLoading"
+          >
             <div
               class="search-item"
               *ngFor="let patient of searchResults"

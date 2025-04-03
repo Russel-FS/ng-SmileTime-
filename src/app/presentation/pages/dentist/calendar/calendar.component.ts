@@ -110,6 +110,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   searchResults: Pacient[] = [];
   searchTerm = '';
   selectedPatient: Pacient | null = null;
+  isLoading = false;
 
   /**
    * Constructor de la clase.
@@ -538,7 +539,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   onSearch(term: string): void {
     this.searchTerm = term;
     this.selectedPatient = null;
+    this.isLoading = true;
     this.patientService.search(term);
+    this.patientService.getPatients().subscribe({
+      next: (results) => {
+        this.searchResults = results;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
   }
   /**
    * Método para seleccionar un paciente de la lista de resultados.
