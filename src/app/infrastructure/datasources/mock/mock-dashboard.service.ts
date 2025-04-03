@@ -90,16 +90,21 @@ export class MockDashboardService {
     getPatients(): Observable<PacientEntity[]> {
         return of(this.mockPatients);
     }
-
     getTreatmentStats(): Observable<{
         cleanings: number;
         extractions: number;
         fillings: number;
     }> {
+        if (!this.mockDashboardData || !this.mockDashboardData.treatments) {
+            return of({ cleanings: 0, extractions: 0, fillings: 0 });
+        }
         return of(this.mockDashboardData.treatments);
     }
 
     getMonthlyAppointments(): Observable<Map<string, number>> {
+        if (!this.mockDashboardData || !this.mockDashboardData.monthlyAppointments) {
+            return of(new Map<string, number>());
+        }
         return of(this.mockDashboardData.monthlyAppointments);
     }
 
@@ -109,7 +114,12 @@ export class MockDashboardService {
         pendingAppointmentsChange: number;
         completedTreatmentsChange: number;
     }> {
-        return of(this.mockDashboardData.metrics);
+        return of({
+            totalPatientsChange: this.mockDashboardData?.metrics?.totalPatientsChange || 0,
+            newPatientsChange: this.mockDashboardData?.metrics?.newPatientsChange || 0,
+            pendingAppointmentsChange: this.mockDashboardData?.metrics?.pendingAppointmentsChange || 0,
+            completedTreatmentsChange: this.mockDashboardData?.metrics?.completedTreatmentsChange || 0
+        });
     }
 
     createAppointment(appointment: CiteEntity): Observable<CiteEntity> {
