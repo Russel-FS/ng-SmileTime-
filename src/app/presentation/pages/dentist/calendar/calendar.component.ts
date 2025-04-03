@@ -312,7 +312,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       fechaHora.setHours(parseInt(hours), parseInt(minutes), 0);
 
       const newAppointment: DentalAppointment = {
-        id: this.createEventId(),
+        id: 0,
+        patientId: this.selectedPatient.id,
         date: fechaHora,
         time: time,
         type: type,
@@ -323,7 +324,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
       // Crear el evento para el calendario
       const eventToAdd = {
-        id: newAppointment.id.toString(),
+        id: '',
         title: this.selectedPatient.name || 'Paciente',
         start: fechaHora,
         end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)),
@@ -332,7 +333,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           type: type,
           status: newAppointment.status,
           duration: newAppointment.duration,
-          notes: newAppointment.notes
+          notes: newAppointment.notes,
+          id: this.selectedPatient.id
         }
       };
 
