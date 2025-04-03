@@ -1,8 +1,7 @@
 .list-container {
   padding: 1rem;
   background: transparent;
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
   animation: slideIn 0.6s ease-out;
 }
 
@@ -26,35 +25,14 @@
 
 .search-box {
   margin: 1.5rem 0;
-}
 
-.search-input-container {
-  position: relative;
-  width: 100%;
-}
+  .search-field {
+    width: 100%;
 
-.search-input {
-  width: 100%;
-  padding: 12px 40px;
-  border: 1px solid #d2d2d7;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  background: white;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #86868b;
+    ::ng-deep .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
 }
 
 .table-container {
@@ -64,72 +42,37 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   border: 1px solid #d2d2d7;
   width: 100%;
-  overflow-x: auto;
-  margin-top: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
-.custom-table {
+.dentist-table {
   width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-}
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 
-.custom-table thead {
-  background: #f8f9fa;
-}
+  th.mat-header-cell {
+    background: #f5f5f7;
+    color: #1d1d1f;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 1rem;
+    letter-spacing: -0.01em;
+  }
 
-.custom-table th {
-  text-align: left;
-  padding: 16px;
-  font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #dee2e6;
-}
+  td.mat-cell {
+    padding: 1rem;
+    color: #1d1d1f;
+    font-size: 0.9rem;
+  }
 
-.custom-table td {
-  padding: 16px;
-  border-bottom: 1px solid #dee2e6;
-  color: #212529;
-}
+  tr.mat-row {
+    height: 60px;
+    transition: background-color 0.2s ease;
 
-.custom-table tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.status-active {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.875rem;
-}
-
-.status-inactive {
-  background: #ffebee;
-  color: #c62828;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 0.875rem;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  color: #6c757d;
-  transition: color 0.2s;
-}
-
-.btn-icon:hover {
-  color: #007bff;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
+    &:hover {
+      background: #f8f8f8;
+    }
+  }
 }
 
 @keyframes slideIn {
@@ -143,21 +86,30 @@
   }
 }
 
-@media (max-width: 768px) {
-  .list-container {
-    padding: 0.5rem;
+::ng-deep {
+  .mat-form-field-outline {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    border-radius: 8px;
+    transition: all 0.3s ease;
   }
 
-  .list-header {
-    margin-bottom: 1rem;
+  .mat-paginator {
+    background: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
   }
 
-  .custom-table {
+  .mat-form-field {
     font-size: 14px;
+    letter-spacing: -0.2px;
   }
 
-  .custom-table th,
-  .custom-table td {
-    padding: 12px 8px;
+  .mat-form-field.mat-focused .mat-form-field-outline {
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+  }
+
+  .mat-button-toggle-group {
+    border-radius: 8px;
+    overflow: hidden;
   }
 }

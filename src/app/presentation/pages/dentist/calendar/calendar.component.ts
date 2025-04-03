@@ -373,7 +373,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       status: clickInfo.event.extendedProps.status,
       duration: clickInfo.event.extendedProps.duration,
       notes: clickInfo.event.extendedProps.notes,
-      patientName: clickInfo.event.extendedProps.patientInfo.name
+      patientName: clickInfo.event.title
+
     };
     this.mostrarDetalles = true;
   }
@@ -428,7 +429,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         type: this.citaSeleccionada.type,
         status: this.citaSeleccionada.status,
         duration: this.citaSeleccionada.duration,
-        notes: this.citaSeleccionada.notes
+        notes: this.citaSeleccionada.notes,
+
       };
 
       this.calendarService.updateAppointment(appointment as DentalAppointment).subscribe(success => {
