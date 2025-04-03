@@ -22,6 +22,9 @@ export class ApiConfig {
         //conversacion api
         messages: `${this.apiUrlBase}/api/conversation/messages`,
         contacts: `${this.apiUrlBase}/api/conversation/contacts`,
+        dentists: `${this.apiUrlBase}/api/conversation/dentists`,
+        patients: `${this.apiUrlBase}/api/conversation/patients`,   
+        allUsers: `${this.apiUrlBase}/api/conversation/all- users`,  
         conversation: `${this.apiUrlBase}/api/conversation/ByConversationId`,
         //mensaje api
         createMessage: `${this.apiUrlBase}/api/messages/create`,
