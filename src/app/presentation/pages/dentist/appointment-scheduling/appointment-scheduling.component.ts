@@ -2,6 +2,7 @@ import { Component, OnInit, LOCALE_ID } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
+import { CalendarService } from '../../../../infrastructure/datasources/dentist/calendar.service';
 
 registerLocaleData(localeEs, 'es');
 
@@ -23,7 +24,10 @@ interface Appointment {
   imports: [CommonModule, FormsModule],
   templateUrl: './appointment-scheduling.component.html',
   styleUrls: ['./appointment-scheduling.component.css'],
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }]
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+    CalendarService
+  ]
 })
 export class AppointmentSchedulingComponent implements OnInit {
   appointments: Appointment[] = [];
@@ -35,10 +39,9 @@ export class AppointmentSchedulingComponent implements OnInit {
     end: 18
   };
 
-  ngOnInit() {
-    this.loadAppointments();
-  }
+  constructor(private calendarService: CalendarService) { }
 
+  ngOnInit() {
   changeDate(days: number) {
     const newDate = new Date(this.selectedDate);
     newDate.setDate(newDate.getDate() + days);
@@ -47,58 +50,32 @@ export class AppointmentSchedulingComponent implements OnInit {
   }
 
   loadAppointments() {
-    this.appointments = this.getMockAppointments().filter(apt =>
-      apt.date.toDateString() === this.selectedDate.toDateString()
+    this.calendarService.getAppointments().subscribe(
+      appointmentsResponse => {
+        this.appointments = appointmentsResponse.map(response => ({
+          patientId: response.appointment.patientId,
+          patientName: response.patientInfo.name,
+          date: new Date(response.appointment.date),
+          time: response.appointment.time,
+          type: response.appointment.type,
+          status: this.mapStatus(response.appointment.status),
+          duration: response.appointment.duration,
+          notes: response.appointment.notes,
+          patientPhone: response.patientInfo.phone
+        })).filter(apt =>
+          apt.date.toDateString() === this.selectedDate.toDateString()
+        );
+      }
     );
   }
 
-  getMockAppointments(): Appointment[] {
-    const mockData = [
-      {
-        appointment: {
-          patientId: "19495efb-817b-4bad-8e47-80caa2ca2f7f",
-          date: "2025-04-03",
-          time: "11:54",
-          type: "consulta",
-          duration: 20,
-          notes: "sdfsdfsdf",
-          status: "Pending"
-        },
-        patientInfo: {
-          name: "flores@gmail.com",
-          phone: "",
-          status: "inactive"
-        }
-      },
-      {
-        appointment: {
-          patientId: "19495efb-817b-4bad-8e47-80caa2ca2f7f",
-          date: "2025-04-02",
-          time: "12:28",
-          type: "consulta",
-          duration: 30,
-          notes: "alumno",
-          status: "Pending"
-        },
-        patientInfo: {
-          name: "flores@gmail.com",
-          phone: "",
-          status: "inactive"
-        }
-      }
-    ];
-
-    return mockData.map(item => ({
-      patientId: item.appointment.patientId,
-      patientName: item.patientInfo.name,
-      date: new Date(item.appointment.date),
-      time: item.appointment.time,
-      type: item.appointment.type as 'consulta',
-      status: 'pendiente',
-      duration: item.appointment.duration,
-      notes: item.appointment.notes,
-      patientPhone: item.patientInfo.phone
-    }));
+  private mapStatus(serverStatus: string): 'pendiente' | 'confirmada' | 'cancelada' {
+    switch (serverStatus.toLowerCase()) {
+      case 'pending': return 'pendiente';
+      case 'confirmed': return 'confirmada';
+      case 'cancelled': return 'cancelada';
+      default: return 'pendiente';
+    }
   }
 
   getStatusColor(status: string): string {
