@@ -57,8 +57,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     eventContent: this.renderEventContent.bind(this),
     views: {
       dayGridMonth: {
-        dayMaxEvents: window.innerWidth < 768 ? 2 : 3,
-        eventMinHeight: window.innerWidth < 768 ? 20 : 24,
+        dayMaxEvents: 3,
+        eventMinHeight: 24,
       }
     },
     events: [],
@@ -122,7 +122,32 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.updateResponsiveSettings();
     this.loadAppointments();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', () => {
+        this.updateResponsiveSettings();
+      });
+    }
+  }
+  /** 
+   * Método para inicializar el componente.
+   * Se llama al cargar el componente.
+   */
+  private updateResponsiveSettings() {
+    if (typeof window !== 'undefined') {
+      const isMobile = window.innerWidth < 768;
+      const calendarApi = this.getCalendarApi();
+
+      if (calendarApi) {
+        calendarApi.setOption('views', {
+          dayGridMonth: {
+            dayMaxEvents: isMobile ? 2 : 3,
+            eventMinHeight: isMobile ? 20 : 24,
+          }
+        });
+      }
+    }
   }
 
   loadAppointments() {
