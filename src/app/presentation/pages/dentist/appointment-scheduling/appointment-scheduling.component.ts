@@ -1,4 +1,4 @@
-import { Component, OnInit, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, LOCALE_ID, AfterViewInit } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
@@ -20,13 +20,12 @@ interface Appointment {
 
 @Component({
   selector: 'app-appointment-scheduling',
-  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './appointment-scheduling.component.html',
   styleUrls: ['./appointment-scheduling.component.css'],
-  providers: [{ provide: LOCALE_ID, useValue: 'es' }]
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }, CalendarService]
 })
-export class AppointmentSchedulingComponent implements OnInit {
+export class AppointmentSchedulingComponent implements OnInit, AfterViewInit {
   appointments: Appointment[] = [];
   selectedDate: Date = new Date();
   filterStatus: string = 'all';
@@ -36,9 +35,14 @@ export class AppointmentSchedulingComponent implements OnInit {
     end: 18
   };
 
-  constructor(private calendarService: CalendarService) { }
+  constructor(private calendarService: CalendarService) {
+
+  }
 
   ngOnInit() {
+
+  }
+  ngAfterViewInit() {
     this.loadAppointments();
   }
 
@@ -51,20 +55,25 @@ export class AppointmentSchedulingComponent implements OnInit {
 
   loadAppointments() {
     this.calendarService.getAppointments().subscribe(
-      appointmentsResponse => {
-        this.appointments = appointmentsResponse.map(response => ({
-          patientId: response.appointment.patientId,
-          patientName: response.patientInfo.name,
-          date: new Date(response.appointment.date),
-          time: response.appointment.time,
-          type: response.appointment.type,
-          status: this.mapStatus(response.appointment.status),
-          duration: response.appointment.duration,
-          notes: response.appointment.notes,
-          patientPhone: response.patientInfo.phone
-        })).filter(apt =>
-          apt.date.toDateString() === this.selectedDate.toDateString()
-        );
+      {
+        next: (appointments) => {
+          this.appointments = appointments.map(response => ({
+            patientId: response.appointment.patientId,
+            patientName: response.patientInfo.name,
+            date: new Date(response.appointment.date),
+            time: response.appointment.time,
+            type: response.appointment.type,
+            status: this.mapStatus(response.appointment.status),
+            duration: response.appointment.duration,
+            notes: response.appointment.notes,
+            patientPhone: response.patientInfo.phone
+          })).filter(apt =>
+            apt.date.toDateString() === this.selectedDate.toDateString()
+          );
+        },
+        error: (error) => {
+          console.error('Error loading appointments:', error);
+        }
       }
     );
   }
