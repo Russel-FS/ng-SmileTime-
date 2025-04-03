@@ -13,8 +13,6 @@ export class DentistService {
     constructor(private http: HttpClient) { }
 
     getAllDentists(): Observable<Dentist[]> {
-        // Temporalmente retornamos datos mock
-        // TODO: Reemplazar con llamada HTTP real cuando esté lista la API
         return of([
             {
                 id: 1,
@@ -35,7 +33,6 @@ export class DentistService {
 
         ]);
 
-        // Cuando la API esté lista, usar:
         // return this.http.get<Dentist[]>(this.apiUrl);
     }
 
