@@ -64,3 +64,21 @@ export interface AppointmentRequest {
         status: PatientStatus;
     };
 }
+
+
+export interface AppointmentResponse {
+    appointment: {
+        patientId: string;
+        date: string;
+        time: string;
+        type: AppointmentType;
+        duration: number;
+        notes?: string;
+        status: AppointmentStatus;
+    };
+    patientInfo: {
+        name: string;
+        phone: string;
+        status: PatientStatus;
+    };
+}

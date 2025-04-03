@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { AppointmentRequest, DentalAppointment } from '../../../presentation/pages/dentist/model/dental-management.model';
+import { AppointmentRequest, AppointmentResponse, AppointmentStatus, AppointmentType, DentalAppointment } from '../../../presentation/pages/dentist/model/dental-management.model';
 import { HttpClient } from '@angular/common/http';  // Cambiado desde @microsoft/signalr
 import { ApiConfig } from '../../config/app.config';
 import { StorageService } from '../../../core/services/storage/storage.service';
@@ -100,8 +100,17 @@ export class CalendarService {
    * Obtiene todas las citas dentales.
    * @returns Un observable que emite un array de citas dentales.
    */
-  getAppointments(): Observable<DentalAppointment[]> {
-    console.log('Obteniendo todas las citas:', this.mockAppointments);
-    return of(this.mockAppointments);
+  getAppointments(): Observable<AppointmentResponse[]> {
+    {
+      const url = this.apiConfig.getEndpoint('dentalAppointment', 'all');
+      const header = this.storageService.getAuthHeaders();
+
+      return this.http.get<AppointmentResponse[]>(url, { headers: header }).pipe(
+        catchError(error => {
+          console.error('Error fetching appointments:', error);
+          return of([]);
+        })
+      );
+    }
   }
 }

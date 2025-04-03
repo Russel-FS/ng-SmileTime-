@@ -58,7 +58,7 @@
             type="text"
             [(ngModel)]="searchTerm"
             (ngModelChange)="onSearch($event)"
-            [readonly]="!!selectedPatient"
+            [readonly]="!!selectedPatient || !!eventoSeleccionado"
             class="modern-input"
             [class.selected-patient]="!!selectedPatient"
             placeholder="Buscar paciente..."
@@ -74,7 +74,7 @@
               class="search-item"
               *ngFor="let patient of searchResults"
               (click)="selectPatient(patient)"
-            > 
+            >
               {{ patient.name }}
             </div>
           </div>

@@ -173,29 +173,29 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarService.getAppointments().subscribe(appointments => {
       console.log('Citas cargadas:', appointments);
 
-      // Convertir las citas en eventos del calendario
-      const events = appointments.map(appointment => {
-        const tipoInfo = this.tiposCita.find(t => t.id === appointment.type);
-        const fechaHora = new Date(appointment.date);
+      const events = appointments.map(response => {
+        const tipoInfo = this.tiposCita.find(t => t.id === response.appointment.type);
+        const fechaHora = new Date(`${response.appointment.date}T${response.appointment.time}`);
 
         return {
-          id: appointment.id.toString(),
-          title: `Paciente ${appointment.id}`,
+          id: response.appointment.patientId,
+          title: response.patientInfo.name,
           start: fechaHora,
-          end: new Date(fechaHora.getTime() + (appointment.duration * 60000)),
+          end: new Date(fechaHora.getTime() + (response.appointment.duration * 60000)),
           backgroundColor: tipoInfo?.color,
           extendedProps: {
-            type: appointment.type,
-            status: appointment.status,
-            duration: appointment.duration,
-            notes: appointment.notes
+            type: response.appointment.type,
+            status: response.appointment.status,
+            duration: response.appointment.duration,
+            notes: response.appointment.notes,
+            patientInfo: response.patientInfo
           }
         };
       });
 
-      // Agregar eventos al calendario
       const calendarApi = this.getCalendarApi();
       if (calendarApi) {
+        calendarApi.removeAllEvents();
         events.forEach(event => {
           calendarApi.addEvent(event);
           this.events.push(event);
@@ -373,7 +373,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       status: clickInfo.event.extendedProps.status,
       duration: clickInfo.event.extendedProps.duration,
       notes: clickInfo.event.extendedProps.notes,
-      patientName: clickInfo.event.title
+      patientName: clickInfo.event.extendedProps.patientInfo.name
     };
     this.mostrarDetalles = true;
   }
