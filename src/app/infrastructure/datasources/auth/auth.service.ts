@@ -28,7 +28,7 @@ export class AuthService implements IAuthService {
     return this.http.get<boolean>(`${this.apiUrl}/is-authenticated`);
   }
 
-  register(credentials: AuthCredentials): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl.getEndpoint('auth', 'register')}`, credentials);
+  register(credentials: AuthCredentials): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl.getEndpoint('auth', 'register')}`, credentials);
   }
 }
