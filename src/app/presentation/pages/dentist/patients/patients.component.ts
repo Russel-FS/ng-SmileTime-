@@ -5,11 +5,18 @@ import { DentalManagement } from '../model/dental-management.model';
 import { MockDentalService } from '../../../../infrastructure/datasources/dentist/mock-dental.service';
 import { AddPatientModalComponent } from './add-patient-modal/add-patient-modal.component';
 import { EditPatientModalComponent } from './edit-patient-modal/edit-patient-modal.component';
+import { MedicalHistoryModalComponent } from './medical-history-modal/medical-history-modal.component';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddPatientModalComponent, EditPatientModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AddPatientModalComponent,
+    EditPatientModalComponent,
+    MedicalHistoryModalComponent
+  ],
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.css'],
 })
@@ -22,6 +29,7 @@ export class PatientsComponent implements OnInit {
   todayAppointments = 0;
   showAddModal = false;
   showEditModal = false;
+  showHistoryModal = false;
   selectedPatient?: DentalManagement;
 
   patients: DentalManagement[] = [];
@@ -99,7 +107,8 @@ export class PatientsComponent implements OnInit {
   }
 
   viewDetails(patient: DentalManagement) {
-    console.log('Ver detalles', patient);
+    this.selectedPatient = patient;
+    this.showHistoryModal = true;
   }
 
   scheduleAppointment(patient: DentalManagement) {

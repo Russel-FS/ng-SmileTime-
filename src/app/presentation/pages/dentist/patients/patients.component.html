@@ -116,4 +116,11 @@
       (save)="onSaveEditPatient($event)"
     ></app-edit-patient-modal>
   }
+
+  @if (showHistoryModal && selectedPatient) {
+    <app-medical-history-modal
+      [patient]="selectedPatient"
+      (close)="showHistoryModal = false"
+    ></app-medical-history-modal>
+  }
 </div>
