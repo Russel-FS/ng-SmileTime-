@@ -53,12 +53,33 @@
     <div class="sidebar-body">
       <div class="form-group">
         <label>Nombre del Paciente</label>
-        <input
-          type="text"
-          [(ngModel)]="citaSeleccionada.patientName"
-          class="modern-input"
-          placeholder="Nombre completo"
-        />
+        <div class="search-container">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearch($event)"
+            [readonly]="!!selectedPatient"
+            class="modern-input"
+            [class.selected-patient]="!!selectedPatient"
+            placeholder="Buscar paciente..."
+          />
+          <div class="search-results" *ngIf="searchResults.length > 0 && !selectedPatient">
+            <div
+              class="search-item"
+              *ngFor="let patient of searchResults"
+              (click)="selectPatient(patient)"
+            >
+              {{ patient.fullName }}
+            </div>
+          </div>
+          <button
+            *ngIf="selectedPatient"
+            class="clear-selection"
+            (click)="selectedPatient = null; searchTerm = ''"
+          >
+            <i class="material-icons">close</i>
+          </button>
+        </div>
       </div>
 
       <div class="form-group">
@@ -100,7 +121,11 @@
       <button *ngIf="eventoSeleccionado" class="delete-button" (click)="eliminarCita()">
         Eliminar Cita
       </button>
-      <button class="save-button" (click)="eventoSeleccionado ? guardarCambios() : confirmarCita()">
+      <button
+        class="save-button"
+        [disabled]="!selectedPatient && !eventoSeleccionado"
+        (click)="eventoSeleccionado ? guardarCambios() : confirmarCita()"
+      >
         {{ eventoSeleccionado ? 'Guardar Cambios' : 'Agendar Cita' }}
       </button>
     </div>

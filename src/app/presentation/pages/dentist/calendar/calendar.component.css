@@ -1142,3 +1142,167 @@
     justify-content: space-between;
   }
 }
+
+.search-container {
+  position: relative;
+  margin-top: 8px;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-item {
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  color: #1d1d1f;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid transparent;
+}
+
+.search-item:hover {
+  background: rgba(0, 106, 106, 0.05);
+  transform: translateY(-2px);
+  border-color: rgba(0, 106, 106, 0.1);
+  box-shadow:
+    0 4px 12px rgba(0, 106, 106, 0.08),
+    0 2px 4px rgba(0, 106, 106, 0.04);
+}
+
+.search-item::before {
+  content: '•';
+  color: #006a6a;
+  font-size: 1.5rem;
+  margin-right: 12px;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.3s ease;
+}
+
+.search-item:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.search-item:active {
+  transform: scale(0.98);
+  background: rgba(0, 106, 106, 0.1);
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 16px rgba(0, 106, 106, 0.08),
+    0 2px 4px rgba(0, 106, 106, 0.04),
+    0 20px 40px rgba(0, 0, 0, 0.04);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 8px;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modern-input.selected-patient {
+  background-color: rgba(0, 106, 106, 0.08);
+  border: 2px solid #006a6a;
+  color: #006a6a;
+  font-weight: 500;
+  padding-right: 40px;
+}
+
+.clear-selection {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.clear-selection:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.search-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.save-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

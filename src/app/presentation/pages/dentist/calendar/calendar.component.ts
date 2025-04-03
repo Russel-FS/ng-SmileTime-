@@ -9,6 +9,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
 import { CalendarService } from '../../../../infrastructure/datasources/dentist/calendar.service';
+import { Pacient } from '../model/pacient';
+import { PatientService } from '../../../../infrastructure/datasources/dentist/patient.service';
 
 interface AppointmentForm {
   type: string;
@@ -104,17 +106,28 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     duration: 30
   };
 
+  // Añadir nuevas propiedades
+  searchResults: Pacient[] = [];
+  searchTerm = '';
+  selectedPatient: Pacient | null = null;
+
   /**
    * Constructor de la clase.
    * Inicializa las variables de instancia `selectedMonth` y `selectedYear`
    * con el mes y año actuales.
    */
   constructor(
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private patientService: PatientService
   ) {
     const today = new Date();
     this.selectedMonth = today.getMonth();
     this.selectedYear = today.getFullYear();
+
+    // Suscribirse a los resultados de búsqueda
+    this.patientService.getPatients().subscribe(results => {
+      this.searchResults = results;
+    });
   }
 
   ngOnInit() {
@@ -275,8 +288,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
    * Cambia la visibilidad del selector y establece el mes y año seleccionados.
    */
   confirmarCita() {
-    const { type, patientName } = this.citaSeleccionada;
-    if (type && patientName) {
+    // Validar que se haya seleccionado un paciente válido
+    if (!this.selectedPatient) {
+      alert('Por favor, seleccione un paciente válido de la lista');
+      return;
+    }
+
+    const { type } = this.citaSeleccionada;
+    if (type && this.selectedPatient) {
       const tipoInfo = this.tiposCita.find(t => t.id === type);
 
       // fecha válida
@@ -304,7 +323,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       // Crear el evento para el calendario
       const eventToAdd = {
         id: newAppointment.id.toString(),
-        title: patientName,
+        title: this.selectedPatient.fullName,
         start: fechaHora,
         end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)), // Agregar duración en minutos
         backgroundColor: tipoInfo?.color,
@@ -510,6 +529,27 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     return this.calendarComponent.getApi();
   }
-
-
+  /**
+   * Método para buscar pacientes por nombre.
+   * Llama al servicio de pacientes para realizar la búsqueda.
+   * @param term El término de búsqueda.
+   * @returns void
+   */
+  onSearch(term: string): void {
+    this.searchTerm = term;
+    this.selectedPatient = null;
+    this.patientService.search(term);
+  }
+  /**
+   * Método para seleccionar un paciente de la lista de resultados.
+   * Establece el paciente seleccionado y actualiza el formulario de cita.
+   * @param patient El paciente seleccionado.
+   * @returns void
+   */
+  selectPatient(patient: Pacient): void {
+    this.selectedPatient = patient;
+    this.searchTerm = patient.fullName || '';
+    this.citaSeleccionada.patientName = patient.fullName || '';
+    this.searchResults = [];
+  }
 }
