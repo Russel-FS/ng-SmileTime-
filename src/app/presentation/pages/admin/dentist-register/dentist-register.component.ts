@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Dentist } from '../models/dentist.interface';
+import { DentistService } from '../../../../infrastructure/datasources/admin/dentist.service';
 
 @Component({
     selector: 'app-dentist-register',
@@ -16,7 +17,10 @@ import { Dentist } from '../models/dentist.interface';
 export class DentistRegisterComponent {
     registrationForm: FormGroup;
 
-    constructor(private fb: FormBuilder) {
+    constructor(
+        private fb: FormBuilder,
+        private dentistService: DentistService
+    ) {
         this.registrationForm = this.fb.group({
             name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
@@ -27,13 +31,14 @@ export class DentistRegisterComponent {
 
     onSubmit() {
         if (this.registrationForm.valid) {
-            const newDentist: Dentist = {
-                ...this.registrationForm.value,
-                active: true,
-                role: 'dentist',
-            };
-            console.log('Nuevo dentista:', newDentist);
-            this.registrationForm.reset();
+            this.dentistService.addDentist(this.registrationForm.value as Dentist).subscribe({
+                next: (response) => {
+                    console.log('Odontólogo registrado:', response);
+                },
+                error: (error) => {
+                    console.error('Error al registrar el odontólogo:', error);
+                }
+            });
         }
     }
 }
