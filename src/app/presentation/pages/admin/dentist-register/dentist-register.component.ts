@@ -18,10 +18,10 @@ export class DentistRegisterComponent {
 
     constructor(private fb: FormBuilder) {
         this.registrationForm = this.fb.group({
-            name: ['', Validators.required],
+            fullName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            specialization: ['', Validators.required],
-            licenseNumber: ['', Validators.required]
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            specialization: ['', Validators.required]
         });
     }
 
@@ -29,7 +29,8 @@ export class DentistRegisterComponent {
         if (this.registrationForm.valid) {
             const newDentist: Dentist = {
                 ...this.registrationForm.value,
-                active: true
+                active: true,
+                role: 'dentist',
             };
             console.log('Nuevo dentista:', newDentist);
             this.registrationForm.reset();

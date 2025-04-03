@@ -1,8 +1,9 @@
 export interface Dentist {
     id: number;
-    name: string;
+    fullName: string;
     email: string;
+    password?: string;
     specialization: string;
-    licenseNumber: string;
-    active: boolean;
+    active?: boolean;
+    role: string;
 }

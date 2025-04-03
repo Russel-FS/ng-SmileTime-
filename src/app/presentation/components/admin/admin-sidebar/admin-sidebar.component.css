@@ -1,0 +1,75 @@
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #f0f0f0;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.logo-container {
+  padding: 8px 0;
+  text-align: center;
+}
+
+.logo-container h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -1px;
+}
+
+.menu-section {
+  margin-top: 40px;
+}
+
+.menu-section h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #86868b;
+  margin-bottom: 15px;
+  letter-spacing: 0.1em;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu li {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.menu li:hover {
+  background-color: #f8f8f8;
+  color: #000;
+}
+
+.menu li.active {
+  background-color: #f0f0f0;
+  color: #000;
+  font-weight: 500;
+}
+
+.menu li i {
+  margin-right: 12px;
+  font-size: 18px;
+  color: #1d1d1f;
+}
+
+.menu li span {
+  font-size: 15px;
+  color: #1d1d1f;
+}

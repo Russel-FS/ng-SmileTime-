@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Dentist } from '../models/dentist.interface';
+import { DentistService } from '../../../../infrastructure/datasources/admin/dentist.service';
 
 @Component({
     selector: 'app-dentist-list',
@@ -20,79 +21,21 @@ import { Dentist } from '../models/dentist.interface';
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
-        MatButtonModule
+        MatButtonModule,
     ]
 })
 export class DentistListComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['name', 'email', 'specialization', 'licenseNumber', 'status', 'actions'];
+    displayedColumns: string[] = ['name', 'email', 'specialization', 'status', 'actions'];
     dataSource: MatTableDataSource<Dentist>;
-    dentists: Dentist[] = [
-        {
-            id: 1,
-            name: 'Dr. Juan Pérez',
-            email: 'juan.perez@ejemplo.com',
-            specialization: 'Ortodoncista',
-            licenseNumber: 'LIC-001',
-            active: true
-        },
-        {
-            id: 2,
-            name: 'Dra. María González',
-            email: 'maria.gonzalez@ejemplo.com',
-            specialization: 'Endodoncista',
-            licenseNumber: 'LIC-002',
-            active: true
-        },
-        {
-            id: 3,
-            name: 'Dr. Carlos Rodríguez',
-            email: 'carlos.rodriguez@ejemplo.com',
-            specialization: 'Cirujano Maxilofacial',
-            licenseNumber: 'LIC-0034',
-            active: false
-        },
-        {
-            id: 4,
-            name: 'flores. Ana Martínez',
-            email: 'ana.martinez@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0045',
-            active: true
-        },
-        {
-            id: 6,
-            name: 'RR. Ana Martínez',
-            email: 'ana.carlos@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0047',
-            active: true
-        },
-        {
-            id: 7,
-            name: 'RR. Ana Martínez',
-            email: 'ana.solano@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0048',
-            active: true
-        },
-        {
-            id: 8,
-            name: 'RR. Ana Martínez',
-            email: 'russel.flores@ejemplo.com',
-            specialization: 'Periodoncista',
-            licenseNumber: 'LIC-0049',
-            active: true
-        },
-    ];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor() {
+    constructor(private dentistService: DentistService) {
         this.dataSource = new MatTableDataSource<Dentist>();
     }
 
     ngOnInit() {
-        this.dataSource.data = this.dentists;
+        this.loadDentists();
     }
 
     ngAfterViewInit() {
@@ -108,7 +51,32 @@ export class DentistListComponent implements OnInit, AfterViewInit {
         }
     }
 
+    loadDentists() {
+        this.dentistService.getAllDentists().subscribe(
+            {
+                next: (dentists: Dentist[]) => {
+                    this.dataSource.data = dentists;
+                }
+                , error: (error) => {
+                    console.error('Error al obtener dentistas:', error);
+
+                }
+            }
+        );
+    }
+
     toggleStatus(dentist: Dentist) {
-        dentist.active = !dentist.active;
+        this.dentistService.toggleDentistStatus(dentist.id, !dentist.active)
+            .subscribe(
+                {
+                    next: (response) => {
+                        dentist.active = !dentist.active;
+                        console.log('Estado del dentista actualizado:', response);
+                    },
+                    error: (error) => {
+                        console.error('Error al actualizar el estado del dentista:', error);
+                    }
+                }
+            );
     }
 }
