@@ -5,5 +5,5 @@ export interface Dentist {
     password?: string;
     specialization: string;
     active?: boolean;
-    role: 'dentist';
+    role: string;
 }

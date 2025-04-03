@@ -24,12 +24,12 @@ import { Dentist } from '../models/dentist.interface';
     ]
 })
 export class DentistListComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['name', 'email', 'specialization', 'licenseNumber', 'status', 'actions'];
+    displayedColumns: string[] = ['name', 'email', 'specialization', 'status', 'actions'];
     dataSource: MatTableDataSource<Dentist>;
     dentists: Dentist[] = [
         {
             id: 1,
-            name: 'Dr. flores Pérez',
+            fullName: 'Dr. flores Pérez',
             email: 'juan.perez@ejemplo.com',
             specialization: 'Ortodoncista',
             active: true,
