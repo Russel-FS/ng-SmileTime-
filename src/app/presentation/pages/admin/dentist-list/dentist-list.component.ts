@@ -11,7 +11,7 @@ import { Dentist } from '../models/dentist.interface';
 @Component({
     selector: 'app-dentist-list',
     templateUrl: './dentist-list.component.html',
-    styleUrls: ['./dentist-list.component.scss'],
+    styleUrls: ['./dentist-list.component.css'],
     standalone: true,
     imports: [
         CommonModule,
