@@ -1,1 +1,26 @@
-<p>admin-sidebar works!</p>
+<aside class="sidebar">
+  <div class="logo-container">
+    <h1>ST</h1>
+  </div>
+
+  <nav class="menu">
+    <ul>
+      <li
+        routerLink="/admin/dentistas"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-tooth"></i>
+        <span>Dentistas</span>
+      </li>
+      <li
+        routerLink="/admin/carruseles"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-images"></i>
+        <span>Carruseles</span>
+      </li>
+    </ul>
+  </nav>
+</aside>
