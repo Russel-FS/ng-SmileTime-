@@ -311,7 +311,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         notes: this.citaSeleccionada.notes
       },
       patientInfo: {
-        name: this.selectedPatient.name || this.selectedPatient.email || '',
+        name: this.selectedPatient.name || this.selectedPatient.email || 'paciente',
         phone: this.selectedPatient.phone || '',
         status: 'active'
       }
@@ -324,7 +324,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
         const eventToAdd = {
           id: this.createEventId(),
-          title: `${this.selectedPatient?.name}`,
+          title: this.selectedPatient?.name || this.selectedPatient?.email || 'paciente',
           start: fechaHora,
           end: new Date(fechaHora.getTime() + (appointmentRequest.appointment.duration * 60000)),
           backgroundColor: tipoInfo?.color,
@@ -332,7 +332,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
             type: appointmentRequest.appointment.type,
             status: 'pendiente',
             duration: appointmentRequest.appointment.duration,
-            notes: appointmentRequest.appointment.notes
+            notes: appointmentRequest.appointment.notes,
+            patientName: this.selectedPatient?.name || this.selectedPatient?.email || 'paciente',
           }
         };
 
