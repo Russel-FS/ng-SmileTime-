@@ -40,6 +40,45 @@
       </div>
     </div>
   </section>
+  <section class="min-h-screen flex items-center relative overflow-hidden">
+    <!-- Carrusel de Servicios -->
+    <div
+      class="carousel"
+      (mouseenter)="onCarouselMouseEnter()"
+      (mouseleave)="onCarouselMouseLeave()"
+    >
+      <div class="carousel-inner" #carouselInner>
+        <div class="carousel-item" *ngFor="let item of carouselItems; let i = index">
+          <img [src]="item.imagenUrl" [alt]="item.alt" />
+          <div class="carousel-caption">
+            <h3>{{ item.titulo }}</h3>
+            <p>{{ item.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-controls">
+        <button class="carousel-control prev" (click)="prevSlide()">
+          <span class="sr-only">Previous</span>
+          ←
+        </button>
+        <button class="carousel-control next" (click)="nextSlide()">
+          <span class="sr-only">Next</span>
+          →
+        </button>
+      </div>
+
+      <div class="carousel-indicators">
+        <button
+          *ngFor="let item of carouselItems; let i = index"
+          class="indicator"
+          [class.active]="i === currentIndex"
+          (click)="goToSlide(i)"
+          [attr.aria-label]="'Go to slide ' + (i + 1)"
+        ></button>
+      </div>
+    </div>
+  </section>
 
   <!-- Caracteristicas -->
   <section class="py-20 bg-white">

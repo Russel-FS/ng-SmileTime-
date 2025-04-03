@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://turbo-doodle-q7pw5pwr6jww34rgr-5011.app.github.dev';
+  private apiUrlBase = 'https://localhost:7201';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
@@ -26,7 +26,14 @@ export class ApiConfig {
         //mensaje api
         createMessage: `${this.apiUrlBase}/api/messages/create`,
         user: `${this.apiUrlBase}/api/user`,
-      }
+      },
+      carousel: {
+        getById: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
+        create: `${this.apiUrlBase}/api/Carousel`,
+        update: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
+        delete: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
+        active: `${this.apiUrlBase}/api/Carousel/active`
+      },
     },
   };
 

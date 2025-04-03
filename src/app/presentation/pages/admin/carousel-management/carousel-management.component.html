@@ -1,0 +1,362 @@
+<!-- Página de gestión del carrusel -->
+<main class="min-h-screen bg-gray-50">
+  <!-- Cabecera -->
+  <header class="bg-white shadow">
+    <div class="max-w-[1500px] mx-auto px-8 py-6">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-900">Gestión de Carrusel</h1>
+        <button
+          (click)="mostrarFormularioNuevo()"
+          class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          Nuevo Item
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <section class="py-10">
+    <div class="max-w-[1500px] mx-auto px-8">
+      <!-- Formulario de creación/edición (inicialmente oculto) -->
+      <div *ngIf="formularioVisible" class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fadeIn">
+        <h2 class="text-xl font-bold mb-4">
+          {{ modoEdicion ? 'Editar' : 'Crear' }} Item del Carrusel
+        </h2>
+
+        <form [formGroup]="carouselForm" (ngSubmit)="guardarItem()" class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label for="titulo" class="block text-sm font-medium text-gray-700 mb-1"
+                  >Título *</label
+                >
+                <input
+                  type="text"
+                  id="titulo"
+                  formControlName="titulo"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  [ngClass]="{ 'border-red-500': formularioEnviado && f['titulo'].errors }"
+                />
+                <div
+                  *ngIf="formularioEnviado && f['titulo'].errors"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  <span *ngIf="f['titulo'].errors['required']">El título es obligatorio</span>
+                  <span *ngIf="f['titulo'].errors['maxlength']"
+                    >El título no puede superar 100 caracteres</span
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1"
+                  >Descripción</label
+                >
+                <textarea
+                  id="descripcion"
+                  formControlName="descripcion"
+                  rows="4"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  [ngClass]="{ 'border-red-500': formularioEnviado && f['descripcion'].errors }"
+                ></textarea>
+                <div
+                  *ngIf="formularioEnviado && f['descripcion'].errors"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  <span *ngIf="f['descripcion'].errors['maxlength']"
+                    >La descripción no puede superar 500 caracteres</span
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label for="alt" class="block text-sm font-medium text-gray-700 mb-1"
+                  >Texto alternativo</label
+                >
+                <input
+                  type="text"
+                  id="alt"
+                  formControlName="alt"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  [ngClass]="{ 'border-red-500': formularioEnviado && f['alt'].errors }"
+                />
+                <div *ngIf="formularioEnviado && f['alt'].errors" class="text-red-500 text-sm mt-1">
+                  <span *ngIf="f['alt'].errors['maxlength']"
+                    >El texto alternativo no puede superar 255 caracteres</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label for="imagenUrl" class="block text-sm font-medium text-gray-700 mb-1"
+                  >URL de la imagen *</label
+                >
+                <input
+                  type="text"
+                  id="imagenUrl"
+                  formControlName="imagenUrl"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  [ngClass]="{ 'border-red-500': formularioEnviado && f['imagenUrl'].errors }"
+                />
+                <div
+                  *ngIf="formularioEnviado && f['imagenUrl'].errors"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  <span *ngIf="f['imagenUrl'].errors['required']"
+                    >La URL de la imagen es obligatoria</span
+                  >
+                  <span *ngIf="f['imagenUrl'].errors['maxlength']"
+                    >La URL no puede superar 255 caracteres</span
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Vista previa de la imagen</label
+                >
+                <div
+                  class="border border-gray-300 rounded-lg overflow-hidden h-40 bg-gray-100 flex items-center justify-center"
+                >
+                  <img
+                    *ngIf="carouselForm.get('imagenUrl')?.value"
+                    [src]="carouselForm.get('imagenUrl')?.value"
+                    [alt]="carouselForm.get('alt')?.value || 'Vista previa'"
+                    class="max-h-full max-w-full object-contain"
+                  />
+                  <div *ngIf="!carouselForm.get('imagenUrl')?.value" class="text-gray-400 text-sm">
+                    No hay imagen seleccionada
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 mt-4">
+                <input
+                  type="checkbox"
+                  id="activo"
+                  formControlName="activo"
+                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                />
+                <label for="activo" class="text-sm font-medium text-gray-700">Item activo</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              (click)="cancelarFormulario()"
+              class="bg-white hover:bg-gray-50 text-gray-700 px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 border border-gray-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
+            >
+              {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tabla de elementos -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Imagen
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Título
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Descripción
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Estado
+                </th>
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let item of carouselItems" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="h-12 w-16 flex-shrink-0 overflow-hidden rounded bg-gray-100">
+                      <img
+                        [src]="item.imagenUrl"
+                        [alt]="item.alt"
+                        class="h-full w-full object-cover"
+                      />
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-medium text-gray-900">{{ item.titulo }}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-500 max-w-xs truncate">{{ item.descripcion }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [ngClass]="
+                      item.activo ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    "
+                  >
+                    {{ item.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      (click)="editarItem(item)"
+                      class="text-blue-600 hover:text-blue-900"
+                      title="Editar"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      (click)="confirmarEliminar(item)"
+                      class="text-red-600 hover:text-red-900"
+                      title="Eliminar"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Estado vacío -->
+              <tr *ngIf="carouselItems.length === 0">
+                <td colspan="5" class="px-6 py-10 text-center text-sm text-gray-500">
+                  <div class="flex flex-col items-center justify-center gap-2">
+                    <svg
+                      class="w-10 h-10 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <p>No hay elementos en el carrusel</p>
+                    <button
+                      (click)="mostrarFormularioNuevo()"
+                      class="text-blue-600 hover:text-blue-900 font-medium flex items-center gap-1"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Agregar nuevo item
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal de confirmación para eliminar -->
+  <div
+    *ngIf="mostrarModalEliminar"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-xl animate-fadeIn">
+      <div class="text-center mb-4">
+        <div
+          class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4"
+        >
+          <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900">Confirmar eliminación</h3>
+        <div class="mt-2">
+          <p class="text-sm text-gray-500">
+            ¿Estás seguro de que deseas eliminar este item del carrusel? Esta acción no se puede
+            deshacer.
+          </p>
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 mt-5">
+        <button
+          type="button"
+          (click)="cancelarEliminar()"
+          class="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-all border border-gray-300"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          (click)="eliminarItem()"
+          class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
