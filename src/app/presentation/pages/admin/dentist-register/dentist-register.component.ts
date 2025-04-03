@@ -22,16 +22,24 @@ export class DentistRegisterComponent {
         private dentistService: DentistService
     ) {
         this.registrationForm = this.fb.group({
-            name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(6)]],
-            specialization: ['', Validators.required]
+            fullName: ['', Validators.required],
+            role: ['Dentist', Validators.required],
+            specialization: ['', Validators.required],
+            active: [true, Validators.required]
         });
     }
 
     onSubmit() {
         if (this.registrationForm.valid) {
-            this.dentistService.addDentist(this.registrationForm.value as Dentist).subscribe({
+            const dentistData = {
+                ...this.registrationForm.value,
+                role: 'Dentist',
+                active: true
+            };
+
+            this.dentistService.addDentist(dentistData).subscribe({
                 next: (response) => {
                     console.log('Odontólogo registrado:', response);
                 },
