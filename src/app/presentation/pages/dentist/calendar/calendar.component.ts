@@ -365,6 +365,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
    */
   handleEventClick(clickInfo: any) {
     this.eventoSeleccionado = clickInfo.event;
+    // Establecer el paciente seleccionado con la información del evento
+    this.selectedPatient = {
+      id: clickInfo.event.id,
+      name: clickInfo.event.title,
+      fullName: clickInfo.event.extendedProps.patientInfo?.phone || '',
+      email: clickInfo.event.extendedProps.patientInfo?.email || '',
+    };
+    // Establecer el término de búsqueda con el nombre del paciente
+    this.searchTerm = clickInfo.event.title;
+
+    // Establecer la cita seleccionada con la información del evento
     this.citaSeleccionada = {
       id: clickInfo.event.id,
       date: clickInfo.event.start || new Date(),
@@ -374,7 +385,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       duration: clickInfo.event.extendedProps.duration,
       notes: clickInfo.event.extendedProps.notes,
       patientName: clickInfo.event.title
-
     };
     this.mostrarDetalles = true;
   }
@@ -386,6 +396,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   cerrarDetalles() {
     this.mostrarDetalles = false;
     this.eventoSeleccionado = null;
+    this.selectedPatient = null;
+    this.searchTerm = '';
   }
 
   /**
