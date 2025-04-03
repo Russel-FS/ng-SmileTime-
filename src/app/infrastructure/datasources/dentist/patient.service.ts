@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, map } from 'rxjs/operators';
 import { Pacient } from '../../../presentation/pages/dentist/model/pacient';
+import { HttpClient } from '@angular/common/http';
+import { ApiConfig } from '../../config/app.config';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,16 +12,15 @@ import { Pacient } from '../../../presentation/pages/dentist/model/pacient';
 export class PatientService {
     private searchTerms = new Subject<string>();
 
-    constructor() { }
+    constructor(
+        private http: HttpClient,
+        private apiConfig: ApiConfig,
+        private storageService: StorageService,
+    ) { }
 
     search(term: string): void {
         this.searchTerms.next(term);
     }
-
-    private mockPatients: Pacient[] = [
-        { id: 1, fullName: 'Juan Pérez', email: 'juan@example.com', },
-        { id: 2, fullName: 'María García', email: 'maria@example.com', }
-    ];
 
     getPatients(): Observable<Pacient[]> {
         return this.searchTerms.pipe(
@@ -28,14 +30,27 @@ export class PatientService {
                 if (!term.trim()) {
                     return of([]);
                 }
-                return of(this.mockPatients.filter(patient =>
-                    patient.fullName?.toLowerCase().includes(term.toLowerCase())
-                ));
+                const searchUrl = `${this.apiConfig.getEndpoint('pacient', 'search')}/${term}`;
+
+                return this.http.get<any>(searchUrl).pipe(
+                    map(response => response.data as Pacient[]),
+                    catchError(error => {
+                        console.error('Error al buscar pacientes:', error);
+                        return of([]);
+                    })
+                );
             })
         );
     }
 
     getPatientById(id: number): Observable<Pacient | undefined> {
-        return of(this.mockPatients.find(patient => patient.id === id));
+        const url = this.apiConfig.getEndpoint('pacient', 'getById');
+        return this.http.get<any>(url).pipe(
+            map(response => response.data as Pacient),
+            catchError(error => {
+                console.error(`Error al obtener paciente ${id}:`, error);
+                return of(undefined);
+            })
+        );
     }
 }

@@ -48,6 +48,13 @@ export class ApiConfig {
         assign: (userId: number) => `${this.apiUrlBase}/api/AdminManagement/assign/${userId}`,
         removeRole: (userId: number) => `${this.apiUrlBase}/api/AdminManagement/remove-role/${userId}`,
       },
+      pacient: {
+        all: `${this.apiUrlBase}/api/Pacient/all`,
+        getById: (id: number | string) => `${this.apiUrlBase}/api/Pacient/${id}`,
+        update: (id: number | string) => `${this.apiUrlBase}/api/Pacient/${id}`,
+        search: `${this.apiUrlBase}/api/Pacient/search`,
+        create: `${this.apiUrlBase}/api/Pacient/create`,
+      },
     },
   };
 
