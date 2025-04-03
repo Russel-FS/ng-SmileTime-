@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
@@ -32,7 +32,7 @@ interface AppointmentForm {
     ])
   ]
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
   // Calendar Configuration
@@ -118,13 +118,50 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
     this.loadAppointments();
   }
 
   loadAppointments() {
+    if (!this.calendarComponent) {
+      console.warn('El calendario aún no está inicializado');
+      return;
+    }
+
     this.calendarService.getAppointments().subscribe(appointments => {
       console.log('Citas cargadas:', appointments);
-    
+
+      // Convertir las citas en eventos del calendario
+      const events = appointments.map(appointment => {
+        const tipoInfo = this.tiposCita.find(t => t.id === appointment.type);
+        const fechaHora = new Date(appointment.date);
+
+        return {
+          id: appointment.id.toString(),
+          title: `Paciente ${appointment.id}`,
+          start: fechaHora,
+          end: new Date(fechaHora.getTime() + (appointment.duration * 60000)),
+          backgroundColor: tipoInfo?.color,
+          extendedProps: {
+            type: appointment.type,
+            status: appointment.status,
+            duration: appointment.duration,
+            notes: appointment.notes
+          }
+        };
+      });
+
+      // Agregar eventos al calendario
+      const calendarApi = this.getCalendarApi();
+      if (calendarApi) {
+        events.forEach(event => {
+          calendarApi.addEvent(event);
+          this.events.push(event);
+        });
+      }
     });
   }
 
@@ -257,7 +294,11 @@ export class CalendarComponent implements OnInit {
       this.calendarService.addAppointment(newAppointment).subscribe(success => {
         if (success) {
           const calendarApi = this.getCalendarApi();
-          calendarApi.addEvent(eventToAdd);
+          if (calendarApi) {
+            calendarApi.addEvent(eventToAdd);
+          } else {
+            console.warn('No se pudo agregar el evento porque el calendario no está inicializado');
+          }
           this.events.push(eventToAdd);
         }
       });
@@ -438,6 +479,10 @@ export class CalendarComponent implements OnInit {
    * @returns FullCalendarComponent
    */
   private getCalendarApi() {
+    if (!this.calendarComponent) {
+      console.warn('Componente de calendario no inicializado');
+      return null;
+    }
     return this.calendarComponent.getApi();
   }
 
