@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 import { Carrusel } from '../../../../core/domain/model/heropagedata/carrusel';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarouselService } from '../../../../infrastructure/datasources/carousel.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-carousel-management',
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
   templateUrl: './carousel-management.component.html',
-  styleUrls: ['./carousel-management.component.css']
+  styleUrl: './carousel-management.component.css'
 })
-export class CarouselManagementComponent implements OnInit {
+export class CarouselManagementComponent {
   carouselItems: Carrusel[] = [];
   carouselForm: FormGroup;
   formularioVisible = false;
@@ -16,7 +18,7 @@ export class CarouselManagementComponent implements OnInit {
   itemSeleccionado: Carrusel | null = null;
   formularioEnviado = false;
 
-  // Variables para el modal de confirmación
+  // Variables para el modal de confirmaciónes
   mostrarModalEliminar = false;
   itemParaEliminar: Carrusel | null = null;
 
@@ -39,11 +41,11 @@ export class CarouselManagementComponent implements OnInit {
 
   obtenerCarouselItems(): void {
     this.carouselService.getCarouselItems().subscribe(
-      (items) => {
-        this.carouselItems = items;
-      },
-      (error) => {
-        console.error('Error al obtener los items del carrusel', error);
+      {
+        next: (items) => {
+          this.carouselItems = items;
+        },
+        error: (error) => console.error('Error al obtener los carruseles', error)
       }
     );
   }
