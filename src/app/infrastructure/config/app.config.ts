@@ -34,6 +34,20 @@ export class ApiConfig {
         delete: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
         active: `${this.apiUrlBase}/api/Carousel/active`
       },
+      dentist: {
+        all: `${this.apiUrlBase}/api/DentistManagement/all`,
+        getById: (id: number) => `${this.apiUrlBase}/api/DentistManagement/${id}`,
+        delete: (id: number) => `${this.apiUrlBase}/api/DentistManagement/${id}`,
+        create: `${this.apiUrlBase}/api/DentistManagement/create`,
+        assign: (userId: number) => `${this.apiUrlBase}/api/DentistManagement/assign/${userId}`,
+        removeRole: (userId: number) => `${this.apiUrlBase}/api/DentistManagement/remove-role/${userId}`,
+      },
+      admin: {
+        all: `${this.apiUrlBase}/api/AdminManagement/all`,
+        create: `${this.apiUrlBase}/api/AdminManagement/create`,
+        assign: (userId: number) => `${this.apiUrlBase}/api/AdminManagement/assign/${userId}`,
+        removeRole: (userId: number) => `${this.apiUrlBase}/api/AdminManagement/remove-role/${userId}`,
+      },
     },
   };
 
