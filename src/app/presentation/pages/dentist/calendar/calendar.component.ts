@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventContentArg } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg, EventClickArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { FormsModule } from '@angular/forms';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { DentalManagement, DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
+import { DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
 
-interface NuevaCita {
-  tipo: string;
-  nombre: string;
+interface AppointmentForm {
+  type: string;
+  patientName: string;
 }
 
 @Component({
@@ -34,40 +34,7 @@ interface NuevaCita {
 export class CalendarComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
-  tiposCita = [
-    { id: 'limpieza' as AppointmentType, label: 'Limpieza Dental', color: '#007AFF' },
-    { id: 'consulta' as AppointmentType, label: 'Consulta', color: '#5856D6' },
-    { id: 'tratamiento' as AppointmentType, label: 'Tratamiento', color: '#FF2D55' }
-  ];
-  mostrarSelector = false;
-  nuevaCita: NuevaCita = { tipo: '', nombre: '' };
-  seleccionTemporal: any;
-  currentDate = new Date();
-  months = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
-  years = Array.from(new Array(10), (val, index) => new Date().getFullYear() + index);
-  selectedMonth: number;
-  selectedYear: number;
-
-  mostrarDetalles = false;
-  citaSeleccionada: Partial<DentalAppointment> & { patientName?: string } = {
-    id: '',
-    date: new Date(),
-    time: '',
-    type: 'consulta',
-    status: 'pendiente',
-    duration: 30
-  };
-  eventoSeleccionado: any = null;
-
-  constructor() {
-    const today = new Date();
-    this.selectedMonth = today.getMonth();
-    this.selectedYear = today.getFullYear();
-  }
-
+  // Calendar Configuration
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
@@ -99,12 +66,62 @@ export class CalendarComponent implements OnInit {
     }
   };
 
+  // Appointment Types
+  tiposCita = [
+    { id: 'limpieza' as AppointmentType, label: 'Limpieza Dental', color: '#007AFF' },
+    { id: 'consulta' as AppointmentType, label: 'Consulta', color: '#5856D6' },
+    { id: 'tratamiento' as AppointmentType, label: 'Tratamiento', color: '#FF2D55' }
+  ];
+
+  // Date Navigation
+  readonly months = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+
+  /** años */
+  readonly years = Array.from(new Array(10), (_, i) => new Date().getFullYear() + i);
+
+  // estado variables son para el selector de mes y año
   events: any[] = [];
+  currentDate = new Date();
+  selectedMonth: number;
+  selectedYear: number;
+  mostrarSelector = false;
+  mostrarDetalles = false;
+  eventoSeleccionado: any = null;
+
+  // Forms
+  nuevaCita: AppointmentForm = { type: '', patientName: '' };
+  seleccionTemporal: any;
+  citaSeleccionada: Partial<DentalAppointment> & { patientName?: string } = {
+    id: '',
+    date: new Date(),
+    time: '',
+    type: 'consulta',
+    status: 'pendiente',
+    duration: 30
+  };
+
+  /**
+   * Constructor de la clase.
+   * Inicializa las variables de instancia `selectedMonth` y `selectedYear`
+   * con el mes y año actuales.
+   */
+  constructor() {
+    const today = new Date();
+    this.selectedMonth = today.getMonth();
+    this.selectedYear = today.getFullYear();
+  }
 
   ngOnInit() {
 
   }
-
+  /**
+   * Método para abrir el selector de mes y año.
+   * Muestra el selector y establece el mes y año seleccionados.
+   * @param event El evento de clic.
+   */
   renderEventContent(eventInfo: any) {
     const isMobile = window.innerWidth < 768;
 
@@ -116,7 +133,7 @@ export class CalendarComponent implements OnInit {
         hour12: isMobile
       }).replace(/\s/g, '').toLowerCase() : '';
 
-    // Obtener el tipo de cita de manera segura
+    // Obtener el tipo de cita 
     const tipo = this.tiposCita.find(t => t.id === eventInfo.event.extendedProps.type);
     const typeLabel = tipo ?
       (isMobile ? tipo.label.split(' ')[0] : tipo.label) :
@@ -154,10 +171,15 @@ export class CalendarComponent implements OnInit {
     };
   }
 
+  /**
+   * Método para manejar la selección de una fecha en el calendario.
+   * Establece la fecha seleccionada y muestra el formulario de detalles.
+   * @param selectInfo Información de la selección de fecha.
+   */
   handleDateSelect(selectInfo: DateSelectArg) {
     const selectedDate = selectInfo.start;
 
-    // Asegurarnos de mantener la hora actual al seleccionar una fecha
+    //  hora actual al seleccionar una fecha
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
     selectedDate.setHours(currentHour, currentMinutes, 0);
@@ -175,18 +197,21 @@ export class CalendarComponent implements OnInit {
     this.mostrarDetalles = true;
     this.eventoSeleccionado = null;
   }
-
+  /**
+   * Método para confirmar la cita y cerrar el selector de mes y año.
+   * Cambia la visibilidad del selector y establece el mes y año seleccionados.
+   */
   confirmarCita() {
     const { type, patientName } = this.citaSeleccionada;
     if (type && patientName) {
       const tipoInfo = this.tiposCita.find(t => t.id === type);
 
-      // Asegurarnos de que tenemos una fecha válida
+      // fecha válida
       const fechaBase = this.citaSeleccionada.date instanceof Date ?
         this.citaSeleccionada.date :
         new Date(this.citaSeleccionada.date || new Date());
 
-      // Manejar la hora de forma segura
+      // Manejar la hora 
       const time = this.citaSeleccionada.time || '00:00';
       const [hours = '0', minutes = '0'] = time.split(':');
 
@@ -226,13 +251,22 @@ export class CalendarComponent implements OnInit {
     this.cerrarDetalles();
   }
 
+  /**
+   * Método para cerrar el selector de mes y año.
+   * Cambia la visibilidad del selector.
+   */
   cerrarSelector() {
     this.mostrarSelector = false;
     if (this.seleccionTemporal) {
       this.seleccionTemporal.view.calendar.unselect();
     }
   }
-
+  /**
+   * Método para manejar el clic en un evento del calendario.
+   * Muestra los detalles del evento seleccionado.
+   * @param clickInfo Información del evento clicado.
+   * @returns void
+   */
   handleEventClick(clickInfo: any) {
     this.eventoSeleccionado = clickInfo.event;
     this.citaSeleccionada = {
@@ -248,11 +282,20 @@ export class CalendarComponent implements OnInit {
     this.mostrarDetalles = true;
   }
 
+  /**
+   * Método para cerrar el formulario de detalles de la cita.
+   * Cambia la visibilidad del formulario y restablece la cita seleccionada.
+   */
   cerrarDetalles() {
     this.mostrarDetalles = false;
     this.eventoSeleccionado = null;
   }
 
+  /**
+   * Método para eliminar una cita.
+   * Solicita confirmación al usuario antes de proceder con la eliminación.
+   * @returns void
+   */
   eliminarCita() {
     if (confirm('¿Está seguro de eliminar esta cita?')) {
       this.eventoSeleccionado?.remove();
@@ -260,6 +303,11 @@ export class CalendarComponent implements OnInit {
     }
   }
 
+  /**
+   * Método para guardar los cambios realizados en la cita seleccionada.
+   * Actualiza la información del evento en el calendario.
+   * @returns void
+   */
   guardarCambios() {
     if (this.eventoSeleccionado) {
       const tipoInfo = this.tiposCita.find(t => t.id === this.citaSeleccionada.type);
@@ -296,9 +344,15 @@ export class CalendarComponent implements OnInit {
     this.cerrarDetalles();
   }
 
+  /**
+   * Método para abrir un nuevo formulario de cita.
+   * Inicializa los valores necesarios para crear una nueva cita.
+   * @returns void
+   */
+
   abrirNuevaCita() {
     const now = new Date();
-    this.nuevaCita = { tipo: '', nombre: '' };
+    this.nuevaCita = { type: '', patientName: '' };
     this.seleccionTemporal = {
       startStr: now.toISOString(),
       end: now,
@@ -316,11 +370,20 @@ export class CalendarComponent implements OnInit {
     };
     this.mostrarDetalles = true;
   }
-
+  /**
+   * Método para crear un nuevo ID de evento.
+   * Genera un ID único basado en la longitud del array de eventos.
+   * @returns string
+   */
   createEventId() {
     return String(this.events.length + 1);
   }
-
+  /**
+   * Método para manejar el cambio de mes en el calendario.
+   * Cambia la fecha del calendario al mes seleccionado.
+   * @param event El evento de cambio de mes.
+   * @returns void
+   */
   changeMonth(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     const month = parseInt(value, 10);
@@ -331,7 +394,12 @@ export class CalendarComponent implements OnInit {
       calendarApi.gotoDate(date);
     }
   }
-
+  /**
+   * Método para manejar el cambio de año en el calendario.
+   * Cambia la fecha del calendario al año seleccionado.
+   * @param event El evento de cambio de año.
+   * @returns void
+   */
   changeYear(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
     const year = parseInt(value, 10);
@@ -342,13 +410,13 @@ export class CalendarComponent implements OnInit {
       calendarApi.gotoDate(date);
     }
   }
-
+  /**
+   * Método para obtener la API del calendario.
+   * @returns FullCalendarComponent
+   */
   private getCalendarApi() {
     return this.calendarComponent.getApi();
   }
 
-  private getTipoId(label: string): string {
-    const tipo = this.tiposCita.find(t => t.label === label);
-    return tipo ? tipo.id : '';
-  }
+
 }
