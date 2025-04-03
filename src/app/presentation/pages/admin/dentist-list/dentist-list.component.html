@@ -1,15 +1,13 @@
 <div class="list-container">
   <header class="list-header">
-    <div class="header-content">
-      <h2>Odontólogos</h2>
-      <p class="subtitle">Gestiona el equipo médico de la clínica</p>
-    </div>
+    <h2>Odontólogos</h2>
+    <p class="subtitle">Gestiona el equipo médico de la clínica</p>
+
     <div class="search-box">
-      <div class="search-input-container">
-        <i class="fas fa-search search-icon"></i>
+      <div class="search-input-wrapper">
+        <i class="fas fa-search"></i>
         <input
           type="text"
-          class="search-input"
           placeholder="Buscar por nombre, email o especialidad..."
           (input)="applyFilter($event)"
         />
@@ -17,8 +15,8 @@
     </div>
   </header>
 
-  <div class="table-container">
-    <table class="custom-table">
+  <div class="table-wrapper">
+    <table class="dentist-table">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -34,19 +32,19 @@
           <td>{{ dentist.email }}</td>
           <td>{{ dentist.specialization }}</td>
           <td>
-            <span [class]="dentist.active ? 'status-active' : 'status-inactive'">
+            <span class="status-badge" [class.active]="dentist.active">
               {{ dentist.active ? 'Activo' : 'Inactivo' }}
             </span>
           </td>
           <td class="actions">
-            <button class="btn-icon" (click)="toggleStatus(dentist)">
+            <button class="action-btn" (click)="toggleStatus(dentist)">
               <i
                 class="fas"
                 [class.fa-toggle-on]="dentist.active"
                 [class.fa-toggle-off]="!dentist.active"
               ></i>
             </button>
-            <button class="btn-icon">
+            <button class="action-btn">
               <i class="fas fa-edit"></i>
             </button>
           </td>
