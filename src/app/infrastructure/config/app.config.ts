@@ -28,10 +28,10 @@ export class ApiConfig {
         user: `${this.apiUrlBase}/api/user`,
       },
       carousel: {
-        getById: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
+        getById: (id: number) => `${this.apiUrlBase}/api/Carousel`,
         create: `${this.apiUrlBase}/api/Carousel`,
-        update: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
-        delete: (id: number) => `${this.apiUrlBase}/api/Carousel/${id}`,
+        update: (id: number) => `${this.apiUrlBase}/api/Carousels/${id}`,
+        delete: (id: number) => `${this.apiUrlBase}/api/Carousel`,
         active: `${this.apiUrlBase}/api/Carousel/active`
       },
     },

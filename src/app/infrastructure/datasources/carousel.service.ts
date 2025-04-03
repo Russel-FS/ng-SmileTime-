@@ -37,7 +37,7 @@ export class CarouselService {
 
   // ✏️ Modificar carrusel (Requiere autenticación)
   updateCarousel(id: number, carrusel: Carrusel): Observable<Carrusel> {
-    const url = this.apiUrl.getEndpoint('carousel', 'update').replace('{id}', id.toString());
+    const url = `${this.apiUrl.getEndpoint('carousel', 'update')}/${id}`;
     const headers = this.storage.getAuthHeaders();
     return this.http.put<Carrusel>(url, carrusel, { headers }).pipe(
       tap(data => console.log('✏️ Carrusel actualizado:', data)),
@@ -45,15 +45,17 @@ export class CarouselService {
     );
   }
 
+
   // ❌ Eliminar carrusel (Requiere autenticación)
   deleteCarousel(id: number): Observable<void> {
-    const url = this.apiUrl.getEndpoint('carousel', 'delete').replace('{id}', id.toString());
+    const url = `${this.apiUrl.getEndpoint('carousel', 'delete')}/${id}`;
     const headers = this.storage.getAuthHeaders();
     return this.http.delete<void>(url, { headers }).pipe(
       tap(() => console.log(`❌ Carrusel eliminado: ${id}`)),
       catchError(this.handleError)
     );
   }
+
 
   // ⚠️ Manejo de errores
   private handleError(error: HttpErrorResponse) {
