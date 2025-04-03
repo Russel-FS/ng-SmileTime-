@@ -2,31 +2,12 @@ export type AppointmentType = 'limpieza' | 'consulta' | 'tratamiento';
 export type AppointmentStatus = 'pendiente' | 'confirmada' | 'cancelada';
 export type PatientStatus = 'active' | 'pending' | 'inactive';
 
-export interface Patient {
-    id: number | string;
-    userId: string; 
-    name: string;
-    lastName: string;
-    phone: string;
-    email?: string;
-    status: PatientStatus;
-    lastVisit?: Date;
-}
-export interface Dentist {
-    id: number | string;
-    userId: string; 
-    name: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    specialty?: string;
-    status: 'active' | 'inactive';
-}
+
 
 export interface DentalAppointment {
     id: number | string;
-    patient: Patient;
-    dentist: Dentist;
+    patientId?: number | string;
+    dentistId?: number | string;
     date: Date;
     time: string;
     type: AppointmentType;
