@@ -3,7 +3,7 @@ import { AdminSidebarComponent } from "../../../components/admin/admin-sidebar/a
 
 @Component({
   selector: 'app-admin-home',
-  imports: [AdminSidebarComponent],
+  imports: [],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css'
 })
