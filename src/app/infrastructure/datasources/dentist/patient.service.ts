@@ -16,8 +16,8 @@ export class PatientService {
     }
 
     private mockPatients: Pacient[] = [
-        { id: 1, fullName: 'Juan Pérez', email: 'juan@example.com', specialization: 'General' },
-        { id: 2, fullName: 'María García', email: 'maria@example.com', specialization: 'General' }
+        { id: 1, fullName: 'Juan Pérez', email: 'juan@example.com', },
+        { id: 2, fullName: 'María García', email: 'maria@example.com', }
     ];
 
     getPatients(): Observable<Pacient[]> {

@@ -1,7 +1,7 @@
 export interface Pacient {
-    id: number;
+    id: number | string;
     fullName?: string;
     name?: string;
     email: string;
-    specialization: string;
+    phone?: string;
 }
