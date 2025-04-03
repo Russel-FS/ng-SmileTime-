@@ -17,6 +17,7 @@ interface Appointment {
   patientPhone?: string;
 }
 
+
 @Component({
   selector: 'app-appointment-scheduling',
   standalone: true,

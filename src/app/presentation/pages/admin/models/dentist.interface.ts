@@ -1,6 +1,7 @@
 export interface Dentist {
     id: number;
-    fullName: string;
+    fullName?: string;
+    name?: string;
     email: string;
     password?: string;
     specialization: string;
