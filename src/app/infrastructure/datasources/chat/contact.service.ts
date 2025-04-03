@@ -47,7 +47,7 @@ export class ContactDataSource implements IUserDatasource {
 
   getContacts(): Observable<ConversationParticipantDTO[]> {
     const headers = this.storage.getAuthHeaders();
-    return this.http.get<ConversationParticipantDTO[]>(`${this.apiUrl.getEndpoint('chat', 'dentists')}`, { headers });
+    return this.http.get<ConversationParticipantDTO[]>(`${this.apiUrl.getEndpoint('chat', 'contacts')}`, { headers });
   }
 
   getContact(id: string): Observable<ConversationParticipantDTO> {
