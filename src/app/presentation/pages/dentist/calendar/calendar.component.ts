@@ -311,7 +311,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         notes: this.citaSeleccionada.notes
       },
       patientInfo: {
-        name: this.selectedPatient.name || '',
+        name: this.selectedPatient.name || this.selectedPatient.email || '',
         phone: this.selectedPatient.phone || '',
         status: 'active'
       }
