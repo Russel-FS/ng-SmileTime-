@@ -55,6 +55,9 @@ export class ApiConfig {
         search: `${this.apiUrlBase}/api/Pacient/search`,
         create: `${this.apiUrlBase}/api/Pacient/create`,
       },
+      dentalAppointment: {
+        create: `${this.apiUrlBase}/api/DentalAppointment/create`,
+      },
     },
   };
 

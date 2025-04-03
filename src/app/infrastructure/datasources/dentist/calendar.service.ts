@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { AppointmentRequest, DentalAppointment } from '../../../presentation/pages/dentist/model/dental-management.model';
+import { HttpClient } from '@angular/common/http';  // Cambiado desde @microsoft/signalr
+import { ApiConfig } from '../../config/app.config';
+import { StorageService } from '../../../core/services/storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CalendarService {
+
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfig,
+    private storageService: StorageService,
+  ) { }
+
   private mockAppointments: DentalAppointment[] = [
     {
       id: '1',
@@ -36,15 +46,35 @@ export class CalendarService {
     }
   ];
 
-  constructor() { }
   /**
-   * Obtiene una cita dental por su ID.
-   * @param appointmentId - El ID de la cita a obtener.
-   * @returns Un observable que emite la cita dental correspondiente al ID proporcionado.
+   * Añade una cita dental.
+   * @param appointment - La cita a añadir.
+   * @returns Un observable que emite true si la cita fue añadida con éxito, o false en caso contrario.
    */
   addAppointment(appointment: AppointmentRequest): Observable<boolean> {
-    console.log('Agregando cita:', appointment);
-    return of(true);
+    console.log('Añadiendo cita:', JSON.stringify(appointment, null, 2));
+    const url = this.apiConfig.getEndpoint('dentalAppointment', 'create');
+    // Transformar el formato de la petición
+    const serverRequest = {
+      date: appointment.appointment.date,
+      time: appointment.appointment.time,
+      duration: appointment.appointment.duration,
+      notes: appointment.appointment.notes,
+      patientId: appointment.appointment.patientId,
+      type: appointment.appointment.type,
+      patientInfo: appointment.patientInfo
+    };
+
+    return this.http.post<boolean>(url, serverRequest).pipe(
+      map(response => {
+        console.log('Cita añadida:', response);
+        return true;
+      }),
+      catchError(error => {
+        console.error('Error al añadir cita:', error);
+        return of(false);
+      })
+    );
   }
 
   /**
