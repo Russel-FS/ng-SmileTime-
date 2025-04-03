@@ -2,12 +2,11 @@ import { Component, OnInit, LOCALE_ID } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
-import { DentalManagement } from '../model/dental-management.model';
 
 registerLocaleData(localeEs, 'es');
 
 interface Appointment {
-  id: number | string;
+  patientId: string;
   patientName: string;
   date: Date;
   time: string;
@@ -18,7 +17,6 @@ interface Appointment {
   patientPhone?: string;
 }
 
-
 @Component({
   selector: 'app-appointment-scheduling',
   standalone: true,
@@ -28,7 +26,6 @@ interface Appointment {
   providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class AppointmentSchedulingComponent implements OnInit {
-  patients: DentalManagement[] = [];
   appointments: Appointment[] = [];
   selectedDate: Date = new Date();
   filterStatus: string = 'all';
@@ -56,33 +53,51 @@ export class AppointmentSchedulingComponent implements OnInit {
   }
 
   getMockAppointments(): Appointment[] {
-    const patient = new DentalManagement({
-      id: "P001",
-      name: 'Russel',
-      lastName: 'Pérez',
-      phone: '999-888-777',
-      status: 'active',
-      appointments: [{
-        id: "A001",
-        date: new Date(),
-        time: '09:00',
-        type: 'consulta',
-        status: 'pendiente',
-        duration: 30,
-        notes: 'Primera consulta'
-      }]
-    });
+    const mockData = [
+      {
+        appointment: {
+          patientId: "19495efb-817b-4bad-8e47-80caa2ca2f7f",
+          date: "2025-04-03",
+          time: "11:54",
+          type: "consulta",
+          duration: 20,
+          notes: "sdfsdfsdf",
+          status: "Pending"
+        },
+        patientInfo: {
+          name: "flores@gmail.com",
+          phone: "",
+          status: "inactive"
+        }
+      },
+      {
+        appointment: {
+          patientId: "19495efb-817b-4bad-8e47-80caa2ca2f7f",
+          date: "2025-04-02",
+          time: "12:28",
+          type: "consulta",
+          duration: 30,
+          notes: "alumno",
+          status: "Pending"
+        },
+        patientInfo: {
+          name: "flores@gmail.com",
+          phone: "",
+          status: "inactive"
+        }
+      }
+    ];
 
-    return (patient.appointments || []).map(apt => ({
-      id: apt.id,
-      patientName: patient.fullName,
-      date: apt.date,
-      time: apt.time,
-      type: apt.type,
-      status: apt.status,
-      duration: apt.duration,
-      notes: apt.notes,
-      patientPhone: patient.phone
+    return mockData.map(item => ({
+      patientId: item.appointment.patientId,
+      patientName: item.patientInfo.name,
+      date: new Date(item.appointment.date),
+      time: item.appointment.time,
+      type: item.appointment.type as 'consulta',
+      status: 'pendiente',
+      duration: item.appointment.duration,
+      notes: item.appointment.notes,
+      patientPhone: item.patientInfo.phone
     }));
   }
 

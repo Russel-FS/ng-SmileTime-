@@ -31,7 +31,7 @@
   </header>
 
   <div class="appointments-timeline">
-    @for (appointment of appointments; track appointment.id) {
+    @for (appointment of appointments; track appointment.patientId) {
       <div class="appointment-card" [class]="'status-' + appointment.status">
         <div class="time-column">
           <span class="time">{{ appointment.time }}</span>
@@ -44,12 +44,12 @@
             <div class="patient-info">
               <h3>{{ appointment.patientName }}</h3>
               <span class="appointment-type">
-                <i class="material-icons">{{
+                <i class="material-icons mini-icon">{{
                   appointment.type === 'consulta'
-                    ? 'medical_services'
+                    ? 'local_hospital'
                     : appointment.type === 'limpieza'
-                      ? 'cleaning_services'
-                      : 'healing'
+                      ? 'sanitizer'
+                      : 'medication'
                 }}</i>
                 {{ appointment.type }}
               </span>
@@ -95,7 +95,7 @@
                     : 'Reactivar'
               }}</span>
             </button>
-            <button class="action-btn edit" (click)="rescheduleAppointment(appointment.id)">
+            <button class="action-btn edit" (click)="rescheduleAppointment(appointment.patientId)">
               <i class="material-icons">edit_calendar</i>
               <span>Reprogramar</span>
             </button>
