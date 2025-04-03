@@ -1,11 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { Dentist } from '../models/dentist.interface';
 import { DentistService } from '../../../../infrastructure/datasources/admin/dentist.service';
 
@@ -15,54 +9,38 @@ import { DentistService } from '../../../../infrastructure/datasources/admin/den
     styleUrls: ['./dentist-list.component.css'],
     standalone: true,
     imports: [
-        CommonModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatButtonModule,
+        CommonModule
     ]
 })
-export class DentistListComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['fullName', 'email', 'specialization', 'status', 'actions'];
-    dataSource: MatTableDataSource<Dentist>;
+export class DentistListComponent implements OnInit {
+    dentists: Dentist[] = [];
+    filteredDentists: Dentist[] = [];
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-    constructor(private dentistService: DentistService) {
-        this.dataSource = new MatTableDataSource<Dentist>();
-    }
+    constructor(private dentistService: DentistService) { }
 
     ngOnInit() {
         this.loadDentists();
     }
 
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-    }
-
     applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage();
-        }
+        const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+        this.filteredDentists = this.dentists.filter(dentist =>
+            dentist.fullName.toLowerCase().includes(filterValue) ||
+            dentist.email.toLowerCase().includes(filterValue) ||
+            dentist.specialization.toLowerCase().includes(filterValue)
+        );
     }
 
     loadDentists() {
-        this.dentistService.getAllDentists().subscribe(
-            {
-                next: (dentists: Dentist[]) => {
-                    this.dataSource.data = dentists;
-                }
-                , error: (error) => {
-                    console.error('Error al obtener dentistas:', error);
-
-                }
+        this.dentistService.getAllDentists().subscribe({
+            next: (dentists: Dentist[]) => {
+                this.dentists = dentists;
+                this.filteredDentists = dentists;
+            },
+            error: (error) => {
+                console.error('Error al obtener dentistas:', error);
             }
-        );
+        });
     }
 
     toggleStatus(dentist: Dentist) {

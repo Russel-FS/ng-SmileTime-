@@ -17,21 +17,21 @@
     </div>
 
     <div class="form-field">
+      <input
+        type="password"
+        formControlName="password"
+        class="apple-input"
+        placeholder="Contraseña"
+      />
+    </div>
+
+    <div class="form-field">
       <select formControlName="specialization" class="apple-select">
         <option value="" disabled selected>Selecciona una especialización</option>
         <option value="general">Odontología General</option>
         <option value="ortodoncista">Ortodoncista</option>
         <option value="endodoncista">Endodoncista</option>
       </select>
-    </div>
-
-    <div class="form-field">
-      <input
-        type="text"
-        formControlName="licenseNumber"
-        class="apple-input"
-        placeholder="Número de Licencia"
-      />
     </div>
 
     <button type="submit" class="apple-button" [disabled]="!registrationForm.valid">

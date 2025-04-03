@@ -18,7 +18,7 @@ export class DentistRegisterComponent {
 
     constructor(private fb: FormBuilder) {
         this.registrationForm = this.fb.group({
-            fullName: ['', Validators.required],
+            name: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(6)]],
             specialization: ['', Validators.required]
