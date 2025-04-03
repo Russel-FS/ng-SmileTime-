@@ -25,7 +25,7 @@ export class DentistListComponent implements OnInit {
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
         this.filteredDentists = this.dentists.filter(dentist =>
-            dentist.fullName.toLowerCase().includes(filterValue) ||
+            dentist.name?.toLowerCase().includes(filterValue) ||
             dentist.email.toLowerCase().includes(filterValue) ||
             dentist.specialization.toLowerCase().includes(filterValue)
         );

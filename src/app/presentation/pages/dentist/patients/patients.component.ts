@@ -1,15 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Patient {
-  id: number;
-  name: string;
-  lastName: string;
-  phone: string;
-  lastVisit: Date;
-  status: 'active' | 'pending' | 'inactive';
-}
+import { DentalManagement } from '../model/dental-management.model';
 
 @Component({
   selector: 'app-patients',
@@ -26,15 +18,15 @@ export class PatientsComponent implements OnInit {
   totalPatients = 0;
   todayAppointments = 0;
 
-  patients: Patient[] = [];
-  filteredPatients: Patient[] = [];
+  patients: DentalManagement[] = [];
+  filteredPatients: DentalManagement[] = [];
 
   ngOnInit() {
 
     this.patients = this.generateMockPatients();
     this.filteredPatients = [...this.patients];
     this.totalPatients = this.patients.length;
-    this.todayAppointments = 5; // Simulado
+    this.todayAppointments = 5;
   }
 
   filterPatients() {
@@ -66,14 +58,49 @@ export class PatientsComponent implements OnInit {
     return `${name.charAt(0)}${lastName.charAt(0)}`;
   }
 
-  private generateMockPatients(): Patient[] {
+  private generateMockPatients(): DentalManagement[] {
 
     return [
-      { id: 1, name: 'Russel', lastName: 'Pérez', phone: '1234567890', lastVisit: new Date(), status: 'active' },
-      { id: 2, name: 'María', lastName: 'Gómez', phone: '0987654321', lastVisit: new Date(), status: 'pending' },
-      { id: 3, name: 'Luis', lastName: 'Martínez', phone: '1122334455', lastVisit: new Date(), status: 'inactive' },
-      { id: 4, name: 'Ana', lastName: 'López', phone: '2233445566', lastVisit: new Date(), status: 'active' },
-      { id: 5, name: 'Carlos', lastName: 'Sánchez', phone: '3344556677', lastVisit: new Date(), status: 'pending' },
+      new DentalManagement({
+        id: 1,
+        name: 'Russel',
+        lastName: 'Pérez',
+        phone: '1234567890',
+        lastVisit: new Date(),
+        status: 'active'
+      }),
+      new DentalManagement({
+        id: 2,
+        name: 'María',
+        lastName: 'Gómez',
+        phone: '0987654321',
+        lastVisit: new Date(),
+        status: 'pending'
+      }),
+      new DentalManagement({
+        id: 3,
+        name: 'Luis',
+        lastName: 'Martínez',
+        phone: '1122334455',
+        lastVisit: new Date(),
+        status: 'inactive'
+      }),
+      new DentalManagement({
+        id: 4,
+        name: 'Ana',
+        lastName: 'López',
+        phone: '2233445566',
+        lastVisit: new Date(),
+        status: 'active'
+      }),
+      new DentalManagement({
+        id: 5,
+        name: 'Carlos',
+        lastName: 'Sánchez',
+        phone: '3344556677',
+        lastVisit: new Date(),
+        status: 'pending'
+      }),
 
     ];
   }
@@ -82,20 +109,20 @@ export class PatientsComponent implements OnInit {
     console.log('Agregar nuevo paciente');
   }
 
-  viewDetails(patient: Patient) {
+  viewDetails(patient: DentalManagement) {
     console.log('Ver detalles', patient);
   }
 
-  editPatient(patient: Patient) {
+  editPatient(patient: DentalManagement) {
     console.log('Editar paciente', patient);
   }
 
-  scheduleAppointment(patient: Patient) {
+  scheduleAppointment(patient: DentalManagement) {
     console.log('Programar cita para:', patient);
 
   }
 
-  openChat(patient: Patient) {
+  openChat(patient: DentalManagement) {
     console.log('Abrir chat con:', patient);
 
   }

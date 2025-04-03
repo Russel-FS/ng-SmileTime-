@@ -2,6 +2,7 @@ import { Component, OnInit, LOCALE_ID } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
+import { DentalManagement } from '../model/dental-management.model';
 
 registerLocaleData(localeEs, 'es');
 
@@ -27,6 +28,7 @@ interface Appointment {
   providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class AppointmentSchedulingComponent implements OnInit {
+  patients: DentalManagement[] = [];
   appointments: Appointment[] = [];
   selectedDate: Date = new Date();
   filterStatus: string = 'all';
@@ -54,40 +56,34 @@ export class AppointmentSchedulingComponent implements OnInit {
   }
 
   getMockAppointments(): Appointment[] {
-    return [
-      {
+    const patient = new DentalManagement({
+      id: 1,
+      name: 'Russel',
+      lastName: 'Pérez',
+      phone: '999-888-777',
+      status: 'active',
+      appointments: [{
         id: 1,
-        patientName: 'Russel Pérez',
         date: new Date(),
         time: '09:00',
         type: 'consulta',
         status: 'pendiente',
         duration: 30,
-        patientPhone: '999-888-777',
         notes: 'Primera consulta'
-      },
-      {
-        id: 2,
-        patientName: 'María García',
-        date: new Date(),
-        time: '10:00',
-        type: 'limpieza',
-        status: 'confirmada',
-        duration: 60,
-        patientPhone: '999-777-666'
-      },
-      {
-        id: 3,
-        patientName: 'Carlos López',
-        date: new Date(),
-        time: '11:30',
-        type: 'tratamiento',
-        status: 'pendiente',
-        duration: 45,
-        patientPhone: '999-666-555',
-        notes: 'Tratamiento de conducto'
-      }
-    ];
+      }]
+    });
+
+    return (patient.appointments || []).map(apt => ({
+      id: apt.id,
+      patientName: patient.fullName,
+      date: apt.date,
+      time: apt.time,
+      type: apt.type,
+      status: apt.status,
+      duration: apt.duration,
+      notes: apt.notes,
+      patientPhone: patient.phone
+    }));
   }
 
   getStatusColor(status: string): string {
