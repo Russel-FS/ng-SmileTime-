@@ -54,7 +54,8 @@ export class CalendarService {
   addAppointment(appointment: AppointmentRequest): Observable<boolean> {
     console.log('Añadiendo cita:', JSON.stringify(appointment, null, 2));
     const url = this.apiConfig.getEndpoint('dentalAppointment', 'create');
-    // Transformar el formato de la petición
+    const header = this.storageService.getAuthHeaders();
+
     const serverRequest = {
       date: appointment.appointment.date,
       time: appointment.appointment.time,
@@ -65,7 +66,7 @@ export class CalendarService {
       patientInfo: appointment.patientInfo
     };
 
-    return this.http.post<boolean>(url, serverRequest).pipe(
+    return this.http.post<boolean>(url, serverRequest, { headers: header }).pipe(
       map(response => {
         console.log('Cita añadida:', response);
         return true;
