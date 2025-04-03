@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { DentalAppointment } from '../../../presentation/pages/dentist/model/dental-management.model';
+import { AppointmentRequest, DentalAppointment } from '../../../presentation/pages/dentist/model/dental-management.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class CalendarService {
    * @param appointmentId - El ID de la cita a obtener.
    * @returns Un observable que emite la cita dental correspondiente al ID proporcionado.
    */
-  addAppointment(appointment: DentalAppointment): Observable<boolean> {
+  addAppointment(appointment: AppointmentRequest): Observable<boolean> {
     console.log('Agregando cita:', appointment);
     return of(true);
   }

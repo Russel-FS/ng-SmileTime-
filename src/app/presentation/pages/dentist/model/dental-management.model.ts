@@ -2,8 +2,6 @@ export type AppointmentType = 'limpieza' | 'consulta' | 'tratamiento';
 export type AppointmentStatus = 'pendiente' | 'confirmada' | 'cancelada';
 export type PatientStatus = 'active' | 'pending' | 'inactive';
 
-
-
 export interface DentalAppointment {
     id: number | string;
     patientId?: number | string;
@@ -15,6 +13,7 @@ export interface DentalAppointment {
     duration: number;
     notes?: string;
 }
+
 
 export class DentalManagement {
     id: number | string;
@@ -46,4 +45,22 @@ export class DentalManagement {
     get fullName(): string {
         return `${this.name} ${this.lastName}`;
     }
+}
+
+
+export interface AppointmentRequest {
+    appointment: {
+        dentistId?: string;
+        patientId?: string;
+        date: string;
+        time: string;
+        type: AppointmentType;
+        duration: number;
+        notes?: string;
+    };
+    patientInfo: {
+        name: string;
+        phone: string;
+        status: PatientStatus;
+    };
 }

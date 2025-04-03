@@ -7,7 +7,7 @@ import { CalendarOptions, DateSelectArg, EventClickArg } from '@fullcalendar/cor
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
+import { DentalAppointment, AppointmentType, AppointmentStatus, AppointmentRequest } from '../model/dental-management.model';
 import { CalendarService } from '../../../../infrastructure/datasources/dentist/calendar.service';
 import { Pacient } from '../model/pacient';
 import { PatientService } from '../../../../infrastructure/datasources/dentist/patient.service';
@@ -289,67 +289,61 @@ export class CalendarComponent implements OnInit, AfterViewInit {
    * Cambia la visibilidad del selector y establece el mes y año seleccionados.
    */
   confirmarCita() {
-    // Validar que se haya seleccionado un paciente válido
     if (!this.selectedPatient) {
       alert('Por favor, seleccione un paciente válido de la lista');
       return;
     }
 
-    const { type } = this.citaSeleccionada;
-    if (type && this.selectedPatient) {
-      const tipoInfo = this.tiposCita.find(t => t.id === type);
+    const fechaBase = this.citaSeleccionada.date instanceof Date ?
+      this.citaSeleccionada.date :
+      new Date(this.citaSeleccionada.date || new Date());
 
-      // fecha válida
-      const fechaBase = this.citaSeleccionada.date instanceof Date ?
-        this.citaSeleccionada.date :
-        new Date(this.citaSeleccionada.date || new Date());
+    const formattedDate = fechaBase.toISOString().split('T')[0];
+    const time = this.citaSeleccionada.time || '00:00';
 
-      // Manejar la hora 
-      const time = this.citaSeleccionada.time || '00:00';
-      const [hours = '0', minutes = '0'] = time.split(':');
-
-      const fechaHora = new Date(fechaBase);
-      fechaHora.setHours(parseInt(hours), parseInt(minutes), 0);
-
-      const newAppointment: DentalAppointment = {
-        id: 0,
-        patientId: this.selectedPatient.id,
-        date: fechaHora,
+    const appointmentRequest: AppointmentRequest = {
+      appointment: {
+        patientId: this.selectedPatient.id as string,
+        date: formattedDate,
         time: time,
-        type: type,
-        status: 'pendiente',
+        type: this.citaSeleccionada.type as AppointmentType,
         duration: this.citaSeleccionada.duration || 30,
         notes: this.citaSeleccionada.notes
-      };
+      },
+      patientInfo: {
+        name: this.selectedPatient.name || '',
+        phone: this.selectedPatient.phone || '',
+        status: 'active'
+      }
+    };
 
-      // Crear el evento para el calendario
-      const eventToAdd = {
-        id: '',
-        title: this.selectedPatient.name || 'Paciente',
-        start: fechaHora,
-        end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)),
-        backgroundColor: tipoInfo?.color,
-        extendedProps: {
-          type: type,
-          status: newAppointment.status,
-          duration: newAppointment.duration,
-          notes: newAppointment.notes,
-          id: this.selectedPatient.id
-        }
-      };
+    this.calendarService.addAppointment(appointmentRequest).subscribe(success => {
+      if (success) {
+        const tipoInfo = this.tiposCita.find(t => t.id === this.citaSeleccionada.type);
+        const fechaHora = new Date(`${formattedDate}T${time}`);
 
-      this.calendarService.addAppointment(newAppointment).subscribe(success => {
-        if (success) {
-          const calendarApi = this.getCalendarApi();
-          if (calendarApi) {
-            calendarApi.addEvent(eventToAdd);
-          } else {
-            console.warn('No se pudo agregar el evento porque el calendario no está inicializado');
+        const eventToAdd = {
+          id: this.createEventId(),
+          title: `${this.selectedPatient?.name}`,
+          start: fechaHora,
+          end: new Date(fechaHora.getTime() + (appointmentRequest.appointment.duration * 60000)),
+          backgroundColor: tipoInfo?.color,
+          extendedProps: {
+            type: appointmentRequest.appointment.type,
+            status: 'pendiente',
+            duration: appointmentRequest.appointment.duration,
+            notes: appointmentRequest.appointment.notes
           }
-          this.events.push(eventToAdd);
+        };
+
+        const calendarApi = this.getCalendarApi();
+        if (calendarApi) {
+          calendarApi.addEvent(eventToAdd);
         }
-      });
-    }
+        this.events.push(eventToAdd);
+      }
+    });
+
     this.cerrarDetalles();
   }
 
