@@ -8,8 +8,6 @@ import { IAuthService } from '../../../../core/interfaces/datasource/auth/i-auth
 import { AuthService } from '../../../../infrastructure/datasources/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../../core/services/notifications/notification.service';
-import { AuthResponse } from '../../../../core/domain/entities/auth/auth';
-import { StorageService } from '../../../../core/services/storage/storage.service';
 
 @Component({
   selector: 'app-register',
@@ -49,8 +47,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private notificationService: NotificationService,
-    private cd: ChangeDetectorRef,
-    private storageService: StorageService,
+    private cd: ChangeDetectorRef
   ) { }
   ngOnInit() {
     console.log('Inicializando registerForm...');
@@ -104,33 +101,18 @@ export class RegisterComponent implements OnInit {
 
     this.loading = true;
     this.AuthService.register(this.registerForm.value).subscribe({
-      next: (response) => {
-        this.success(response);
+      next: () => {
+        this.notificationService.success('Registro exitoso, ahora puedes iniciar sesión');
+        this.router.navigate(['/home']);
       },
-      error: (error) => {
-        this.error(error);
+      error: () => {
+        this.loading = false;
+        this.notificationService.error('Error al registrar usuario, usuario ya existe o la conexion no funciona');
       },
       complete: () => {
-        this.complete();
+        this.loading = false;
       },
     });
-  }
-
-
-  success(response: AuthResponse) {
-    console.log(response);
-    this.storageService.setAuthData(response);
-    this.notificationService.success('Registro exitoso, bienvenido');
-    this.router.navigate(['/home']);
-  }
-  error(error: any) {
-    const errorMessage = error.error.messageResponse || 'Error desconocido';
-    this.loading = false; // carga 
-    this.notificationService.error(errorMessage); // mensaje de notificacion
-  }
-
-  complete() {
-    this.loading = false;
   }
 
   /**
