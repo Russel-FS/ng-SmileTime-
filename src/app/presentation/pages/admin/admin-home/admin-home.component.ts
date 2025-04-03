@@ -1,12 +1,135 @@
-import { Component } from '@angular/core';
-import { AdminSidebarComponent } from "../../../components/admin/admin-sidebar/admin-sidebar.component";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Carrusel } from '../../../../core/domain/model/heropagedata/carrusel';
+import { CarouselService } from '../../../../infrastructure/datasources/carousel.service';
 
 @Component({
-  selector: 'app-admin-home',
-  imports: [AdminSidebarComponent],
-  templateUrl: './admin-home.component.html',
-  styleUrl: './admin-home.component.css'
+  selector: 'app-carousel-management',
+  templateUrl: './carousel-management.component.html',
+  styleUrls: ['./carousel-management.component.css']
 })
-export class AdminHomeComponent {
+export class CarouselManagementComponent implements OnInit {
+  carouselItems: Carrusel[] = [];
+  carouselForm: FormGroup;
+  formularioVisible = false;
+  modoEdicion = false;
+  itemSeleccionado: Carrusel | null = null;
+  formularioEnviado = false;
 
+  // Variables para el modal de confirmación
+  mostrarModalEliminar = false;
+  itemParaEliminar: Carrusel | null = null;
+
+  constructor(
+    private carouselService: CarouselService,
+    private fb: FormBuilder
+  ) {
+    this.carouselForm = this.fb.group({
+      titulo: ['', [Validators.required, Validators.maxLength(100)]],
+      descripcion: ['', [Validators.maxLength(500)]],
+      alt: ['', [Validators.maxLength(255)]],
+      imagenUrl: ['', [Validators.required, Validators.maxLength(255)]],
+      activo: [true]
+    });
+  }
+
+  ngOnInit(): void {
+    this.obtenerCarouselItems();
+  }
+
+  obtenerCarouselItems(): void {
+    this.carouselService.getCarouselItems().subscribe(
+      (items) => {
+        this.carouselItems = items;
+      },
+      (error) => {
+        console.error('Error al obtener los items del carrusel', error);
+      }
+    );
+  }
+
+  mostrarFormularioNuevo(): void {
+    this.formularioVisible = true;
+    this.modoEdicion = false;
+    this.formularioEnviado = false;
+    this.carouselForm.reset({
+      activo: true // Establecer el valor predeterminado para activo
+    });
+  }
+
+  cancelarFormulario(): void {
+    this.formularioVisible = false;
+    this.formularioEnviado = false;
+    this.carouselForm.reset();
+  }
+
+  guardarItem(): void {
+    this.formularioEnviado = true;
+
+    if (this.carouselForm.invalid) {
+      return;
+    }
+
+    const nuevoItem: Carrusel = this.carouselForm.value;
+
+    if (this.modoEdicion && this.itemSeleccionado) {
+      this.carouselService.updateCarousel(this.itemSeleccionado.id, nuevoItem).subscribe(
+        (updatedItem) => {
+          const index = this.carouselItems.findIndex(item => item.id === updatedItem.id);
+          this.carouselItems[index] = updatedItem;
+          this.cancelarFormulario();
+        },
+        (error) => {
+          console.error('Error al actualizar el carrusel', error);
+        }
+      );
+    } else {
+      this.carouselService.createCarousel(nuevoItem).subscribe(
+        (createdItem) => {
+          this.carouselItems.push(createdItem);
+          this.cancelarFormulario();
+        },
+        (error) => {
+          console.error('Error al crear el carrusel', error);
+        }
+      );
+    }
+  }
+
+  editarItem(item: Carrusel): void {
+    this.modoEdicion = true;
+    this.itemSeleccionado = item;
+    this.formularioEnviado = false;
+    this.carouselForm.patchValue(item);
+    this.formularioVisible = true;
+  }
+
+  confirmarEliminar(item: Carrusel): void {
+    this.itemParaEliminar = item;
+    this.mostrarModalEliminar = true;
+  }
+
+  cancelarEliminar(): void {
+    this.mostrarModalEliminar = false;
+    this.itemParaEliminar = null;
+  }
+
+  eliminarItem(): void {
+    if (!this.itemParaEliminar) return;
+
+    this.carouselService.deleteCarousel(this.itemParaEliminar.id).subscribe(
+      () => {
+        this.carouselItems = this.carouselItems.filter(i => i.id !== this.itemParaEliminar?.id);
+        this.cancelarEliminar();
+      },
+      (error) => {
+        console.error('Error al eliminar el carrusel', error);
+      }
+    );
+  }
+
+  // Getter para el acceso fácil a los campos del formulario en las validaciones del template
+  get f() {
+    return this.carouselForm.controls;
+  }
 }
