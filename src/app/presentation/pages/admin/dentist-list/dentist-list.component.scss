@@ -1,16 +1,4 @@
 .list-container {
-<<<<<<< HEAD
-  padding: 20px;
-  background: #fff;
-}
-
-.list-header {
-  margin-bottom: 20px;
-}
-
-.table-container {
-  width: 100%;
-=======
   padding: 0.8rem;
   background: #fff;
   min-height: 100vh;
@@ -49,22 +37,10 @@
   width: 100%;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
->>>>>>> 4542cf90bcec1d65c263fea2243426b9b501d1cb
 }
 
 .dentist-table {
   width: 100%;
-<<<<<<< HEAD
-}
-
-th.mat-header-cell {
-  background: #f0f0f0;
-  color: #1c1c1e;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-=======
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 
   th.mat-header-cell {
@@ -128,5 +104,4 @@ th.mat-header-cell {
     border-radius: 8px;
     overflow: hidden;
   }
->>>>>>> 4542cf90bcec1d65c263fea2243426b9b501d1cb
 }

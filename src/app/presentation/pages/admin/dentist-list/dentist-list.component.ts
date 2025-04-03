@@ -25,7 +25,7 @@ import { DentistService } from '../../../../infrastructure/datasources/admin/den
     ]
 })
 export class DentistListComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['name', 'email', 'specialization', 'status', 'actions'];
+    displayedColumns: string[] = ['fullName', 'email', 'specialization', 'status', 'actions'];
     dataSource: MatTableDataSource<Dentist>;
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
