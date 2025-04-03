@@ -6,7 +6,7 @@ import { AdminSidebarComponent } from "../../../components/admin/admin-sidebar/a
   imports: [],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css'
-})
+}) 
 export class AdminHomeComponent {
 
 }
