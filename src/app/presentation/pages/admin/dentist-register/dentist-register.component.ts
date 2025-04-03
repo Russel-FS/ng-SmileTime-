@@ -40,11 +40,12 @@ export class DentistRegisterComponent {
             };
 
             this.dentistService.addDentist(dentistData).subscribe({
-                next: (response) => {
-                    console.log('Odontólogo registrado:', response);
+                next: () => {
+                    console.log('Odontólogo registrado con éxito');
+                    this.registrationForm.reset();
                 },
                 error: (error) => {
-                    console.error('Error al registrar el odontólogo:', error);
+                    console.error('Error al registrar odontólogo:', error);
                 }
             });
         }
