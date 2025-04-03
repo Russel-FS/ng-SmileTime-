@@ -1,0 +1,115 @@
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos específicos para el formulario */
+form .ng-invalid.ng-touched {
+  border-color: #ef4444;
+}
+
+/* Estilos para las transiciones */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Ajustes para mejorar la experiencia en dispositivos móviles */
+@media (max-width: 640px) {
+  .carousel-image-preview {
+    height: 120px;
+  }
+
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Estilos para inputs con foco */
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Estilo para tooltips en botones de acción */
+[title] {
+  position: relative;
+}
+
+/* Hover en filas de la tabla */
+tr:hover td {
+  background-color: #f9fafb;
+}
+
+/* Adición de estilos para transiciones fluidas */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Estilo para la previsualización de la imagen */
+.image-preview {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Estilos para el modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  max-width: 28rem;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos para inputs deshabilitados */
+input:disabled,
+textarea:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+/* Espaciado para los grupos de formulario */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Estilo para labels de formulario */
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
