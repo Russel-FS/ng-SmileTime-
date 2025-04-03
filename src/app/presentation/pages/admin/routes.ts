@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
+import { MainComponent } from './main/main.component';
 
 export const adminRoutes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./admin-panel/admin-panel.component')
-            .then(m => m.AdminPanelComponent)
+        component: MainComponent,
+        children: []
     }
 ];
