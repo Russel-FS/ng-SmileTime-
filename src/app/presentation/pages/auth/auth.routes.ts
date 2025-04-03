@@ -6,5 +6,5 @@ import { RecoveryComponent } from './recovery/recovery.component';
 export const authRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  {path: 'recovery', component: RecoveryComponent},
+  { path: 'recovery', component: RecoveryComponent},
 ];
