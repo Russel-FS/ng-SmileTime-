@@ -29,7 +29,7 @@ export class DentistService {
     }
 
 
-    addDentist(dentist: Dentist): Observable<Dentist> {
+    addDentist(dentist: Dentist): Observable<any> {
         const url = this.apiUrl.getEndpoint('dentist', 'create');
         const header = this.localStorage.getAuthHeaders();
         return this.http.post<Dentist>(url, dentist, { headers: header });
