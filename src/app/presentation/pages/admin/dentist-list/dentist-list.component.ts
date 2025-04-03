@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Dentist } from '../models/dentist.interface';
+import { DentistService } from '../../../../infrastructure/datasources/admin/dentist.service';
 
 @Component({
     selector: 'app-dentist-list',
@@ -20,32 +21,21 @@ import { Dentist } from '../models/dentist.interface';
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
-        MatButtonModule
+        MatButtonModule,
     ]
 })
 export class DentistListComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['name', 'email', 'specialization', 'status', 'actions'];
     dataSource: MatTableDataSource<Dentist>;
-    dentists: Dentist[] = [
-        {
-            id: 1,
-            fullName: 'Dr. flores Pérez',
-            email: 'juan.perez@ejemplo.com',
-            specialization: 'Ortodoncista',
-            active: true,
-            role: 'dentist'
-        },
-
-    ];
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    constructor() {
+    constructor(private dentistService: DentistService) {
         this.dataSource = new MatTableDataSource<Dentist>();
     }
 
     ngOnInit() {
-        this.dataSource.data = this.dentists;
+        this.loadDentists();
     }
 
     ngAfterViewInit() {
@@ -61,7 +51,32 @@ export class DentistListComponent implements OnInit, AfterViewInit {
         }
     }
 
+    loadDentists() {
+        this.dentistService.getAllDentists().subscribe(
+            {
+                next: (dentists: Dentist[]) => {
+                    this.dataSource.data = dentists;
+                }
+                , error: (error) => {
+                    console.error('Error al obtener dentistas:', error);
+
+                }
+            }
+        );
+    }
+
     toggleStatus(dentist: Dentist) {
-        dentist.active = !dentist.active;
+        this.dentistService.toggleDentistStatus(dentist.id, !dentist.active)
+            .subscribe(
+                {
+                    next: (response) => {
+                        dentist.active = !dentist.active;
+                        console.log('Estado del dentista actualizado:', response);
+                    },
+                    error: (error) => {
+                        console.error('Error al actualizar el estado del dentista:', error);
+                    }
+                }
+            );
     }
 }
