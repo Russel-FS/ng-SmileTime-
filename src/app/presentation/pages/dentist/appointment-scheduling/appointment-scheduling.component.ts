@@ -24,10 +24,7 @@ interface Appointment {
   imports: [CommonModule, FormsModule],
   templateUrl: './appointment-scheduling.component.html',
   styleUrls: ['./appointment-scheduling.component.css'],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es' },
-    CalendarService
-  ]
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }]
 })
 export class AppointmentSchedulingComponent implements OnInit {
   appointments: Appointment[] = [];
@@ -42,6 +39,9 @@ export class AppointmentSchedulingComponent implements OnInit {
   constructor(private calendarService: CalendarService) { }
 
   ngOnInit() {
+    this.loadAppointments();
+  }
+
   changeDate(days: number) {
     const newDate = new Date(this.selectedDate);
     newDate.setDate(newDate.getDate() + days);
