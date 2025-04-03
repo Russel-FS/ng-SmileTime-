@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, map } from 'rxjs/operators';
 import { Pacient } from '../../../presentation/pages/dentist/model/pacient';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ApiConfig } from '../../config/app.config';
 import { StorageService } from '../../../core/services/storage/storage.service';
 
@@ -30,10 +30,11 @@ export class PatientService {
                 if (!term.trim()) {
                     return of([]);
                 }
-                const searchUrl = `${this.apiConfig.getEndpoint('pacient', 'search')}/${term}`;
+                const searchUrl = `${this.apiConfig.getEndpoint('pacient', 'search')}`;
+                const params = new HttpParams().set('searchTerm', term);
 
-                return this.http.get<any>(searchUrl).pipe(
-                    map(response => response.data as Pacient[]),
+                return this.http.get<any>(searchUrl, { params }).pipe(
+                    map(response => response as Pacient[] || [] ),
                     catchError(error => {
                         console.error('Error al buscar pacientes:', error);
                         return of([]);

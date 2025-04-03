@@ -324,9 +324,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       // Crear el evento para el calendario
       const eventToAdd = {
         id: newAppointment.id.toString(),
-        title: this.selectedPatient.fullName,
+        title: this.selectedPatient.name || 'Paciente',
         start: fechaHora,
-        end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)), // Agregar duración en minutos
+        end: new Date(fechaHora.getTime() + (newAppointment.duration * 60000)),
         backgroundColor: tipoInfo?.color,
         extendedProps: {
           type: type,
@@ -559,8 +559,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
    */
   selectPatient(patient: Pacient): void {
     this.selectedPatient = patient;
-    this.searchTerm = patient.fullName || '';
-    this.citaSeleccionada.patientName = patient.fullName || '';
+    this.searchTerm = patient.name || '';
+    this.citaSeleccionada.patientName = patient.name || '';
     this.searchResults = [];
   }
 }
