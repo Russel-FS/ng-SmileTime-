@@ -16,7 +16,6 @@ export class CarouselService {
     private storage: StorageService
   ) { }
 
-  // ✅ Listar Items activos (No requiere autenticación)
   getCarouselItems(): Observable<Carrusel[]> {
     const url = this.apiUrl.getEndpoint('carousel', 'active');
     return this.http.get<Carrusel[]>(url).pipe(

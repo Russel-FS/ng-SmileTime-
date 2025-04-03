@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfig {
-  private apiUrlBase = 'https://localhost:7201';
+  private apiUrlBase = 'https://turbo-doodle-q7pw5pwr6jww34rgr-5011.app.github.dev';
   private config = {
     apiUrl: this.apiUrlBase,
     timeoutDuration: 30000,
