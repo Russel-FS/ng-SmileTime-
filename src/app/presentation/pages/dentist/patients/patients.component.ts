@@ -14,7 +14,7 @@ export class PatientsComponent implements OnInit {
   searchTerm = '';
   viewMode: 'grid' | 'list' = 'grid';
   activeFilter = 'all';
-  expandedId: number | null = null;
+  expandedId: number | string | null = null;
   totalPatients = 0;
   todayAppointments = 0;
 
@@ -42,7 +42,7 @@ export class PatientsComponent implements OnInit {
     this.activeFilter = filter;
   }
 
-  toggleExpand(id: number) {
+  toggleExpand(id: number | string) {
     this.expandedId = this.expandedId === id ? null : id;
   }
 
@@ -62,7 +62,7 @@ export class PatientsComponent implements OnInit {
 
     return [
       new DentalManagement({
-        id: 1,
+        id: "P001",  // Ahora podemos usar strings
         name: 'Russel',
         lastName: 'Pérez',
         phone: '1234567890',

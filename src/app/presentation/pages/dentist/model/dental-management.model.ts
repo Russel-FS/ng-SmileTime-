@@ -3,7 +3,7 @@ export type AppointmentStatus = 'pendiente' | 'confirmada' | 'cancelada';
 export type PatientStatus = 'active' | 'pending' | 'inactive';
 
 export interface DentalAppointment {
-    id: number;
+    id: number | string;
     date: Date;
     time: string;
     type: AppointmentType;
@@ -13,7 +13,7 @@ export interface DentalAppointment {
 }
 
 export class DentalManagement {
-    id: number;
+    id: number | string;
     name: string;
     lastName: string;
     phone: string;
@@ -22,7 +22,7 @@ export class DentalManagement {
     appointments: DentalAppointment[];
 
     constructor(params: {
-        id: number;
+        id: number | string;
         name: string;
         lastName: string;
         phone: string;

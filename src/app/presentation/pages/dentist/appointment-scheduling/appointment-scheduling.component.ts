@@ -7,7 +7,7 @@ import { DentalManagement } from '../model/dental-management.model';
 registerLocaleData(localeEs, 'es');
 
 interface Appointment {
-  id: number;
+  id: number | string;
   patientName: string;
   date: Date;
   time: string;
@@ -57,13 +57,13 @@ export class AppointmentSchedulingComponent implements OnInit {
 
   getMockAppointments(): Appointment[] {
     const patient = new DentalManagement({
-      id: 1,
+      id: "P001",
       name: 'Russel',
       lastName: 'Pérez',
       phone: '999-888-777',
       status: 'active',
       appointments: [{
-        id: 1,
+        id: "A001",
         date: new Date(),
         time: '09:00',
         type: 'consulta',
@@ -99,15 +99,15 @@ export class AppointmentSchedulingComponent implements OnInit {
     console.log('Agregar nueva cita');
   }
 
-  confirmAppointment(id: number) {
+  confirmAppointment(id: number | string) {
     console.log('Confirmar cita:', id);
   }
 
-  cancelAppointment(id: number) {
+  cancelAppointment(id: number | string) {
     console.log('Cancelar cita:', id);
   }
 
-  rescheduleAppointment(id: number) {
+  rescheduleAppointment(id: number | string) {
     console.log('Reprogramar cita:', id);
   }
 
