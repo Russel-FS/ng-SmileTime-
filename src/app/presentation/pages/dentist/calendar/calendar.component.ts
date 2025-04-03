@@ -8,6 +8,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { DentalAppointment, AppointmentType, AppointmentStatus } from '../model/dental-management.model';
+import { CalendarService } from '../../../../infrastructure/datasources/dentist/calendar.service';
 
 interface AppointmentForm {
   type: string;
@@ -108,15 +109,25 @@ export class CalendarComponent implements OnInit {
    * Inicializa las variables de instancia `selectedMonth` y `selectedYear`
    * con el mes y año actuales.
    */
-  constructor() {
+  constructor(
+    private calendarService: CalendarService
+  ) {
     const today = new Date();
     this.selectedMonth = today.getMonth();
     this.selectedYear = today.getFullYear();
   }
 
   ngOnInit() {
-
+    this.loadAppointments();
   }
+
+  loadAppointments() {
+    this.calendarService.getAppointments().subscribe(appointments => {
+      console.log('Citas cargadas:', appointments);
+    
+    });
+  }
+
   /**
    * Método para abrir el selector de mes y año.
    * Muestra el selector y establece el mes y año seleccionados.
@@ -243,10 +254,13 @@ export class CalendarComponent implements OnInit {
         }
       };
 
-      // Agregar el evento al calendario y al array de eventos
-      const calendarApi = this.getCalendarApi();
-      calendarApi.addEvent(eventToAdd);
-      this.events.push(eventToAdd);
+      this.calendarService.addAppointment(newAppointment).subscribe(success => {
+        if (success) {
+          const calendarApi = this.getCalendarApi();
+          calendarApi.addEvent(eventToAdd);
+          this.events.push(eventToAdd);
+        }
+      });
     }
     this.cerrarDetalles();
   }
@@ -298,8 +312,13 @@ export class CalendarComponent implements OnInit {
    */
   eliminarCita() {
     if (confirm('¿Está seguro de eliminar esta cita?')) {
-      this.eventoSeleccionado?.remove();
-      this.cerrarDetalles();
+      const appointmentId = this.eventoSeleccionado.id;
+      this.calendarService.deleteAppointment(appointmentId).subscribe(success => {
+        if (success) {
+          this.eventoSeleccionado?.remove();
+          this.cerrarDetalles();
+        }
+      });
     }
   }
 
@@ -330,16 +349,20 @@ export class CalendarComponent implements OnInit {
         notes: this.citaSeleccionada.notes
       };
 
-      this.eventoSeleccionado.setProp('title', this.citaSeleccionada.patientName);
-      this.eventoSeleccionado.setStart(appointment.date);
-      this.eventoSeleccionado.setExtendedProp('type', appointment.type);
-      this.eventoSeleccionado.setExtendedProp('status', appointment.status);
-      this.eventoSeleccionado.setExtendedProp('duration', appointment.duration);
-      this.eventoSeleccionado.setExtendedProp('notes', appointment.notes);
+      this.calendarService.updateAppointment(appointment as DentalAppointment).subscribe(success => {
+        if (success) {
+          this.eventoSeleccionado.setProp('title', this.citaSeleccionada.patientName);
+          this.eventoSeleccionado.setStart(appointment.date);
+          this.eventoSeleccionado.setExtendedProp('type', appointment.type);
+          this.eventoSeleccionado.setExtendedProp('status', appointment.status);
+          this.eventoSeleccionado.setExtendedProp('duration', appointment.duration);
+          this.eventoSeleccionado.setExtendedProp('notes', appointment.notes);
 
-      if (tipoInfo) {
-        this.eventoSeleccionado.setProp('backgroundColor', tipoInfo.color);
-      }
+          if (tipoInfo) {
+            this.eventoSeleccionado.setProp('backgroundColor', tipoInfo.color);
+          }
+        }
+      });
     }
     this.cerrarDetalles();
   }
