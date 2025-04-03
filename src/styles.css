@@ -1,3 +1,38 @@
-@import "tailwindcss";
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import 'tailwindcss';
+
+:root {
+  --primary-color: #000000;
+  --secondary-color: #1d1d1f;
+  --background-color: #fbfbfd;
+  --surface-color: #ffffff;
+  --text-color: #1d1d1f;
+  --accent-color: #0071e3;
+  --error-color: #ef4444;
+  --border-radius: 8px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --font-sf: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --md-sys-color-primary: #006a6a;
+  --md-sys-color-surface: #fafdfc;
+  --md-sys-color-on-surface: #191c1c;
+  --md-sys-color-surface-variant: #dae5e4;
+  --md-sys-color-outline: #6f7979;
+  --md-elevation-level1:
+    0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 4px 5px 0 rgba(0, 0, 0, 0.07),
+    0 1px 10px 0 rgba(0, 0, 0, 0.06);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-sf);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  min-height: 100vh;
+}

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { IUserRepository } from '../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../core/interfaces/datasource/chat/I-user-datasource';
-import { ConversationParticipant } from '../../../core/domain/model/chat/conversation-participant';
+import { ConversationParticipant } from '../../../core/domain/entities/chat/conversation-participant';
 import { ParticipantMapper } from '../../mappers/participant.mapper';
 
 @Injectable({

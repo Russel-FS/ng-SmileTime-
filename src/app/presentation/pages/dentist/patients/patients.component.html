@@ -1,1 +1,104 @@
-<p>patients works!</p>
+<div class="patients-wrapper">
+  <header class="patients-header">
+    <div class="header-left">
+      <h1 class="fade-in">Pacientes</h1>
+      <div class="stats-pills">
+        <span class="stat-pill">
+          <i class="material-icons">groups</i>
+          {{ totalPatients }} total
+        </span>
+        <span class="stat-pill">
+          <i class="material-icons">event</i>
+          {{ todayAppointments }} citas hoy
+        </span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="search-wrapper">
+        <i class="material-icons">search</i>
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="filterPatients()"
+          placeholder="Buscar por nombre, teléfono..."
+        />
+      </div>
+      <div class="view-toggle">
+        <button [class.active]="viewMode === 'grid'" (click)="viewMode = 'grid'">
+          <i class="material-icons">grid_view</i>
+        </button>
+        <button [class.active]="viewMode === 'list'" (click)="viewMode = 'list'">
+          <i class="material-icons">view_list</i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="filter-chips">
+    <div class="chip" [class.active]="activeFilter === 'all'" (click)="filterBy('all')">Todos</div>
+    <div class="chip" [class.active]="activeFilter === 'recent'" (click)="filterBy('recent')">
+      Recientes
+    </div>
+    <div class="chip" [class.active]="activeFilter === 'pending'" (click)="filterBy('pending')">
+      Pendientes
+    </div>
+  </div>
+
+  <div [class]="'patients-container ' + viewMode">
+    @for (patient of filteredPatients; track patient.id) {
+      <div class="patient-card" [class.expanded]="patient.id === expandedId">
+        <div class="card-header" (click)="toggleExpand(patient.id)">
+          <div class="patient-avatar" [style.background-color]="getAvatarColor(patient.name)">
+            {{ getInitials(patient.name, patient.lastName) }}
+          </div>
+          <div class="patient-basic-info">
+            <h3>{{ patient.name }} {{ patient.lastName }}</h3>
+            <span class="patient-id">ID: {{ patient.id }}</span>
+          </div>
+          <div class="quick-actions">
+            <button
+              class="icon-button"
+              (click)="$event.stopPropagation(); scheduleAppointment(patient)"
+            >
+              <i class="material-icons">event</i>
+            </button>
+            <button class="icon-button" (click)="$event.stopPropagation(); openChat(patient)">
+              <i class="material-icons">chat</i>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-details">
+          <div class="detail-item">
+            <i class="material-icons">phone</i>
+            <span>{{ patient.phone }}</span>
+          </div>
+          <div class="detail-item">
+            <i class="material-icons">calendar_today</i>
+            <span>Última visita: {{ patient.lastVisit | date: 'dd MMM yyyy' }}</span>
+          </div>
+          <div class="actions-row">
+            <button class="action-button primary" (click)="viewDetails(patient)">
+              <i class="material-icons">history</i>
+              Ver Historial
+            </button>
+            <button class="action-button" (click)="editPatient(patient)">
+              <i class="material-icons">edit</i>
+              Editar
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-results">
+        <i class="material-icons">search_off</i>
+        <p>No se encontraron pacientes</p>
+      </div>
+    }
+  </div>
+
+  <button class="fab-button" (click)="addNewPatient()">
+    <i class="material-icons">add</i>
+  </button>
+</div>

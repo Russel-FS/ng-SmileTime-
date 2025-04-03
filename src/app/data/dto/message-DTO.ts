@@ -1,14 +1,14 @@
-import { MessageType } from '../../core/domain/model/chat/message-entity';
+import { MessageType } from '../../core/domain/entities/chat/message-entity';
 import { AttachmentEntityDTO } from './attachment-entity-DTO';
 import { ConversationParticipantDTO } from './conversation-participant-DTO';
 import { MessageStatusDTO } from './message-status-DTO';
 import { UserEntityDto } from './user-DTO';
 
 export interface MessageEntityDTO {
-  MessageId: string | number;
+  messageId: string | number;
   sender: ConversationParticipantDTO;
   content: string;
-  type: MessageType;
+  messageType: MessageType;
   messageStatuses: MessageStatusDTO[];
   createdAt: Date;
   modifiedAt?: Date | null;

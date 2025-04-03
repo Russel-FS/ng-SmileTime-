@@ -4,7 +4,7 @@ export class ConversationParticipant {
 
   userId: number | string;
   userName: string;
-  avatar: string;
+  avatar?: string;
   lastActive?: Date;
   joinedAt?: Date;
   leftAt?: Date;
@@ -17,7 +17,7 @@ export class ConversationParticipant {
   constructor(params: {
     userId: number | string;
     userName: string;
-    avatar: string;
+    avatar?: string;
     lastActive?: Date;
     joinedAt?: Date;
     leftAt?: Date;

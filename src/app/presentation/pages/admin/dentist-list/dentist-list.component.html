@@ -1,0 +1,68 @@
+<div class="list-container">
+  <header class="list-header">
+    <h2>Odontólogos</h2>
+    <p class="subtitle">Gestiona el equipo médico de la clínica</p>
+
+    <div class="search-box">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix class="search-icon">search</mat-icon>
+        <input
+          matInput
+          placeholder="Buscar por nombre, email o especialidad..."
+          (keyup)="applyFilter($event)"
+        />
+      </mat-form-field>
+    </div>
+  </header>
+
+  <div class="table-container mat-elevation-z0">
+    <table mat-table [dataSource]="dataSource" class="dentist-table">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let dentist">{{ dentist.fullName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let dentist">{{ dentist.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="specialization">
+        <th mat-header-cell *matHeaderCellDef>Especialización</th>
+        <td mat-cell *matCellDef="let dentist">{{ dentist.specialization }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let dentist">{{ dentist.active ? 'Activo' : 'Inactivo' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let dentist">
+          <button
+            mat-icon-button
+            [color]="dentist.active ? 'accent' : 'primary'"
+            (click)="toggleStatus(dentist)"
+          >
+            <mat-icon>{{ dentist.active ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [length]="dataSource.filteredData.length"
+      [pageSize]="15"
+      [pageSizeOptions]="[15, 30, 50]"
+      showFirstLastButtons
+      aria-label="Seleccionar página"
+    >
+    </mat-paginator>
+  </div>
+</div>

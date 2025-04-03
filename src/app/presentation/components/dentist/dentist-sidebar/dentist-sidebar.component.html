@@ -1,0 +1,48 @@
+<div class="layout-container">
+  <aside class="sidebar">
+    <nav>
+      <ul class="menu-list">
+        <li>
+          <a
+            class="menu-item"
+            [routerLink]="['/dentist/main/home']"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="material-icons">home</i>
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a class="menu-item" [routerLink]="['/dentist/main/patients']" routerLinkActive="active">
+            <i class="fa fa-users"></i>
+            <span>Pacientes</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="menu-item"
+            [routerLink]="['/dentist/main/appointment-scheduling']"
+            routerLinkActive="active"
+          >
+            <i class="far fa-calendar-check"></i>
+            <span>Citas</span>
+          </a>
+        </li>
+        <li>
+          <a class="menu-item" [routerLink]="['/dentist/main/calendar']" routerLinkActive="active">
+            <i class="far fa-calendar-alt"></i>
+            <span>Calendario</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="section-label">Acciones</div>
+
+    <button class="action-button" (click)="nuevoPaciente()">
+      <i class="material-icons">add</i>
+      <span>Nuevo Paciente</span>
+    </button>
+  </aside>
+</div>

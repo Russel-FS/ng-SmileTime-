@@ -1,4 +1,4 @@
-import { Status } from '../../core/domain/model/chat/message-status';
+import { Status } from '../../core/domain/entities/chat/message-status';
 
 export interface MessageStatusDTO {
   userId?: string | number;

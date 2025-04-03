@@ -14,13 +14,13 @@ import { ManageRealtimeMessageUseCase } from '../../../../core/use-cases/signalR
 import { ManageTypingStatusUseCase } from '../../../../core/use-cases/signalR/manage-typing-status-use-case';
 import { IUserRepository } from '../../../../core/interfaces/repositorys/chat/i-user-repository';
 import { IUserDatasource } from '../../../../core/interfaces/datasource/chat/I-user-datasource';
-import { MessageEntity, MessageType } from '../../../../core/domain/model/chat/message-entity';
+import { MessageEntity, MessageType } from '../../../../core/domain/entities/chat/message-entity';
 import {
   ConversationEntity,
   ConversationType,
-} from '../../../../core/domain/model/chat/conversation-entity';
-import { ConversationParticipant } from '../../../../core/domain/model/chat/conversation-participant';
-import { MessageStatus, Status } from '../../../../core/domain/model/chat/message-status';
+} from '../../../../core/domain/entities/chat/conversation-entity';
+import { ConversationParticipant } from '../../../../core/domain/entities/chat/conversation-participant';
+import { MessageStatus, Status } from '../../../../core/domain/entities/chat/message-status';
 import { Subject, takeUntil } from 'rxjs';
 import { ContactsUseCase } from '../../../../core/use-cases/chat/contacts-use-case';
 import { ChatHeaderComponent } from "../../../components/chat/chat-header/chat-header.component";
@@ -32,7 +32,10 @@ import { ConversationRepository } from '../../../../data/repositories/chat/conve
 import { IConversationDatasource } from '../../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { StorageService } from '../../../../core/services/storage/storage.service';
 import { MessageDataSource } from '../../../../infrastructure/datasources/chat/message.service';
-
+import { TypingStatus } from '../../../../core/domain/entities/signalR/TypingStatus';
+import { PrivateMessage } from '../../../../core/domain/entities/signalR/PrivateMessage';
+import { ManageOnlineUserUseCase } from '../../../../core/use-cases/signalR/manage-online-user-use-case';
+import { OnlineUser } from '../../../../core/domain/entities/signalR/OnlineUser';
 
 @Component({
   selector: 'app-client-chat',
@@ -48,6 +51,7 @@ import { MessageDataSource } from '../../../../infrastructure/datasources/chat/m
   providers: [
     ManageRealtimeMessageUseCase,
     ManageTypingStatusUseCase,
+    ManageOnlineUserUseCase,
     {
       provide: IRealTimeComunication,
       useClass: SignalRService,
@@ -83,13 +87,25 @@ import { MessageDataSource } from '../../../../infrastructure/datasources/chat/m
   styleUrls: ['./client-chat.component.css'],
 })
 export class ClientChatComponent implements OnInit, OnDestroy {
+  isMobile: boolean = window.innerWidth <= 768; // Inicializa la vista móvil
+  isLoadingContacts: boolean = true; // Indica si los contactos están siendo cargados
+
   constructor(
     private ContactsUseCase: ContactsUseCase,
     private manageRealTimeMessages: ManageRealtimeMessageUseCase,
     private manageTypingStatus: ManageTypingStatusUseCase,
+    private manageOnlineUsers: ManageOnlineUserUseCase,
     private conversationUseCase: ConversationUseCase,
     private storage: StorageService
-  ) { }
+  ) {
+    // Detectar cambios en el tamaño de la ventana para ajustar la vista
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 768;
+      if (!this.isMobile) {
+        this.isChatView = false;
+      }
+    });
+  }
   /** Contacto actualmente seleccionado en la conversación */
   contactSelected!: ConversationParticipant;
   /** Lista de todos los contactos disponibles */
@@ -97,7 +113,11 @@ export class ClientChatComponent implements OnInit, OnDestroy {
   /** Almacena todas las conversaciones activas */
   conversations: ConversationEntity[] = [];
   /** Indica si el contacto está escribiendo actualmente */
-  isTyping: boolean = false;
+  typingStatus!: TypingStatus;
+  /** Indica si los mensajes están siendo cargados */
+  isLoadingMessages: boolean = false;
+  /** Indica si se muestra la vista de chat en móvil */
+  isChatView: boolean = false;
   /** Subject para manejar la limpieza de subscripciones */
   private unsubscribe$ = new Subject<void>();
 
@@ -105,9 +125,13 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Inicializa los datos de la pantalla y la comunicación en tiempo real.
    * Se llama cuando el componente se inicializa.
    */
-  ngOnInit(): void {
-    this.initData();
-    this.initRealTimeCommunication();
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.initRealTimeCommunication();
+      this.initData();
+    } catch (error) {
+      console.error('Error initializing chat:', error);
+    }
   }
 
   /**
@@ -121,6 +145,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia el estado de un contacto y actualiza la conversacion activa.
+   * y obtiene la conversación asociada al contacto seleccionado.
    * @param contact El contacto seleccionado.
    */
   onContactClick(contact: ConversationParticipant): void {
@@ -128,16 +153,23 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     contact.selected = true;
     this.contactSelected = contact;
     this.conversations = [];
-
+    this.isLoadingMessages = true;
     this.conversationUseCase.getConversationById(this.contactSelected.conversationId as number)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (conversation) => {
           this.conversations.push(conversation);
-          console.log('Conversación cargada:', conversation);
+          this.isLoadingMessages = false;
         },
-        error: err => console.error('Error obteniendo conversación:', err)
+        error: err => {
+          console.error('Error obteniendo conversación:', err);
+          this.isLoadingMessages = false;
+        }
       });
+
+    if (this.isMobile) {
+      this.isChatView = true;
+    }
   }
 
   /**
@@ -146,26 +178,35 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   onTyping(text: string): void {
     if (this.contactSelected && text?.length > 0) {
-      this.manageTypingStatus.notifyTyping(2, true);
+      this.manageTypingStatus.notifyTyping({
+        senderId: this.currenUserSesion().userId, // ID del usuario actual
+        receiverId: this.contactSelected.userId, // ID del contacto seleccionado
+        isTyping: true, // Indica que el usuario está escribiendo
+        conversationId: this.contactSelected.conversationId, // ID de la conversación actual
+        username: this.currenUserSesion().userName // Nombre del usuario actual
+      });
     }
   }
 
   /**
-   * Inicializa los datos de la pantalla, obteniendo la lista de contactos y una conversacion de ejemplo.
-   * Selecciona el primer contacto activo o el primero de la lista si no hay ninguno activo.
-   * Se suscribe a los eventos de ContactUseCase y ConversationUseCase para obtener los datos.
-   * Se cancelan las subscripciones cuando el componente se destruye.
+   * Inicializa los datos de la pantalla.
+   * Obtiene la lista de contactos y establece el contacto activo.
    */
-  initData() {
-    // Obtener contactos
+  private initData() {
+    this.isLoadingContacts = true;
     this.ContactsUseCase.execute()
       .pipe(takeUntil(this.unsubscribe$),)
       .subscribe({
         next: contacts => {
           this.contacts = contacts;
-          this.contactSelected = contacts.find(c => c.isActive) || contacts[0];
+          this.isLoadingContacts = false;
+          // Solicitar el estado de usuarios en línea después de cargar los contactos
+          this.manageOnlineUsers.getOnlineUsers();
         },
-        error: err => console.error('Error obteniendo contactos:', err)
+        error: err => {
+          console.error('Error obteniendo contactos:', err);
+          this.isLoadingContacts = false;
+        }
       });
   }
 
@@ -173,12 +214,19 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * Incializa la comunicación en tiempo real, 
    * escucha los mensajes y actualiza la conversación local.
    */
-  private initRealTimeCommunication(): void {
-    this.manageRealTimeMessages.initializeConnection();
-    this.listenForMessages();
-    this.listenForTypingStatus();
+  private async initRealTimeCommunication(): Promise<void> {
+    try {
+      await this.manageRealTimeMessages.initializeConnection();
+      this.listenForMessages();
+      this.listenForTypingStatus();
+      this.listenForOnlineUsers();
+      this.listenForUserConnected();
+      this.listenForUserDisconnected();
+    } catch (error) {
+      console.error('Error en la comunicación en tiempo real:', error);
+      throw error;
+    }
   }
-
 
   /**
    * Envia un mensaje a través de SignalR y actualiza la conversación local.
@@ -194,7 +242,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Verificar si existe una conversación
+    // Verificar si no existe una conversación
     if (!selectedContact.conversationId) {
       // Crear nueva conversación
       const newConversation = new ConversationEntity({
@@ -238,52 +286,76 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Agregar mensaje localmente primero (optimistic update)
+    const conversation = this.findConversationById(message.conversationId);
+    if (conversation) {
+      message.status = [new MessageStatus(this.currenUserSesion().userId, Status.PENDING, new Date())];
+      conversation.messages.push(message);
+    }
+
+    // Enviar mensaje al servidor
     this.manageRealTimeMessages.sendMessage(message)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (conversation) => {
-          if (conversation) {
-            this.handleNewConversation(conversation);
+        next: (incomingMessage) => {
+          if (incomingMessage && conversation) {
+            // Actualizar el mensaje local con la información del servidor
+            const index = conversation.messages.findIndex(m =>
+              m.content === message.content &&
+              m.sender.userId === message.sender.userId
+            );
+            if (index !== -1) {
+              conversation.messages[index] = incomingMessage;
+            }
           }
+        },
+        error: (error) => {
+          // En caso de error, marcar el mensaje como fallido
+          if (conversation) {
+            const index = conversation.messages.findIndex(m => m === message);
+            if (index !== -1) {
+              conversation.messages[index].status = [
+                new MessageStatus(this.currenUserSesion().userId, Status.FAILED, new Date())
+              ];
+            }
+          }
+          this.handleMessageError(error);
         },
         complete: () => {
           this.handleCompleteSendMessage(message);
-        },
-        error: this.handleMessageError.bind(this)
+        }
       });
   }
+
   private currenUserSesion(): ConversationParticipant {
+    const userId = this.storage.getItem('userId');
+    const userName = this.storage.getItem('email');
     return new ConversationParticipant({
-      userId: 2,
-      userName: 'Solano Flores',
-      avatar: 'https://example.com/avatar2.jpg'
+      userId: userId || '',
+      userName: userName || '',
     });
   }
 
   /**
-   * Se llama cuando se completa el envio del mensaje.
-   * Notifica el estado de escritura y transmite el mensaje enviado.
+   * Maneja la finalización del envío de un mensaje.
+   * Notifica que el usuario ha dejado de escribir y transmite el mensaje enviado en tiempo real.
    * @param message El mensaje enviado.
    */
   private handleCompleteSendMessage(message: MessageEntity): void {
-    this.manageTypingStatus.notifyTyping(2, false);
-    this.manageRealTimeMessages.broadcastMessage(message);
+    // Notificar que el usuario ha dejado de escribir
+    this.manageTypingStatus.notifyTyping({
+      senderId: this.currenUserSesion().userId,
+      receiverId: this.contactSelected.userId,
+      isTyping: false,
+      conversationId: this.contactSelected.conversationId
+    });
+    //  Transmitir el mensaje enviado en tiempo real
+    this.manageRealTimeMessages.broadcastMessage({
+      ...message,
+      recipientId: this.contactSelected.userId,
+    });
   }
 
-  /**
-   * Se llama cuando se recibe una conversación nueva desde el SignalR.
-   * Verifica si la conversación ya existe en la lista de conversaciones locales.
-   * Si no existe, se agrega a la lista de conversaciones. De lo contrario, no se hace nada.
-   * @param incomingConversation La conversación recibida desde el SignalR.
-   */
-  private handleNewConversation(incomingConversation: ConversationEntity): void {
-    const conversationExists = this.conversations.some(conv =>
-      conv?.id?.toString() === incomingConversation?.id?.toString()
-    );
-    if (!conversationExists) {
-      this.conversations.push(incomingConversation);
-    }
-  }
 
   /**
    * Maneja el error cuando se produce un error al enviar un mensaje.
@@ -292,7 +364,12 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    */
   private handleMessageError(error: any): void {
     console.error('Error enviando mensaje:', error);
-    this.manageTypingStatus.notifyTyping(2, false);
+    this.manageTypingStatus.notifyTyping({
+      senderId: this.currenUserSesion().userId,
+      receiverId: this.contactSelected.userId,
+      isTyping: false,
+      conversationId: this.contactSelected.conversationId
+    });
   }
 
   /**
@@ -310,7 +387,7 @@ export class ClientChatComponent implements OnInit, OnDestroy {
       sender: sender,
       content: content,
       type: MessageType.TEXT,
-      status: [new MessageStatus(2, Status.SENT, new Date())],
+      status: [new MessageStatus(sender.userId, Status.SENT, new Date())],
       createdAt: new Date(),
       isDeleted: false
     });
@@ -325,26 +402,39 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageRealTimeMessages.listenForMessages()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (incomingMessage: MessageEntity) => {
-          console.log('Mensaje recibido:', incomingMessage);
+        next: (incomingMessage: PrivateMessage) => {
           this.handleIncomingMessage(incomingMessage);
         },
         error: error => console.error('Error al recibir mensajes:', error)
       });
   }
+
   /**
- * Procesa un mensaje entrante y lo agrega a la conversacion correspondiente.
- *
- * @param incomingMessage El mensaje entrante que se va a procesar.
- */
+   * Procesa un mensaje entrante y lo agrega a la conversacion correspondiente.
+   *
+   * @param incomingMessage El mensaje entrante que se va a procesar.
+   */
   private handleIncomingMessage(incomingMessage: MessageEntity): void {
-    // Verificar que el mensaje tenga ID de conversación
     if (!incomingMessage.conversationId) {
       console.error('Mensaje recibido sin ID de conversación');
-
+      return;
     }
 
     const conversation = this.findConversationById(incomingMessage.conversationId);
+    const isCurrentUserMessage = incomingMessage.sender.userId === this.currenUserSesion().userId;
+
+    // Si es un mensaje del usuario actual y ya existe en la conversación, no lo agregamos
+    if (isCurrentUserMessage && conversation) {
+      const messageExists = conversation.messages.some(m =>
+        m.content === incomingMessage.content &&
+        m.sender.userId === incomingMessage.sender.userId &&
+        Math.abs(new Date(m.createdAt).getTime() - new Date(incomingMessage.createdAt).getTime()) < 1000
+      );
+
+      if (messageExists) {
+        return; // Evitamos agregar el mensaje duplicado
+      }
+    }
 
     if (!conversation) {
       // Si no existe la conversación, obtenerla del servidor
@@ -354,15 +444,20 @@ export class ClientChatComponent implements OnInit, OnDestroy {
           next: (newConversation) => {
             if (newConversation) {
               this.conversations.push(newConversation);
-              newConversation.messages.push(incomingMessage);
+              if (!isCurrentUserMessage) { // Solo agregamos si no es un mensaje propio
+                newConversation.messages.push(incomingMessage);
+              }
             }
           },
           error: (error) => console.error('Error al obtener conversación:', error)
         });
     } else {
-      conversation.messages.push(incomingMessage);
+      if (!isCurrentUserMessage) { // Solo agregamos si no es un mensaje propio
+        conversation.messages.push(incomingMessage);
+      }
     }
   }
+
   /**
    * Encuentra una conversaci n por su ID.
    * 
@@ -383,24 +478,85 @@ export class ClientChatComponent implements OnInit, OnDestroy {
     this.manageTypingStatus.listenTypingStatus()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: ({ userId, isTyping }) => {
-          this.updateTypingStatus(userId, isTyping);
+        next: (typingStatus) => {
+          this.updateTypingStatus(typingStatus);
         },
         error: (error) => console.error('Error al recibir el estado de escritura:', error),
       });
   }
+
+  /**
+   * Escucha los cambios en el estado en línea de los usuarios
+   */
+  private listenForOnlineUsers(): void {
+    this.manageOnlineUsers.listenForOnlineUsers()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (onlineUsers) => {
+          this.updateOnlineUsersStatus(...onlineUsers);
+        },
+        error: (error) => console.error('Error al recibir usuarios en línea:', error)
+      });
+  }
+
+  /**
+   * Escucha cuando un usuario se conecta
+   */
+  private listenForUserConnected(): void {
+    this.manageOnlineUsers.listenForUserConnected()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (user) => {
+          this.updateOnlineUsersStatus(user);
+        },
+        error: (error) => console.error('Error al recibir usuario conectado:', error)
+      });
+  }
+
+  /**
+   * Escucha cuando un usuario se desconecta
+   */
+  private listenForUserDisconnected(): void {
+    this.manageOnlineUsers.listenForUserDisconnected()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (user) => {
+          this.updateOnlineUsersStatus(user);
+        },
+        error: (error) => console.error('Error al recibir usuario desconectado:', error)
+      });
+  }
+
+  /**
+   * Actualiza el estado en línea de los contactos en función de la lista de usuarios en línea.
+   * 
+   * @param onlineUsers Lista de usuarios en línea.
+   * @returns void
+   */
+  private updateOnlineUsersStatus(...onlineUsers: OnlineUser[]): void {
+    if (onlineUsers && onlineUsers.length > 0) {
+      this.contacts.forEach(contact => {
+        // Buscar si el contacto está en la lista de usuarios en línea
+        const onlineUser = onlineUsers.find(user => user.userId === contact.userId);
+        contact.isOnline = !!onlineUser?.isOnline;
+      });
+    }
+
+  }
+
   /**
    * Actualiza el estado de escritura de un usuario en la lista de conversaciones.
    * 
    * @param userId El ID del usuario a actualizar.
-   * @param isTyping El estado de escritura a asignar.
+   * @param typingStatus El estado de escritura a asignar.
    */
-  private updateTypingStatus(userId: number | string, isTyping: boolean): void {
-    const contact = this.findContactById(userId);
+  private updateTypingStatus(typingStatus: TypingStatus): void {
+    const contact = this.findContactById(typingStatus.senderId);
     if (contact) {
-      this.isTyping = isTyping;
+      this.typingStatus = typingStatus;
     }
   }
+
   /**
    * Busca un contacto en la lista de contactos por su ID.
    * 
@@ -418,10 +574,21 @@ export class ClientChatComponent implements OnInit, OnDestroy {
    * @returns El array de mensajes asociados al contacto seleccionado.
    */
   getMessages(): MessageEntity[] {
+    if (!this.contactSelected?.conversationId) {
+      return [];
+    }
+
     const conversation = this.conversations.find(
-      conv => conv.id === this.contactSelected?.conversationId
+      conv => conv?.id === this.contactSelected?.conversationId
     );
+
     return conversation?.messages || [];
   }
 
+  /**
+   * Alterna entre la vista de chat y la vista de contactos.
+   */
+  toggleView(): void {
+    this.isChatView = !this.isChatView;
+  }
 }

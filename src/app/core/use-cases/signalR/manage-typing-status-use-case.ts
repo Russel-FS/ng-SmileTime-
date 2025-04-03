@@ -11,11 +11,12 @@ import {
   map,
 } from 'rxjs';
 import { IRealTimeComunication } from '../../interfaces/signalR/i-real-time-comunication';
+import { TypingStatus } from '../../domain/entities/signalR/TypingStatus';
 
 @Injectable()
 export class ManageTypingStatusUseCase {
-  private typingSubject = new Subject<{ userId: string | number; isTyping: boolean }>(); // Observable para notificar el estado de escritura
-  private readonly TYPING_DEBOUNCE_TIME = 300; // 300ms de debounce
+  private typingSubject = new Subject<TypingStatus>(); // Observable para notificar el estado de escritura
+  private readonly TYPING_DEBOUNCE_TIME = 350; // 300ms de debounce
 
 
   constructor(private realTimeCommunication: IRealTimeComunication) {
@@ -26,29 +27,36 @@ export class ManageTypingStatusUseCase {
     this.typingSubject
       .pipe(
         debounceTime(this.TYPING_DEBOUNCE_TIME),
-        switchMap(({ userId, isTyping }) => {
-          if (isTyping) {
+        switchMap((typingStatus: TypingStatus) => {
+          if (typingStatus.isTyping) {
             return timer(0, 1500).pipe(
               map((index) => ({
-                userId,
+                ...typingStatus,
                 isTyping: index === 0,
               }
               )),
             );
           }
-          return of({ userId, isTyping });
+          return of(typingStatus);
         }),
         distinctUntilChanged((prev, curr) =>
-          prev.isTyping === curr.isTyping && prev.userId === curr.userId,
+          prev.isTyping === curr.isTyping &&
+          prev.senderId === curr.senderId &&
+          prev.receiverId === curr.receiverId &&
+          prev.conversationId === curr.conversationId,
         ),
         catchError((error) => {
           console.error('Error al procesar la escritura:', error);
-          return of({ userId: '', isTyping: false });
+          return of({
+            senderId: '',
+            receiverId: '',
+            isTyping: false,
+            conversationId: 0,
+          } as TypingStatus);
         }),
       )
-      .subscribe(({ userId, isTyping }) => {
-        // console.log(isTyping ? 'El usuario está escribiendo...' : 'El usuario dejó de escribir.'); // 🖨️ Mostrar en consola
-        this.realTimeCommunication.setTypingStatus(userId, isTyping);
+      .subscribe((typingStatus: TypingStatus) => {
+        this.realTimeCommunication.setTypingStatus(typingStatus);
       });
   }
 
@@ -58,8 +66,8 @@ export class ManageTypingStatusUseCase {
    * se encarga de procesar el evento de escritura y notificar el estado
    * de "escribiendo" o "no escribiendo" al servidor.
    */
-  notifyTyping(userId: string | number, isTyping: boolean): void {
-    this.typingSubject.next({ userId, isTyping });
+  notifyTyping(typingStatus: TypingStatus): void {
+    this.typingSubject.next(typingStatus);
   }
 
   /**
@@ -68,7 +76,7 @@ export class ManageTypingStatusUseCase {
    * con el userId correspondiente y una propiedad "isTyping" que indica
    * si el usuario est  escribiendo o no.
    */
-  listenTypingStatus(): Observable<{ userId: string | number; isTyping: boolean }> {
+  listenTypingStatus(): Observable<TypingStatus> {
     return this.realTimeCommunication.onTypingStatus();
   }
 }

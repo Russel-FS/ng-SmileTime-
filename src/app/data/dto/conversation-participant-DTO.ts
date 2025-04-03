@@ -1,7 +1,7 @@
 export interface ConversationParticipantDTO {
   userId: number | string;
   userName: string;
-  avatar: string;
+  avatar?: string;
   lastActive?: Date;
   joinedAt?: Date;
   leftAt?: Date;

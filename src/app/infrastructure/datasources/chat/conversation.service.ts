@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IConversationDatasource } from '../../../core/interfaces/datasource/chat/i-conversation-datasource';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { ConversationEntityDTO } from '../../../data/dto/conversation-entity-DTO';
-import { mockConversation } from '../../../core/domain/model/chat/__mocks__/conversation.mock';
+import { mockConversation } from '../../../core/domain/entities/chat/__mocks__/conversation.mock';
 import { HttpClient } from '@angular/common/http';
 import { ApiConfig } from '../../config/app.config';
 import { StorageService } from '../../../core/services/storage/storage.service';
@@ -33,12 +33,6 @@ export class ConversationService implements IConversationDatasource {
   getConversationById(id: string | number): Observable<ConversationEntityDTO> {
     const headers = this.storage.getAuthHeaders();
     const url = `${this.apiUrl.getEndpoint('chat', 'conversation')}/${id}`;
-    return this.http.get<ConversationEntityDTO>(url, { headers }).pipe(
-      tap((conversation) => {
-        console.log('conversation', conversation);
-      })
-    )
-
-
+    return this.http.get<ConversationEntityDTO>(url, { headers });
   }
 }

@@ -1,0 +1,116 @@
+<div class="appointments-wrapper">
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="fade-in">Agenda de Citas</h1>
+      <div class="date-navigation">
+        <button class="nav-button" (click)="changeDate(-1)">
+          <i class="material-icons">chevron_left</i>
+        </button>
+        <span class="current-date">{{ selectedDate | date: 'EEEE, d MMMM' }}</span>
+        <button class="nav-button" (click)="changeDate(1)">
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="status-filter-wrapper">
+        <i class="material-icons">filter_list</i>
+        <select [(ngModel)]="filterStatus" class="status-filter">
+          <option value="all">Todas las citas</option>
+          <option value="pendiente">Pendientes</option>
+          <option value="confirmada">Confirmadas</option>
+          <option value="cancelada">Canceladas</option>
+        </select>
+      </div>
+      <button class="add-appointment-btn" (click)="addAppointment()">
+        <i class="material-icons">add</i>
+        Nueva Cita
+      </button>
+    </div>
+  </header>
+
+  <div class="appointments-timeline">
+    @for (appointment of appointments; track appointment.id) {
+      <div class="appointment-card" [class]="'status-' + appointment.status">
+        <div class="time-column">
+          <span class="time">{{ appointment.time }}</span>
+          <span class="duration">{{ appointment.duration }} min</span>
+          <div class="time-line"></div>
+        </div>
+
+        <div class="appointment-content">
+          <div class="appointment-header">
+            <div class="patient-info">
+              <h3>{{ appointment.patientName }}</h3>
+              <span class="appointment-type">
+                <i class="material-icons">{{
+                  appointment.type === 'consulta'
+                    ? 'medical_services'
+                    : appointment.type === 'limpieza'
+                      ? 'cleaning_services'
+                      : 'healing'
+                }}</i>
+                {{ appointment.type }}
+              </span>
+            </div>
+            <div class="status-badge" [style.background-color]="getStatusColor(appointment.status)">
+              {{ appointment.status }}
+            </div>
+          </div>
+
+          <div class="appointment-details">
+            @if (appointment.patientPhone) {
+              <span class="detail-item">
+                <i class="material-icons">phone</i>
+                {{ appointment.patientPhone }}
+              </span>
+            }
+            @if (appointment.notes) {
+              <span class="detail-item">
+                <i class="material-icons">note</i>
+                {{ appointment.notes }}
+              </span>
+            }
+          </div>
+
+          <div class="appointment-actions">
+            <button
+              class="action-btn"
+              [class]="appointment.status"
+              (click)="toggleAppointmentStatus(appointment)"
+            >
+              <i class="material-icons">{{
+                appointment.status === 'pendiente'
+                  ? 'check_circle'
+                  : appointment.status === 'confirmada'
+                    ? 'cancel'
+                    : 'refresh'
+              }}</i>
+              <span>{{
+                appointment.status === 'pendiente'
+                  ? 'Confirmar'
+                  : appointment.status === 'confirmada'
+                    ? 'Cancelar'
+                    : 'Reactivar'
+              }}</span>
+            </button>
+            <button class="action-btn edit" (click)="rescheduleAppointment(appointment.id)">
+              <i class="material-icons">edit_calendar</i>
+              <span>Reprogramar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-appointments">
+        <i class="material-icons">event_busy</i>
+        <p>No hay citas programadas para este día</p>
+        <button class="add-appointment-btn" (click)="addAppointment()">
+          <i class="material-icons">add</i>
+          Agregar Cita
+        </button>
+      </div>
+    }
+  </div>
+</div>

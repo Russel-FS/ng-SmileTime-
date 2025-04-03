@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IAuthService } from '../../../core/interfaces/datasource/auth/i-auth-service';
-import { AuthCredentials, AuthResponse } from '../../../core/domain/model/auth/auth';
+import { AuthCredentials, AuthResponse } from '../../../core/domain/entities/auth/auth';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ApiConfig } from '../../config/app.config';

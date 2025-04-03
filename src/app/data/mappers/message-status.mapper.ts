@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageStatus } from '../../core/domain/model/chat/message-status';
+import { MessageStatus } from '../../core/domain/entities/chat/message-status';
 import { MessageStatusDTO } from '../dto/message-status-DTO';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class MessageStatusMapper {
 
   toDTO(entity: MessageStatus): MessageStatusDTO {
     return {
-      userId: entity.userId,
+      userId: entity.userId || '',
       status: entity.status,
       statusTimestamp: entity.statusTimestamp,
     };
