@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DentalManagement } from '../model/dental-management.model';
+import { MockDentalService } from '../../../../infrastructure/datasources/dentist/mock-dental.service';
+import { AddPatientModalComponent } from './add-patient-modal/add-patient-modal.component';
 
 @Component({
   selector: 'app-patients',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddPatientModalComponent],
   templateUrl: './patients.component.html',
   styleUrls: ['./patients.component.css'],
 })
@@ -17,16 +19,20 @@ export class PatientsComponent implements OnInit {
   expandedId: number | string | null = null;
   totalPatients = 0;
   todayAppointments = 0;
+  showAddModal = false;
 
   patients: DentalManagement[] = [];
   filteredPatients: DentalManagement[] = [];
 
-  ngOnInit() {
+  constructor(private dentalService: MockDentalService) { }
 
-    this.patients = this.generateMockPatients();
-    this.filteredPatients = [...this.patients];
-    this.totalPatients = this.patients.length;
-    this.todayAppointments = 5;
+  ngOnInit() {
+    this.dentalService.getPatients().subscribe(patients => {
+      this.patients = patients;
+      this.filteredPatients = [...this.patients];
+      this.totalPatients = this.patients.length;
+      this.todayAppointments = 5;
+    });
   }
 
   filterPatients() {
@@ -58,55 +64,19 @@ export class PatientsComponent implements OnInit {
     return `${name.charAt(0)}${lastName.charAt(0)}`;
   }
 
-  private generateMockPatients(): DentalManagement[] {
-
-    return [
-      new DentalManagement({
-        id: "P001",  // Ahora podemos usar strings
-        name: 'Russel',
-        lastName: 'Pérez',
-        phone: '1234567890',
-        lastVisit: new Date(),
-        status: 'active'
-      }),
-      new DentalManagement({
-        id: 2,
-        name: 'María',
-        lastName: 'Gómez',
-        phone: '0987654321',
-        lastVisit: new Date(),
-        status: 'pending'
-      }),
-      new DentalManagement({
-        id: 3,
-        name: 'Luis',
-        lastName: 'Martínez',
-        phone: '1122334455',
-        lastVisit: new Date(),
-        status: 'inactive'
-      }),
-      new DentalManagement({
-        id: 4,
-        name: 'Ana',
-        lastName: 'López',
-        phone: '2233445566',
-        lastVisit: new Date(),
-        status: 'active'
-      }),
-      new DentalManagement({
-        id: 5,
-        name: 'Carlos',
-        lastName: 'Sánchez',
-        phone: '3344556677',
-        lastVisit: new Date(),
-        status: 'pending'
-      }),
-
-    ];
+  addNewPatient() {
+    this.showAddModal = true;
   }
 
-  addNewPatient() {
-    console.log('Agregar nuevo paciente');
+  onSaveNewPatient(patient: DentalManagement) {
+    this.dentalService.addPatient(patient).subscribe(newPatient => { 
+      this.dentalService.getPatients().subscribe(patients => {
+        this.patients = patients;
+        this.filteredPatients = [...this.patients];
+        this.totalPatients = this.patients.length;
+        this.showAddModal = false;
+      });
+    });
   }
 
   viewDetails(patient: DentalManagement) {
@@ -119,11 +89,9 @@ export class PatientsComponent implements OnInit {
 
   scheduleAppointment(patient: DentalManagement) {
     console.log('Programar cita para:', patient);
-
   }
 
   openChat(patient: DentalManagement) {
     console.log('Abrir chat con:', patient);
-
   }
 }

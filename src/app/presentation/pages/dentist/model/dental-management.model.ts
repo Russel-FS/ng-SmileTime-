@@ -23,6 +23,9 @@ export class DentalManagement {
     status: PatientStatus;
     lastVisit?: Date;
     appointments: DentalAppointment[];
+    email?: string;
+    allergies?: string;
+    medicalNotes?: string;
 
     constructor(params: {
         id: number | string;
@@ -32,6 +35,9 @@ export class DentalManagement {
         status: PatientStatus;
         lastVisit?: Date;
         appointments?: DentalAppointment[];
+        email?: string;
+        allergies?: string;
+        medicalNotes?: string;
     }) {
         this.id = params.id;
         this.name = params.name;
@@ -40,6 +46,9 @@ export class DentalManagement {
         this.status = params.status;
         this.lastVisit = params.lastVisit;
         this.appointments = params.appointments || [];
+        this.email = params.email;
+        this.allergies = params.allergies;
+        this.medicalNotes = params.medicalNotes;
     }
 
     get fullName(): string {
