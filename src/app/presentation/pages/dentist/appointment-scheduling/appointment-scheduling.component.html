@@ -23,7 +23,7 @@
           <option value="cancelada">Canceladas</option>
         </select>
       </div>
-      <button class="add-appointment-btn" (click)="addAppointment()">
+      <button class="add-appointment-btn" [routerLink]="['/dentist/main/calendar']">
         <i class="material-icons">add</i>
         Nueva Cita
       </button>

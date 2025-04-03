@@ -3,6 +3,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import localeEs from '@angular/common/locales/es';
 import { CalendarService } from '../../../../infrastructure/datasources/dentist/calendar.service';
+import { RouterModule } from '@angular/router';
 
 registerLocaleData(localeEs, 'es');
 
@@ -20,7 +21,7 @@ interface Appointment {
 
 @Component({
   selector: 'app-appointment-scheduling',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './appointment-scheduling.component.html',
   styleUrls: ['./appointment-scheduling.component.css'],
   providers: [{ provide: LOCALE_ID, useValue: 'es' }, CalendarService]
