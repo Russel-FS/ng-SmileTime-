@@ -39,7 +39,7 @@ import { AuthResponse } from '../../../../core/domain/entities/auth/auth';
         animate('500ms ease-in-out', style({ opacity: 0, transform: 'translateY(20px)' })),
       ])
     ]),
-  ],Dentist
+  ],
 })
 export class LoginComponent {
   loading = false;
