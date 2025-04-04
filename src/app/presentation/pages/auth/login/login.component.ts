@@ -97,8 +97,7 @@ export class LoginComponent {
   success(response: AuthResponse) {
     console.log(response);
     this.storageService.setAuthData(response);
-    this.notificationService.success('Inicio de sesión exitoso, bienvenido');
-    this.router.navigate(['/home']);
+    this.notificationService.success('Inicio de sesión exitoso, bienvenido'); 
   }
   error(error: any) {
     const errorMessage = error.error.messageResponse || 'Error desconocido';
@@ -106,9 +105,12 @@ export class LoginComponent {
     this.notificationService.error(errorMessage); // mensaje de notificacion
   }
 
+
   complete() {
     this.loading = false;
   }
+
+  //metodo para redirigir a usuario acorde a su rol
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control?.hasError('required')) {
