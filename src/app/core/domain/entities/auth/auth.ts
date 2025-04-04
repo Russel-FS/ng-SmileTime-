@@ -10,5 +10,5 @@ export interface AuthResponse {
   email: string;
   tokenExpiration: Date;
   messageResponse?: string; 
-  
+  roles: string[];
 }

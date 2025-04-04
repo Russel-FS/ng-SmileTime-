@@ -111,6 +111,10 @@ export class LoginComponent {
   }
 
   //metodo para redirigir a usuario acorde a su rol
+  redirectUser(roles: string[]){
+     
+  }
+
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control?.hasError('required')) {
